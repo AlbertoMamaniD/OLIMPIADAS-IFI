@@ -17,8 +17,8 @@ app.use(express.json());
 
 import { getRecentMatches, getLeaderboard, isDbConnected } from './db/supabase.js';
 
-// Endpoint de salud
-app.get('/health', (req, res) => {
+// Endpoint de salud (compatible con Render /healthz y /health)
+app.get(['/health', '/healthz'], (req, res) => {
   res.json({ status: 'ok', service: 'juego-bolsa-server', timestamp: Date.now() });
 });
 
@@ -58,7 +58,7 @@ const clientDist = path.resolve(__dirname, '../../client/dist');
 if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist, { etag: false, maxAge: 0 }));
   app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/socket.io') || req.path === '/health') return next();
+    if (req.path.startsWith('/socket.io') || req.path.startsWith('/api') || req.path === '/health' || req.path === '/healthz') return next();
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.sendFile(path.join(clientDist, 'index.html'));
   });
