@@ -9,6 +9,11 @@ import {
   AlertTriangle,
   Play,
   RotateCcw,
+  TrendingUp,
+  Layers,
+  Briefcase,
+  LineChart,
+  Activity,
 } from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 import { TimerBadge } from '../components/TimerBadge';
@@ -38,6 +43,7 @@ export function TeamGameScreen() {
   const [activeModal, setActiveModal] = useState(null);
   const [actionInProgress, setActionInProgress] = useState(false);
   const [localError, setLocalError] = useState('');
+  const [mobileTab, setMobileTab] = useState('market'); // 'market' | 'cards' | 'portfolio' | 'chart' | 'tape'
 
   if (!game || !myTeam) return null;
 
@@ -141,10 +147,14 @@ export function TeamGameScreen() {
             RONDA #{game.turnNumber}
           </div>
 
+          <div className="ribbon-team-pill font-mono">
+            {teamData.name}
+          </div>
+
           <div className={`turn-status-badge ${isMyTurn ? 'is-active' : 'is-idle'}`}>
             <span className="status-pulse-dot" />
             <span className="status-text font-mono">
-              {isMyTurn ? 'MESA HABILITADA PARA OPERAR' : `TURNO EN CURSO: ${currentTurnTeam.name.toUpperCase()}`}
+              {isMyTurn ? 'MESA HABILITADA PARA OPERAR' : `TURNO: ${currentTurnTeam.name.toUpperCase()}`}
             </span>
           </div>
 
@@ -152,23 +162,26 @@ export function TeamGameScreen() {
           {isMyTurn && (
             <div className="phase-stepper-bar font-mono">
               <span className={`phase-step ${currentTurn.phase === 'before' ? 'step-current' : 'step-done'}`}>
-                1. Pre-operación (Libre)
+                <span className="step-full-label">1. Pre-operación (Libre)</span>
+                <span className="step-mob-label">1. Libre</span>
               </span>
-              <ArrowRight size={13} className="step-arrow" />
+              <ArrowRight size={12} className="step-arrow" />
               <span className={`phase-step ${currentTurn.cardPlayed ? 'step-done' : currentTurn.phase === 'before' ? 'step-pending' : 'step-current'}`}>
-                2. Tarjeta Táctica (Obligatoria)
+                <span className="step-full-label">2. Tarjeta Táctica (Obligatoria)</span>
+                <span className="step-mob-label">2. Tarjeta {!currentTurn.cardPlayed ? '!' : '✓'}</span>
               </span>
-              <ArrowRight size={13} className="step-arrow" />
+              <ArrowRight size={12} className="step-arrow" />
               <span className={`phase-step ${currentTurn.cardPlayed ? 'step-current' : 'step-pending'}`}>
-                3. Post-operación (Restante)
+                <span className="step-full-label">3. Post-operación (Restante)</span>
+                <span className="step-mob-label">3. Fin</span>
               </span>
             </div>
           )}
 
           {currentTurn?.isLastTurn && (
             <div className="last-turn-warning-chip font-mono">
-              <AlertTriangle size={14} />
-              <span>ÚLTIMO TURNO · SOLO VENTAS AUTORIZADAS</span>
+              <AlertTriangle size={13} />
+              <span>ÚLTIMO TURNO · SOLO VENTAS</span>
             </div>
           )}
         </div>
@@ -207,35 +220,96 @@ export function TeamGameScreen() {
         </div>
       )}
 
+      {/* Barra de Pestañas Segmentadas para Móvil (Solo visible en pantallas <= 768px) */}
+      <div className="mobile-nav-tabs-bar">
+        <button
+          type="button"
+          className={`mobile-tab-btn ${mobileTab === 'market' ? 'active' : ''}`}
+          onClick={() => setMobileTab('market')}
+        >
+          <TrendingUp size={15} />
+          <span>Mercado</span>
+        </button>
+
+        <button
+          type="button"
+          className={`mobile-tab-btn ${mobileTab === 'cards' ? 'active' : ''} ${isMyTurn && !currentTurn?.cardPlayed ? 'tab-urgent' : ''}`}
+          onClick={() => setMobileTab('cards')}
+        >
+          <Layers size={15} />
+          <span>Cartas</span>
+          <span className="tab-count-pill font-mono">{teamData.hand?.length || 0}</span>
+          {isMyTurn && !currentTurn?.cardPlayed && <span className="tab-alert-badge">!</span>}
+        </button>
+
+        <button
+          type="button"
+          className={`mobile-tab-btn ${mobileTab === 'portfolio' ? 'active' : ''}`}
+          onClick={() => setMobileTab('portfolio')}
+        >
+          <Briefcase size={15} />
+          <span>Cartera</span>
+        </button>
+
+        <button
+          type="button"
+          className={`mobile-tab-btn ${mobileTab === 'chart' ? 'active' : ''}`}
+          onClick={() => setMobileTab('chart')}
+        >
+          <LineChart size={15} />
+          <span>Gráfico</span>
+        </button>
+
+        <button
+          type="button"
+          className={`mobile-tab-btn ${mobileTab === 'tape' ? 'active' : ''}`}
+          onClick={() => setMobileTab('tape')}
+        >
+          <Activity size={15} />
+          <span>Registro</span>
+        </button>
+      </div>
+
       {/* Área de Trabajo de Negociación */}
       <div className="trading-workspace">
         {/* Columna Izquierda: Cotizaciones y Gráfico */}
         <div className="workspace-main-column">
-          <MarketBoard
-            companies={game.companies}
-            myTeam={teamData}
-            currentTurn={currentTurn}
-            isMyTurn={isMyTurn}
-            onOpenTrade={handleOpenTrade}
-            isAuctionActive={!!game.auction}
-          />
-          <PriceChart companies={game.companies} />
+          <div className={`workspace-tab-pane pane-market ${mobileTab === 'market' ? 'is-active-tab' : ''}`}>
+            <MarketBoard
+              companies={game.companies}
+              myTeam={teamData}
+              currentTurn={currentTurn}
+              isMyTurn={isMyTurn}
+              onOpenTrade={handleOpenTrade}
+              isAuctionActive={!!game.auction}
+            />
+          </div>
+
+          <div className={`workspace-tab-pane pane-chart ${mobileTab === 'chart' ? 'is-active-tab' : ''}`}>
+            <PriceChart companies={game.companies} />
+          </div>
         </div>
 
         {/* Columna Derecha: Tarjetas, Portafolio y Auditoría */}
         <div className="workspace-side-column">
-          <CardDeck
-            hand={teamData.hand || []}
-            companies={game.companies}
-            isMyTurn={isMyTurn}
-            cardPlayed={!!currentTurn?.cardPlayed}
-            onPlayCard={handlePlayCard}
-            actionInProgress={actionInProgress}
-          />
+          <div className={`workspace-tab-pane pane-cards ${mobileTab === 'cards' ? 'is-active-tab' : ''}`}>
+            <CardDeck
+              hand={teamData.hand || []}
+              companies={game.companies}
+              isMyTurn={isMyTurn}
+              cardPlayed={!!currentTurn?.cardPlayed}
+              onPlayCard={handlePlayCard}
+              actionInProgress={actionInProgress}
+            />
+          </div>
 
-          <Portfolio team={teamData} companies={game.companies} />
+          <div className={`workspace-tab-pane pane-portfolio ${mobileTab === 'portfolio' ? 'is-active-tab' : ''}`}>
+            <Portfolio team={teamData} companies={game.companies} />
+          </div>
 
-          <EventLog log={game.log} />
+          <div className={`workspace-tab-pane pane-tape ${mobileTab === 'tape' ? 'is-active-tab' : ''}`}>
+            <EventLog log={game.log} />
+          </div>
         </div>
       </div>
 

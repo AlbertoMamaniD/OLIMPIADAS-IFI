@@ -76,14 +76,18 @@ export function EventLog({ log }) {
   return (
     <div className="terminal-card event-tape-card">
       {/* Encabezado Fijo: Título en su propia fila completa */}
-      <div className="terminal-card-header">
+      {/* Encabezado Fijo: Título en su propia fila completa */}
+      <div className="terminal-card-header tape-header-row">
         <div className="header-icon-label">
           <Activity size={17} className="text-ifi" />
-          <span className="card-title-strong">Cinta de Operaciones en Rueda</span>
+          <span className="card-title-strong">
+            <span className="tape-title-full">Cinta de Operaciones en Rueda</span>
+            <span className="tape-title-mob">Cinta de Operaciones</span>
+          </span>
           <span className="tape-pulse-dot" title="Transmisión en tiempo real de la BBV" />
         </div>
         <span className="tape-counter-badge font-mono">
-          {log?.length || 0} eventos
+          {log?.length || 0} ev.
         </span>
       </div>
 
@@ -100,7 +104,7 @@ export function EventLog({ log }) {
           className={`tape-filter-btn ${filterType === 'trades' ? 'active' : ''}`}
           onClick={() => setFilterType('trades')}
         >
-          Operaciones
+          Órdenes
         </button>
         <button
           className={`tape-filter-btn ${filterType === 'cards' ? 'active' : ''}`}
@@ -112,7 +116,7 @@ export function EventLog({ log }) {
           className={`tape-filter-btn ${filterType === 'events' ? 'active' : ''}`}
           onClick={() => setFilterType('events')}
         >
-          Subastas/Div.
+          Eventos
         </button>
       </div>
 

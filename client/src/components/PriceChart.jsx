@@ -56,6 +56,13 @@ function CustomFinancialTooltip({ active, payload, label, companies }) {
 export function PriceChart({ companies }) {
   const [activeCompanyId, setActiveCompanyId] = useState(null); // null = todas visibles
   const [curveMode, setCurveMode] = useState('curves'); // 'curves' | 'lines'
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+  React.useEffect(() => {
+    const checkWidth = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', checkWidth);
+    return () => window.removeEventListener('resize', checkWidth);
+  }, []);
 
   if (!companies || companies.length === 0) return null;
 
@@ -85,11 +92,14 @@ export function PriceChart({ companies }) {
   return (
     <div className="terminal-card chart-card pro-chart-card">
       {/* Encabezado Pro con Filtros y Modos */}
-      <div className="terminal-card-header">
+      <div className="terminal-card-header chart-header-row">
         <div className="header-icon-label">
-          <Activity size={18} className="text-ifi" />
-          <span className="card-title-strong">Evolución de Cotizaciones en Rueda</span>
-          <span className="chart-range-indicator font-mono">Banda BBV [10 - 250]</span>
+          <Activity size={17} className="text-ifi" />
+          <span className="card-title-strong">
+            <span className="chart-title-full">Evolución de Cotizaciones en Rueda</span>
+            <span className="chart-title-mob">Evolución de Cotizaciones</span>
+          </span>
+          <span className="chart-range-indicator font-mono">Banda [10 - 250]</span>
         </div>
 
         <div className="chart-controls-group">
@@ -151,10 +161,10 @@ export function PriceChart({ companies }) {
 
       {/* Gráfico Recharts de Alta Fidelidad sin Solapamientos */}
       <div className="recharts-wrapper-container">
-        <ResponsiveContainer width="100%" height={320}>
+        <ResponsiveContainer width="100%" height={isMobile ? 225 : 320}>
           <LineChart
             data={chartData}
-            margin={{ top: 20, right: 30, left: 15, bottom: 12 }}
+            margin={isMobile ? { top: 12, right: 12, left: -10, bottom: 4 } : { top: 20, right: 30, left: 15, bottom: 12 }}
           >
             <CartesianGrid
               strokeDasharray="2 3"
@@ -165,20 +175,20 @@ export function PriceChart({ companies }) {
 
             <XAxis
               dataKey="turnLabel"
-              tick={{ fill: 'var(--ink-secondary)', fontSize: 11.5, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
+              tick={{ fill: 'var(--ink-secondary)', fontSize: isMobile ? 10 : 11.5, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
               axisLine={{ stroke: 'var(--line-strong)' }}
               tickLine={{ stroke: 'var(--line)' }}
-              dy={6}
+              dy={4}
             />
 
             <YAxis
               domain={[10, 250]}
               ticks={[10, 50, 100, 150, 200, 250]}
-              tick={{ fill: 'var(--ink-secondary)', fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
+              tick={{ fill: 'var(--ink-secondary)', fontSize: isMobile ? 9.5 : 11, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
               tickFormatter={val => `Bs ${val}`}
               axisLine={{ stroke: 'var(--line-strong)' }}
               tickLine={{ stroke: 'var(--line)' }}
-              width={64}
+              width={isMobile ? 46 : 64}
             />
 
             {/* Líneas de Guía Reglamentarias BBV (Líneas limpias SIN etiquetas de texto que choquen con los puntos) */}
@@ -221,8 +231,8 @@ export function PriceChart({ companies }) {
                   name={c.name}
                   stroke={c.color || 'var(--ink)'}
                   strokeWidth={isFocused && activeCompanyId === c.id ? 3.5 : 2.5}
-                  dot={{ r: 4, strokeWidth: 1.5, fill: 'var(--surface)', stroke: c.color }}
-                  activeDot={{ r: 6.5, stroke: '#ffffff', strokeWidth: 2.5, fill: c.color }}
+                  dot={{ r: isMobile ? 3 : 4, strokeWidth: 1.5, fill: 'var(--surface)', stroke: c.color }}
+                  activeDot={{ r: isMobile ? 5 : 6.5, stroke: '#ffffff', strokeWidth: 2, fill: c.color }}
                   strokeOpacity={opacity}
                   isAnimationActive={false}
                 />
@@ -234,9 +244,11 @@ export function PriceChart({ companies }) {
 
       {/* Nota oficial del pie */}
       <div className="chart-footer-note">
-        <span>* Línea dorada superior: Techo (Bs 250). Línea punteada central: Base (Bs 100). Línea roja inferior: Piso (Bs 10).</span>
-        <span className="font-mono text-ifi font-bold">
-          {activeCompanyId ? `Emisor Enfocado: ${companies.find(c => c.id === activeCompanyId)?.name}` : 'Visualización Consolidada'}
+        <span className="chart-note-legend-desc">
+          * Línea dorada: Techo (Bs 250). Punteada: Base (Bs 100). Roja: Piso (Bs 10).
+        </span>
+        <span className="font-mono text-ifi font-bold chart-note-focus-desc">
+          {activeCompanyId ? `Enfoque: ${companies.find(c => c.id === activeCompanyId)?.name}` : 'Visualización Consolidada'}
         </span>
       </div>
     </div>

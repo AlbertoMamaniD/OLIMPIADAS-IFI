@@ -29,7 +29,7 @@ export function BrokerLiveDashboard() {
   }).sort((a, b) => b.totalValue - a.totalValue);
 
   return (
-    <div style={{ padding: '18px 24px', maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+    <div className="broker-dashboard-wrapper">
       {/* Barra de Control de la Mesa Central */}
       <div
         style={{
@@ -174,7 +174,7 @@ export function BrokerLiveDashboard() {
       )}
 
       {/* Grid Principal */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.45fr 1fr', gap: '18px' }}>
+      <div className="broker-dashboard-grid">
         {/* Columna Izquierda: Cotizaciones y Gráfico */}
         <div>
           <div className="terminal-card">

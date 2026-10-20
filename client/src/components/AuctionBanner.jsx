@@ -72,8 +72,9 @@ export function AuctionBanner({
             disabled={!canAfford}
             onClick={onPlaceBid}
           >
-            <ArrowUpRight size={14} />
-            <span>Pujar Bs {nextBidAmount} / acc (Total: Bs {totalCost.toLocaleString()})</span>
+            <ArrowUpRight size={15} />
+            <span className="btn-bid-main">Pujar Bs {nextBidAmount} / acc</span>
+            <span className="btn-bid-sub font-mono">· Total: Bs {totalCost.toLocaleString()}</span>
           </button>
 
           <button
@@ -81,7 +82,7 @@ export function AuctionBanner({
             onClick={onOpenQuickSell}
             title="Venta inmediata de acciones en cartera para generar liquidez"
           >
-            <Coins size={13} />
+            <Coins size={14} />
             <span>Venta de Liquidez</span>
           </button>
         </div>

@@ -23,7 +23,9 @@ export function Topbar({ onOpenRules, onOpenHistory }) {
           </div>
           <div className="brand-title-wrap">
             <div className="brand-title-row">
-              <span className="brand-main-title">IFI TRADER LEAGUE</span>
+              <span className="brand-main-title">
+                IFI TRADER<span className="brand-league-word"> LEAGUE</span>
+              </span>
               {room?.code && (
                 <span className="room-code-badge font-mono">
                   SALA {room.code}

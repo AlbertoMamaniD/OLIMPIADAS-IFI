@@ -78,20 +78,23 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
 
   return (
     <div className="terminal-card card-deck-card">
-      <div className="terminal-card-header">
+      <div className="terminal-card-header deck-header-row">
         <div className="header-icon-label">
-          <Layers size={18} className="text-ifi" />
-          <span className="card-title-strong">Cartera de Tarjetas Tácticas ({hand?.length || 0})</span>
+          <Layers size={17} className="text-ifi" />
+          <span className="card-title-strong">
+            <span className="deck-title-full">Cartera de Tarjetas Tácticas ({hand?.length || 0})</span>
+            <span className="deck-title-mob">Tarjetas Tácticas ({hand?.length || 0})</span>
+          </span>
         </div>
         <div className="card-deck-status">
           {cardPlayed ? (
             <span className="turn-step-executed font-mono">
-              <CheckCircle2 size={13} />
-              <span>Ejecutada en este turno</span>
+              <CheckCircle2 size={12} />
+              <span>Ejecutada</span>
             </span>
           ) : (
             <span className="turn-step-pending font-mono">
-              Obligatorio: 1 orden por turno
+              1 obligatoria / turno
             </span>
           )}
         </div>
