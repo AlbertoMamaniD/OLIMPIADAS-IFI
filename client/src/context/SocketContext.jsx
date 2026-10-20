@@ -101,6 +101,34 @@ export function SocketProvider({ children }) {
     });
   };
 
+  const createSoloDemo = (playerName) => {
+    return new Promise((resolve, reject) => {
+      if (!socket) return reject(new Error('Sin conexión'));
+      socket.emit('create_solo_demo', { playerName }, res => {
+        if (res.success) {
+          setRole('team');
+          setRoom(res.room);
+          setMyTeam({ id: res.teamId, name: res.teamName });
+          setGame(res.game);
+          resolve(res);
+        } else {
+          setError(res.error || 'Error al iniciar modo solitario');
+          reject(new Error(res.error));
+        }
+      });
+    });
+  };
+
+  const addBot = () => {
+    return new Promise((resolve, reject) => {
+      if (!socket || !room) return reject(new Error('No hay sala activa'));
+      socket.emit('add_bot', { roomCode: room.code }, res => {
+        if (res.success) resolve(res.bot);
+        else reject(new Error(res.error));
+      });
+    });
+  };
+
   const startGame = () => {
     return new Promise((resolve, reject) => {
       if (!socket || !room) return reject(new Error('No hay sala activa'));
@@ -226,6 +254,8 @@ export function SocketProvider({ children }) {
         toggleTheme,
         createRoom,
         joinRoom,
+        createSoloDemo,
+        addBot,
         startGame,
         trade,
         playCard,

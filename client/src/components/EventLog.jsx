@@ -1,69 +1,166 @@
-import React, { useRef, useEffect } from 'react';
-import { Activity } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import {
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight,
+  DollarSign,
+  Gavel,
+  Zap,
+  ShieldAlert,
+  CheckCircle2,
+  Filter,
+} from 'lucide-react';
+
+function parseEvent(text) {
+  const lower = text.toLowerCase();
+
+  let type = 'general';
+  let badgeLabel = 'RUEDA';
+  let Icon = Activity;
+  let badgeClass = 'badge-general';
+
+  if (lower.includes('subasta')) {
+    type = 'auction';
+    badgeLabel = 'SUBASTA';
+    Icon = Gavel;
+    badgeClass = 'badge-auction';
+  } else if (lower.includes('dividendo')) {
+    type = 'dividend';
+    badgeLabel = 'DIVIDENDO';
+    Icon = DollarSign;
+    badgeClass = 'badge-dividend';
+  } else if (lower.includes('compra')) {
+    type = 'buy';
+    badgeLabel = 'COMPRA';
+    Icon = ArrowUpRight;
+    badgeClass = 'badge-buy';
+  } else if (lower.includes('venta') || lower.includes('vende') || lower.includes('liquidada')) {
+    type = 'sell';
+    badgeLabel = 'VENTA';
+    Icon = ArrowDownRight;
+    badgeClass = 'badge-sell';
+  } else if (lower.includes('juega') || lower.includes('tarjeta')) {
+    type = 'card';
+    badgeLabel = 'TÁCTICA';
+    Icon = Zap;
+    badgeClass = 'badge-card';
+  } else if (lower.includes('crisis')) {
+    type = 'crisis';
+    badgeLabel = 'CRISIS';
+    Icon = ShieldAlert;
+    badgeClass = 'badge-crisis';
+  }
+
+  return { type, badgeLabel, Icon, badgeClass };
+}
 
 export function EventLog({ log }) {
   const containerRef = useRef(null);
+  const [filterType, setFilterType] = useState('all');
 
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [log]);
+  }, [log, filterType]);
+
+  const filteredLog = (log || []).filter(item => {
+    if (filterType === 'all') return true;
+    const { type } = parseEvent(item.text);
+    if (filterType === 'trades') return type === 'buy' || type === 'sell';
+    if (filterType === 'cards') return type === 'card';
+    if (filterType === 'events') return type === 'auction' || type === 'dividend' || type === 'crisis';
+    return true;
+  });
 
   return (
-    <div className="terminal-card">
+    <div className="terminal-card event-tape-card">
+      {/* Encabezado Fijo: Título en su propia fila completa */}
       <div className="terminal-card-header">
         <div className="header-icon-label">
-          <Activity size={15} color="var(--ifi-secondary)" />
-          <span>Registro de Operaciones</span>
+          <Activity size={17} className="text-ifi" />
+          <span className="card-title-strong">Cinta de Operaciones en Rueda</span>
+          <span className="tape-pulse-dot" title="Transmisión en tiempo real de la BBV" />
         </div>
-        <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)' }}>
-          TRANSMISIÓN EN VIVO
+        <span className="tape-counter-badge font-mono">
+          {log?.length || 0} eventos
         </span>
       </div>
 
-      <div
-        ref={containerRef}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '6px',
-          maxHeight: '190px',
-          overflowY: 'auto',
-          fontSize: '12px',
-        }}
-      >
-        {(!log || log.length === 0) ? (
-          <div style={{ color: 'var(--ink-muted)', fontStyle: 'italic', padding: '10px 0' }}>
-            Sin operaciones registradas en el libro
+      {/* Sub-barra de Filtros Dedicada (Nunca comprime el título) */}
+      <div className="tape-filter-toolbar">
+        <span className="filter-toolbar-label font-mono">FILTRO:</span>
+        <button
+          className={`tape-filter-btn ${filterType === 'all' ? 'active' : ''}`}
+          onClick={() => setFilterType('all')}
+        >
+          Todas ({log?.length || 0})
+        </button>
+        <button
+          className={`tape-filter-btn ${filterType === 'trades' ? 'active' : ''}`}
+          onClick={() => setFilterType('trades')}
+        >
+          Operaciones
+        </button>
+        <button
+          className={`tape-filter-btn ${filterType === 'cards' ? 'active' : ''}`}
+          onClick={() => setFilterType('cards')}
+        >
+          Tarjetas
+        </button>
+        <button
+          className={`tape-filter-btn ${filterType === 'events' ? 'active' : ''}`}
+          onClick={() => setFilterType('events')}
+        >
+          Subastas/Div.
+        </button>
+      </div>
+
+      {/* Contenedor Amplio y Espacioso de Entradas */}
+      <div ref={containerRef} className="tape-feed-scroll">
+        {filteredLog.length === 0 ? (
+          <div className="tape-empty-feed">
+            <Activity size={22} className="tape-empty-icon" />
+            <span className="tape-empty-title">Sin registros en este filtro</span>
+            <span className="tape-empty-sub">Las órdenes transmitidas en la rueda bursátil se reflejarán aquí en tiempo real.</span>
           </div>
         ) : (
-          log.map((item, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                gap: '10px',
-                lineHeight: 1.45,
-                borderBottom: '1px solid var(--surface-subtle)',
-                paddingBottom: '4px',
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'var(--ifi-secondary)',
-                  fontWeight: 700,
-                  fontSize: '11px',
-                  flexShrink: 0,
-                }}
-              >
-                T{item.turn < 10 ? `0${item.turn}` : item.turn}
-              </span>
-              <span style={{ color: 'var(--ink)' }}>{item.text}</span>
-            </div>
-          ))
+          filteredLog.map((item, idx) => {
+            const { type, badgeLabel, Icon, badgeClass } = parseEvent(item.text);
+            const turnStr = item.turn < 10 ? `0${item.turn}` : `${item.turn}`;
+
+            return (
+              <div key={idx} className={`tape-card-entry entry-${type}`}>
+                <div className="tape-card-left">
+                  <span className="turn-stamp-pill font-mono">
+                    T{turnStr}
+                  </span>
+                  <span className={`operation-badge ${badgeClass}`}>
+                    <Icon size={11} />
+                    <span>{badgeLabel}</span>
+                  </span>
+                </div>
+
+                <div className="tape-card-body">
+                  <span className="tape-narrative-text">
+                    {item.text}
+                  </span>
+                </div>
+              </div>
+            );
+          })
         )}
+      </div>
+
+      {/* Pie de Sincronización */}
+      <div className="tape-footer-bar">
+        <span className="tape-footer-status">
+          <CheckCircle2 size={13} className="text-ifi" />
+          <span>Libro de transacciones auditado</span>
+        </span>
+        <span className="tape-footer-counter font-mono">
+          Mostrando {filteredLog.length} de {log?.length || 0}
+        </span>
       </div>
     </div>
   );

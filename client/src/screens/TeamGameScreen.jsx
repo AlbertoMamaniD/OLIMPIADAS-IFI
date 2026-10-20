@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { CheckCircle2, AlertCircle, Send } from 'lucide-react';
+import {
+  CheckCircle2,
+  AlertCircle,
+  Send,
+  Clock,
+  ArrowRight,
+  ShieldCheck,
+  AlertTriangle,
+  Play,
+  RotateCcw,
+} from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 import { TimerBadge } from '../components/TimerBadge';
 import { MarketBoard } from '../components/MarketBoard';
@@ -34,7 +44,7 @@ export function TeamGameScreen() {
   const teamData = game.teams.find(t => t.id === myTeam.id) || myTeam;
   const currentTurn = game.currentTurn;
   const isMyTurn = currentTurn?.teamId === myTeam.id && !game.paused && !game.manualPause;
-  const currentTurnTeam = game.teams.find(t => t.id === currentTurn?.teamId) || { name: 'Mesa contraria' };
+  const currentTurnTeam = game.teams.find(t => t.id === currentTurn?.teamId) || { name: 'Mesa Rival' };
 
   const canEndTurn = isMyTurn && !!currentTurn?.cardPlayed;
 
@@ -123,29 +133,47 @@ export function TeamGameScreen() {
   };
 
   return (
-    <div>
-      {/* Barra de Estado de Turno */}
-      <div className="turn-status-strip">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span className={`turn-pill-badge ${isMyTurn ? 'active' : 'inactive'}`}>
-            <CheckCircle2 size={11} />
-            <span>{isMyTurn ? 'TURNO ACTIVO' : 'TURNO RIVAL'}</span>
-          </span>
-          <span style={{ fontSize: '13px' }}>
-            {isMyTurn ? (
-              <strong>Mesa Habilitada para Operar</strong>
-            ) : (
-              <span>Operando actualmente: <strong style={{ color: 'var(--ink)' }}>{currentTurnTeam.name}</strong></span>
-            )}
-          </span>
-          {currentTurn?.isLastTurn && (
-            <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: 'var(--down)', fontWeight: 700, border: '1px solid var(--down-border)', background: 'var(--down-subtle)', padding: '2px 6px', borderRadius: '2px' }}>
-              ÚLTIMO TURNO · SOLO VENTA AUTORIZADA
+    <div className="game-screen-wrapper">
+      {/* Barra de Comando de Ronda con Espaciado Generoso */}
+      <div className="turn-command-ribbon">
+        <div className="ribbon-left">
+          <div className="turn-number-tag font-mono">
+            RONDA #{game.turnNumber}
+          </div>
+
+          <div className={`turn-status-badge ${isMyTurn ? 'is-active' : 'is-idle'}`}>
+            <span className="status-pulse-dot" />
+            <span className="status-text font-mono">
+              {isMyTurn ? 'MESA HABILITADA PARA OPERAR' : `TURNO EN CURSO: ${currentTurnTeam.name.toUpperCase()}`}
             </span>
+          </div>
+
+          {/* Stepper de Fases Operativas con Alto Contraste */}
+          {isMyTurn && (
+            <div className="phase-stepper-bar font-mono">
+              <span className={`phase-step ${currentTurn.phase === 'before' ? 'step-current' : 'step-done'}`}>
+                1. Pre-operación (Libre)
+              </span>
+              <ArrowRight size={13} className="step-arrow" />
+              <span className={`phase-step ${currentTurn.cardPlayed ? 'step-done' : currentTurn.phase === 'before' ? 'step-pending' : 'step-current'}`}>
+                2. Tarjeta Táctica (Obligatoria)
+              </span>
+              <ArrowRight size={13} className="step-arrow" />
+              <span className={`phase-step ${currentTurn.cardPlayed ? 'step-current' : 'step-pending'}`}>
+                3. Post-operación (Restante)
+              </span>
+            </div>
+          )}
+
+          {currentTurn?.isLastTurn && (
+            <div className="last-turn-warning-chip font-mono">
+              <AlertTriangle size={14} />
+              <span>ÚLTIMO TURNO · SOLO VENTAS AUTORIZADAS</span>
+            </div>
           )}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className="ribbon-right">
           <TimerBadge
             seconds={clock.timeRemaining}
             paused={game.paused || game.manualPause}
@@ -171,9 +199,9 @@ export function TeamGameScreen() {
 
       {/* Notificación de Error */}
       {localError && (
-        <div style={{ padding: '0 24px', marginTop: '12px' }}>
+        <div className="terminal-alert-error-container">
           <div className="terminal-alert-error">
-            <AlertCircle size={14} />
+            <AlertCircle size={16} />
             <span>{localError}</span>
           </div>
         </div>
@@ -182,7 +210,7 @@ export function TeamGameScreen() {
       {/* Área de Trabajo de Negociación */}
       <div className="trading-workspace">
         {/* Columna Izquierda: Cotizaciones y Gráfico */}
-        <div>
+        <div className="workspace-main-column">
           <MarketBoard
             companies={game.companies}
             myTeam={teamData}
@@ -195,7 +223,7 @@ export function TeamGameScreen() {
         </div>
 
         {/* Columna Derecha: Tarjetas, Portafolio y Auditoría */}
-        <div>
+        <div className="workspace-side-column">
           <CardDeck
             hand={teamData.hand || []}
             companies={game.companies}
@@ -211,30 +239,23 @@ export function TeamGameScreen() {
         </div>
       </div>
 
-      {/* Cierre de Turno */}
+      {/* Barra Inferior Fija para Cierre de Turno */}
       {canEndTurn && (
-        <div
-          style={{
-            position: 'sticky',
-            bottom: 0,
-            background: 'var(--surface)',
-            borderTop: '1px solid var(--line)',
-            padding: '12px 24px',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            boxShadow: 'var(--shadow-overlay)',
-            zIndex: 40,
-          }}
-        >
-          <button
-            className="btn-primary-action"
-            style={{ width: 'auto', padding: '10px 24px', fontSize: '13.5px' }}
-            disabled={actionInProgress}
-            onClick={handleEndTurn}
-          >
-            <Send size={14} />
-            <span>{actionInProgress ? 'Transmitiendo orden...' : 'Finalizar Turno Operativo'}</span>
-          </button>
+        <div className="turn-completion-dock">
+          <div className="dock-content">
+            <div className="dock-hint">
+              <CheckCircle2 size={18} className="text-ifi" />
+              <span>Orden táctica registrada en el libro de la BBV. Puede realizar una operación bursátil restante o finalizar su turno ahora.</span>
+            </div>
+            <button
+              className="btn-complete-turn font-mono"
+              disabled={actionInProgress}
+              onClick={handleEndTurn}
+            >
+              <Send size={15} />
+              <span>{actionInProgress ? 'Transmitiendo orden...' : 'Finalizar Turno Operativo'}</span>
+            </button>
+          </div>
         </div>
       )}
 

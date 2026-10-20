@@ -15,17 +15,51 @@ const app = express();
 app.use(cors({ origin: CLIENT_URL }));
 app.use(express.json());
 
+import { getRecentMatches, getLeaderboard, isDbConnected } from './db/supabase.js';
+
 // Endpoint de salud
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'juego-bolsa-server', timestamp: Date.now() });
 });
 
+// Endpoints oficiales para Supabase / Base de Datos
+app.get('/api/history', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit, 10) || 15;
+    const matches = await getRecentMatches(limit);
+    res.json({ success: true, dbConnected: isDbConnected(), matches });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit, 10) || 20;
+    const leaderboard = await getLeaderboard(limit);
+    res.json({ success: true, dbConnected: isDbConnected(), leaderboard });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/db-status', (req, res) => {
+  res.json({
+    connected: isDbConnected(),
+    provider: 'Supabase (PostgreSQL)',
+    message: isDbConnected()
+      ? 'Conectado a la base de datos de Supabase'
+      : 'Modo memoria local activo. Configura SUPABASE_URL y SUPABASE_KEY en server/.env para persistir en la nube.',
+  });
+});
+
 // Servir cliente estático (React Vite build) si existe
 const clientDist = path.resolve(__dirname, '../../client/dist');
 if (fs.existsSync(clientDist)) {
-  app.use(express.static(clientDist));
+  app.use(express.static(clientDist, { etag: false, maxAge: 0 }));
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/socket.io') || req.path === '/health') return next();
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.sendFile(path.join(clientDist, 'index.html'));
   });
 }

@@ -1,129 +1,243 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ReferenceLine,
+} from 'recharts';
+import { Activity } from 'lucide-react';
+
+// Tooltip Institucional de Alta Precisión
+function CustomFinancialTooltip({ active, payload, label, companies }) {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div className="financial-chart-tooltip font-mono">
+      <div className="tooltip-header">
+        <span className="tooltip-turn-title">Ronda {label}</span>
+        <span className="tooltip-feed-tag">BBV OFICIAL</span>
+      </div>
+      <div className="tooltip-body">
+        {payload.map(entry => {
+          const comp = companies.find(c => c.id === entry.dataKey) || {
+            name: entry.name,
+            ticker: entry.dataKey,
+            color: entry.color,
+          };
+          const price = entry.value;
+
+          return (
+            <div key={entry.dataKey} className="tooltip-entry-row">
+              <div className="tooltip-entry-left">
+                <span
+                  className="tooltip-color-swatch"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="tooltip-ticker font-bold">
+                  [{comp.ticker || `E${comp.id}`}]
+                </span>
+                <span className="tooltip-name">{comp.name}</span>
+              </div>
+              <span className="tooltip-price font-bold">
+                Bs {price}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export function PriceChart({ companies }) {
+  const [activeCompanyId, setActiveCompanyId] = useState(null); // null = todas visibles
+  const [curveMode, setCurveMode] = useState('curves'); // 'curves' | 'lines'
+
   if (!companies || companies.length === 0) return null;
 
   const maxPoints = Math.max(...companies.map(c => c.priceHistory?.length || 1), 2);
 
-  const width = 500;
-  const height = 180;
-  const padding = { top: 20, right: 20, bottom: 25, left: 35 };
+  // Formatear datos para recharts
+  const chartData = useMemo(() => {
+    const data = [];
+    for (let i = 0; i < maxPoints; i++) {
+      const row = {
+        turnIndex: i,
+        turnLabel: i === 0 ? 'T0' : `T${i < 10 ? '0' : ''}${i}`,
+      };
+      companies.forEach(c => {
+        const hist = c.priceHistory || [c.price];
+        row[c.id] = hist[i] !== undefined ? hist[i] : hist[hist.length - 1];
+      });
+      data.push(row);
+    }
+    return data;
+  }, [companies, maxPoints]);
 
-  const innerWidth = width - padding.left - padding.right;
-  const innerHeight = height - padding.top - padding.bottom;
-
-  const minPrice = 10;
-  const maxPrice = 250;
-
-  const getX = index => {
-    if (maxPoints <= 1) return padding.left;
-    return padding.left + (index / (maxPoints - 1)) * innerWidth;
-  };
-
-  const getY = price => {
-    const clamped = Math.max(minPrice, Math.min(maxPrice, price));
-    const ratio = (clamped - minPrice) / (maxPrice - minPrice);
-    return padding.top + innerHeight - ratio * innerHeight;
+  const toggleCompanyFocus = id => {
+    setActiveCompanyId(prev => (prev === id ? null : id));
   };
 
   return (
-    <div className="terminal-card" style={{ marginTop: '18px' }}>
+    <div className="terminal-card chart-card pro-chart-card">
+      {/* Encabezado Pro con Filtros y Modos */}
       <div className="terminal-card-header">
-        <span>Histórico de Cotizaciones</span>
-        <span style={{ fontSize: '11px', color: 'var(--ink-secondary)', textTransform: 'none', letterSpacing: 'normal' }}>
-          Piso Bs 10 · Techo Bs 250
-        </span>
-      </div>
+        <div className="header-icon-label">
+          <Activity size={18} className="text-ifi" />
+          <span className="card-title-strong">Evolución de Cotizaciones en Rueda</span>
+          <span className="chart-range-indicator font-mono">Banda BBV [10 - 250]</span>
+        </div>
 
-      {/* Leyenda */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '12px', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
-        {companies.map(c => (
-          <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span
-              style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '1px',
-                backgroundColor: c.color || 'var(--ink)',
-              }}
-            />
-            <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{c.ticker || c.name}</span>
+        <div className="chart-controls-group">
+          <div className="chart-type-toggle font-mono">
+            <button
+              className={`chart-type-btn ${curveMode === 'curves' ? 'active' : ''}`}
+              onClick={() => setCurveMode('curves')}
+              title="Trazado con curvas suaves de interpolación"
+            >
+              Curvas
+            </button>
+            <button
+              className={`chart-type-btn ${curveMode === 'lines' ? 'active' : ''}`}
+              onClick={() => setCurveMode('lines')}
+              title="Trazado directo de cotizaciones punto a punto"
+            >
+              Líneas
+            </button>
           </div>
-        ))}
+        </div>
       </div>
 
-      <div style={{ width: '100%', overflowX: 'auto' }}>
-        <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
-          {/* Techo */}
-          <line
-            x1={padding.left}
-            y1={getY(250)}
-            x2={width - padding.right}
-            y2={getY(250)}
-            stroke="var(--accent)"
-            strokeDasharray="3 3"
-            strokeOpacity="0.6"
-          />
-          <text x={padding.left - 5} y={getY(250) + 3} fill="var(--accent)" fontSize="8.5" textAnchor="end" fontFamily="var(--font-mono)">
-            250
-          </text>
+      {/* Barra Interactiva de Emisores (Click para aislar/enfocar) */}
+      <div className="chart-interactive-legend-bar">
+        <span className="legend-hint font-mono">ENFOQUE:</span>
+        <button
+          className={`legend-pill-btn ${activeCompanyId === null ? 'is-all-active' : ''}`}
+          onClick={() => setActiveCompanyId(null)}
+          title="Ver todos los emisores simultáneamente"
+        >
+          Todos (5)
+        </button>
+        {companies.map(c => {
+          const hist = c.priceHistory || [c.price];
+          const lastPrice = hist[hist.length - 1] ?? c.price;
+          const isSelected = activeCompanyId === c.id;
 
-          {/* Base 100 */}
-          <line
-            x1={padding.left}
-            y1={getY(100)}
-            x2={width - padding.right}
-            y2={getY(100)}
-            stroke="var(--line-strong)"
-            strokeDasharray="2 2"
-            strokeOpacity="0.5"
-          />
-          <text x={padding.left - 5} y={getY(100) + 3} fill="var(--ink-muted)" fontSize="8.5" textAnchor="end" fontFamily="var(--font-mono)">
-            100
-          </text>
+          return (
+            <button
+              key={c.id}
+              className={`legend-pill-btn ${isSelected ? 'is-selected' : ''}`}
+              onClick={() => toggleCompanyFocus(c.id)}
+              style={{
+                borderColor: isSelected ? c.color : 'var(--line)',
+                background: isSelected ? `${c.color}25` : 'var(--surface-subtle)',
+              }}
+              title={`Click para enfocar ${c.name}`}
+            >
+              <span
+                className="legend-color-dot"
+                style={{ backgroundColor: c.color || 'var(--ink)' }}
+              />
+              <span className="legend-ticker font-mono">[{c.ticker || `E${c.id}`}]</span>
+              <span className="legend-price font-mono font-bold">Bs {lastPrice}</span>
+            </button>
+          );
+        })}
+      </div>
 
-          {/* Piso */}
-          <line
-            x1={padding.left}
-            y1={getY(10)}
-            x2={width - padding.right}
-            y2={getY(10)}
-            stroke="var(--down)"
-            strokeDasharray="3 3"
-            strokeOpacity="0.6"
-          />
-          <text x={padding.left - 5} y={getY(10) + 3} fill="var(--down)" fontSize="8.5" textAnchor="end" fontFamily="var(--font-mono)">
-            10
-          </text>
+      {/* Gráfico Recharts de Alta Fidelidad sin Solapamientos */}
+      <div className="recharts-wrapper-container">
+        <ResponsiveContainer width="100%" height={320}>
+          <LineChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 15, bottom: 12 }}
+          >
+            <CartesianGrid
+              strokeDasharray="2 3"
+              stroke="var(--line)"
+              opacity={0.5}
+              vertical={true}
+            />
 
-          {/* Líneas de precio */}
-          {companies.map(c => {
-            const hist = c.priceHistory || [c.price];
-            const points = hist
-              .map((p, idx) => `${getX(idx)},${getY(p)}`)
-              .join(' ');
+            <XAxis
+              dataKey="turnLabel"
+              tick={{ fill: 'var(--ink-secondary)', fontSize: 11.5, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
+              axisLine={{ stroke: 'var(--line-strong)' }}
+              tickLine={{ stroke: 'var(--line)' }}
+              dy={6}
+            />
 
-            return (
-              <g key={c.id}>
-                <polyline
-                  fill="none"
+            <YAxis
+              domain={[10, 250]}
+              ticks={[10, 50, 100, 150, 200, 250]}
+              tick={{ fill: 'var(--ink-secondary)', fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
+              tickFormatter={val => `Bs ${val}`}
+              axisLine={{ stroke: 'var(--line-strong)' }}
+              tickLine={{ stroke: 'var(--line)' }}
+              width={64}
+            />
+
+            {/* Líneas de Guía Reglamentarias BBV (Líneas limpias SIN etiquetas de texto que choquen con los puntos) */}
+            <ReferenceLine
+              y={250}
+              stroke="var(--accent)"
+              strokeDasharray="4 4"
+              strokeWidth={1.5}
+              strokeOpacity={0.8}
+            />
+            <ReferenceLine
+              y={100}
+              stroke="var(--line-strong)"
+              strokeDasharray="3 3"
+              strokeWidth={1.2}
+              strokeOpacity={0.65}
+            />
+            <ReferenceLine
+              y={10}
+              stroke="var(--down)"
+              strokeDasharray="4 4"
+              strokeWidth={1.5}
+              strokeOpacity={0.8}
+            />
+
+            <Tooltip
+              content={<CustomFinancialTooltip companies={companies} />}
+              cursor={{ stroke: 'var(--ifi-secondary)', strokeWidth: 1.5, strokeDasharray: '3 3' }}
+            />
+
+            {companies.map(c => {
+              const isFocused = activeCompanyId === null || activeCompanyId === c.id;
+              const opacity = isFocused ? 1 : 0.12;
+
+              return (
+                <Line
+                  key={c.id}
+                  type={curveMode === 'curves' ? 'monotone' : 'linear'}
+                  dataKey={c.id}
+                  name={c.name}
                   stroke={c.color || 'var(--ink)'}
-                  strokeWidth="2"
-                  points={points}
+                  strokeWidth={isFocused && activeCompanyId === c.id ? 3.5 : 2.5}
+                  dot={{ r: 4, strokeWidth: 1.5, fill: 'var(--surface)', stroke: c.color }}
+                  activeDot={{ r: 6.5, stroke: '#ffffff', strokeWidth: 2.5, fill: c.color }}
+                  strokeOpacity={opacity}
+                  isAnimationActive={false}
                 />
-                {hist.map((p, idx) => (
-                  <circle
-                    key={idx}
-                    cx={getX(idx)}
-                    cy={getY(p)}
-                    r="2.8"
-                    fill={c.color || 'var(--ink)'}
-                  />
-                ))}
-              </g>
-            );
-          })}
-        </svg>
+              );
+            })}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Nota oficial del pie */}
+      <div className="chart-footer-note">
+        <span>* Línea dorada superior: Techo (Bs 250). Línea punteada central: Base (Bs 100). Línea roja inferior: Piso (Bs 10).</span>
+        <span className="font-mono text-ifi font-bold">
+          {activeCompanyId ? `Emisor Enfocado: ${companies.find(c => c.id === activeCompanyId)?.name}` : 'Visualización Consolidada'}
+        </span>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gavel, Clock, ArrowUpRight, Coins, AlertCircle } from 'lucide-react';
+import { Gavel, Clock, ArrowUpRight, Coins, AlertCircle, ShieldAlert } from 'lucide-react';
 
 export function AuctionBanner({
   auction,
@@ -23,103 +23,74 @@ export function AuctionBanner({
 
   return (
     <div className="auction-execution-panel">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
-            style={{
-              background: 'var(--accent-subtle)',
-              border: '1px solid var(--accent-border)',
-              padding: '8px',
-              borderRadius: 'var(--border-radius-sm)',
-              color: 'var(--accent)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Gavel size={20} />
+      <div className="auction-top-row">
+        <div className="auction-title-group">
+          <div className="auction-icon-box">
+            <Gavel size={18} />
           </div>
           <div>
-            <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              SUBASTA OBLIGATORIA EN CURSO
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 600, margin: '2px 0 0 0' }}>
+            <div className="auction-header-tag font-mono">
+              SUBASTA PÚBLICA EXTRAORDINARIA EN CURSO
+            </div>
+            <h3 className="auction-main-heading">
               Lote de {auction.lotSize} acciones de {company.name}
             </h3>
           </div>
         </div>
 
-        <div className="institutional-timer warn" style={{ padding: '6px 14px' }}>
-          <Clock size={15} />
-          <span style={{ fontSize: '10px', textTransform: 'uppercase' }}>Cierre:</span>
-          <span className="val-num" style={{ fontSize: '17px', fontWeight: 700 }}>
-            {auctionSeconds}s
-          </span>
+        <div className="auction-countdown-pill font-mono">
+          <Clock size={14} />
+          <span className="countdown-label">CIERRE:</span>
+          <span className="countdown-seconds">{auctionSeconds}s</span>
         </div>
       </div>
 
-      <p style={{ fontSize: '12.5px', color: 'var(--ink-secondary)', marginBottom: '14px', lineHeight: 1.45 }}>
-        Aportes obligatorios liquidados al precio base (Bs {auction.priceAtStart}). El lote se adjudicará a la mayor postura solvente al vencimiento del plazo.
+      <p className="auction-legal-desc">
+        Aportes obligatorios liquidados al precio base de mercado (Bs {auction.priceAtStart}). El paquete adjudicado se transferirá a la mayor postura solvente registrada al cierre de rueda.
       </p>
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '12px',
-          background: 'var(--surface-subtle)',
-          padding: '12px 16px',
-          borderRadius: 'var(--border-radius-sm)',
-          border: '1px solid var(--line)',
-        }}
-      >
-        <div>
-          <div style={{ fontSize: '11px', color: 'var(--ink-secondary)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
-            Postura máxima vigente:
-          </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '15px', fontWeight: 600, marginTop: '2px' }}>
+      <div className="auction-bid-control-strip">
+        <div className="current-bid-box">
+          <span className="current-bid-caption font-mono">POSTURA MÁXIMA VIGENTE:</span>
+          <div className="current-bid-amount font-mono">
             {highestBid ? (
               <span>
-                Bs {highestBid.amountPerShare} / acción{' '}
-                <span style={{ fontSize: '11.5px', color: 'var(--ink-secondary)', fontWeight: 400 }}>
-                  ({highestBid.teamId === myTeam?.id ? 'Propiedad de tu equipo' : 'Oferta rival'})
+                <strong>Bs {highestBid.amountPerShare}</strong> / acción
+                <span className="bid-owner-tag">
+                  {highestBid.teamId === myTeam?.id ? ' (Propiedad de tu mesa)' : ' (Oferta contraria)'}
                 </span>
               </span>
             ) : (
-              <span style={{ color: 'var(--ink-secondary)' }}>Sin posturas iniciales (Base: Bs 10)</span>
+              <span className="no-bids-yet">Sin posturas iniciales (Base: Bs 10 / acc)</span>
             )}
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="auction-action-buttons">
           <button
-            className="btn-primary-action"
-            style={{ padding: '8px 16px', fontSize: '12.5px', backgroundColor: 'var(--accent)', borderColor: 'var(--accent)' }}
+            className="btn-auction-bid"
             disabled={!canAfford}
             onClick={onPlaceBid}
           >
             <ArrowUpRight size={14} />
-            <span>Pujar Bs {nextBidAmount} / acc (Total Bs {totalCost})</span>
+            <span>Pujar Bs {nextBidAmount} / acc (Total: Bs {totalCost.toLocaleString()})</span>
           </button>
 
           <button
-            className="btn-control"
-            style={{ borderColor: 'var(--down-border)', color: 'var(--down)' }}
+            className="btn-auction-quicksell"
             onClick={onOpenQuickSell}
-            title="Vender acciones para fondear la puja"
+            title="Venta inmediata de acciones en cartera para generar liquidez"
           >
             <Coins size={13} />
-            <span>Venta p/ Liquidez</span>
+            <span>Venta de Liquidez</span>
           </button>
         </div>
       </div>
 
       {!canAfford && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: 'var(--down)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+        <div className="auction-insolvency-alert font-mono">
           <AlertCircle size={13} />
-          <span>Fondos insuficientes (Disponibilidad: Bs {myTeam?.cash || 0}). Realice una venta de liquidez para ofertar.</span>
+          <span>Liquidez disponible insuficiente (Bs {myTeam?.cash || 0}). Realice una venta de cartera para fondear la postura.</span>
         </div>
       )}
     </div>
