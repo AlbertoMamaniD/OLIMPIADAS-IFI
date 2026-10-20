@@ -1,34 +1,127 @@
 import React, { useState } from 'react';
-import { Sliders, Clock, Layers, Users, Building2, Play, ArrowLeft } from 'lucide-react';
+import {
+  Sliders,
+  Clock,
+  Layers,
+  Users,
+  Building2,
+  Play,
+  ArrowLeft,
+  Sparkles,
+  Check,
+  TrendingUp,
+  TrendingDown,
+  ArrowRightLeft,
+  Zap,
+  Gavel,
+  ShieldCheck,
+} from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 
 const CARD_TYPES = [
-  { id: '100_10', label: '100 / 10', desc: '+100 objetivo, -10 resto' },
-  { id: '20_50', label: '20 / 50', desc: '-50 objetivo, +20 resto' },
-  { id: '80_40', label: '80 / 40', desc: '+80 objetivo, -40 contraparte' },
-  { id: '2x', label: '2x', desc: 'Duplica objetivo, mitad contraparte' },
-  { id: 'half_2x', label: '1/2x', desc: 'Mitad objetivo, duplica contraparte' },
-  { id: 'auction', label: 'Subasta', desc: 'Subasta obligatoria de 30 acciones' },
+  {
+    id: '100_10',
+    label: '+100 / -10',
+    title: 'Alza Sistémica',
+    desc: 'Empresa objetivo sube +Bs 100; las demás 4 bajan -Bs 10.',
+    icon: TrendingUp,
+    badgeClass: 'badge-bullish',
+  },
+  {
+    id: '20_50',
+    label: '-50 / +20',
+    title: 'Corrección / Rally',
+    desc: 'Empresa objetivo baja -Bs 50; las demás 4 suben +Bs 20.',
+    icon: TrendingDown,
+    badgeClass: 'badge-bearish',
+  },
+  {
+    id: '80_40',
+    label: '+80 / -40',
+    title: 'Arbitraje Directo',
+    desc: 'Empresa objetivo sube +Bs 80; contraparte elegida baja -Bs 40.',
+    icon: ArrowRightLeft,
+    badgeClass: 'badge-arbitrage',
+  },
+  {
+    id: '2x',
+    label: '2x / 0.5x',
+    title: 'Multiplicador Doble',
+    desc: 'Empresa objetivo duplica (x2); contraparte cae a la mitad (x0.5).',
+    icon: Zap,
+    badgeClass: 'badge-multiplier',
+  },
+  {
+    id: 'half_2x',
+    label: '0.5x / 2x',
+    title: 'Inversión de Mitad',
+    desc: 'Empresa objetivo cae a la mitad (x0.5); contraparte duplica (x2).',
+    icon: Zap,
+    badgeClass: 'badge-multiplier',
+  },
+  {
+    id: 'auction',
+    label: 'Subasta Pública',
+    title: 'Liquidez Forzada',
+    desc: 'Convoca a subasta pública obligatoria de 30 acciones en piso.',
+    icon: Gavel,
+    badgeClass: 'badge-auction',
+  },
 ];
 
-const DEFAULT_COMPANIES = [
-  { id: 'c1', name: 'Empresa 1', ticker: 'E1', color: '#4a5568', price: 100 },
-  { id: 'c2', name: 'Empresa 2', ticker: 'E2', color: '#2b6cb0', price: 100 },
-  { id: 'c3', name: 'Empresa 3', ticker: 'E3', color: '#975a16', price: 100 },
-  { id: 'c4', name: 'Empresa 4', ticker: 'E4', color: '#805ad5', price: 100 },
-  { id: 'c5', name: 'Empresa 5', ticker: 'E5', color: '#22543d', price: 100 },
-];
+const COMPANY_PRESETS = {
+  bbv: {
+    id: 'bbv',
+    label: 'BBV Líder Corporativo',
+    companies: [
+      { id: 'c1', name: 'CBN (Cervecería Boliviana)', ticker: 'CBN', color: '#b45309', price: 100 },
+      { id: 'c2', name: 'SOBOCE (Cemento Nacional)', ticker: 'SOBO', color: '#1e3a8a', price: 100 },
+      { id: 'c3', name: 'Banco BISA S.A.', ticker: 'BISA', color: '#047857', price: 100 },
+      { id: 'c4', name: 'Banco Nacional de Bolivia', ticker: 'BNB', color: '#6b21a8', price: 100 },
+      { id: 'c5', name: 'Telecel / Tigo Bolivia', ticker: 'TIGO', color: '#0284c7', price: 100 },
+    ],
+  },
+  banking: {
+    id: 'banking',
+    label: 'Banca & Finanzas',
+    companies: [
+      { id: 'c1', name: 'Banco Mercantil Santa Cruz', ticker: 'BMSC', color: '#047857', price: 100 },
+      { id: 'c2', name: 'Banco BISA S.A.', ticker: 'BISA', color: '#0f766e', price: 100 },
+      { id: 'c3', name: 'Banco Nacional de Bolivia', ticker: 'BNB', color: '#6b21a8', price: 100 },
+      { id: 'c4', name: 'Banco FIE S.A.', ticker: 'FIE', color: '#c2410c', price: 100 },
+      { id: 'c5', name: 'Banco de Crédito BCP', ticker: 'BCP', color: '#1e3a8a', price: 100 },
+    ],
+  },
+  industry: {
+    id: 'industry',
+    label: 'Industria & Energía',
+    companies: [
+      { id: 'c1', name: 'YPFB Refinación S.A.', ticker: 'YPFB', color: '#0284c7', price: 100 },
+      { id: 'c2', name: 'Minera San Cristóbal', ticker: 'MSC', color: '#b45309', price: 100 },
+      { id: 'c3', name: 'Embol S.A. (Coca-Cola)', ticker: 'EMBL', color: '#b91c1c', price: 100 },
+      { id: 'c4', name: 'Droguería INTI S.A.', ticker: 'INTI', color: '#047857', price: 100 },
+      { id: 'c5', name: 'PIL Andina S.A.', ticker: 'PIL', color: '#4338ca', price: 100 },
+    ],
+  },
+};
 
 export function BrokerSetupScreen({ onBack, onRoomCreated }) {
   const { createRoom, error, setError } = useGameSocket();
 
-  const [turnSeconds, setTurnSeconds] = useState(120);
+  const [turnSeconds, setTurnSeconds] = useState(60);
   const [handSize, setHandSize] = useState(6);
   const [maxTeams, setMaxTeams] = useState('');
   const [selectedCards, setSelectedCards] = useState(CARD_TYPES.map(c => c.id));
-  const [companies, setCompanies] = useState(DEFAULT_COMPANIES);
-  const [showCompanyEdit, setShowCompanyEdit] = useState(false);
+  const [activePreset, setActivePreset] = useState('bbv');
+  const [companies, setCompanies] = useState(COMPANY_PRESETS.bbv.companies);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const applyPreset = presetKey => {
+    setActivePreset(presetKey);
+    if (COMPANY_PRESETS[presetKey]) {
+      setCompanies(COMPANY_PRESETS[presetKey].companies);
+    }
+  };
 
   const toggleCard = id => {
     setSelectedCards(prev =>
@@ -37,6 +130,7 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
   };
 
   const updateCompanyName = (index, name) => {
+    setActivePreset('custom');
     setCompanies(prev => {
       const copy = [...prev];
       copy[index] = { ...copy[index], name };
@@ -45,6 +139,7 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
   };
 
   const updateCompanyTicker = (index, ticker) => {
+    setActivePreset('custom');
     setCompanies(prev => {
       const copy = [...prev];
       copy[index] = { ...copy[index], ticker: ticker.toUpperCase().slice(0, 4) };
@@ -57,7 +152,7 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
     setError('');
 
     if (selectedCards.length === 0) {
-      setError('Debe habilitar al menos un tipo de tarjeta reglamentaria.');
+      setError('Debe autorizar al menos un tipo de tarjeta reglamentaria para la sesión.');
       return;
     }
 
@@ -79,172 +174,246 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
   };
 
   return (
-    <div className="terminal-centered">
-      <div className="terminal-panel" style={{ maxWidth: '540px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--ifi-secondary)', marginBottom: '4px' }}>
-          <Sliders size={20} />
-          <span style={{ fontSize: '11.5px', fontFamily: 'var(--font-mono)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            CONFIGURACIÓN DEL BROKER
+    <div className="terminal-centered" style={{ padding: '24px 16px' }}>
+      <div className="terminal-panel broker-setup-panel">
+        {/* Encabezado Institucional */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', borderBottom: '1px solid var(--line)', paddingBottom: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--ifi-secondary)' }}>
+            <Sliders size={20} />
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              MESA DE CONTROL (BROKER) · BBV
+            </span>
+          </div>
+          <span className="order-type-chip chip-buy font-mono" style={{ fontSize: '10px' }}>
+            REGLAMENTO IFI 2026
           </span>
         </div>
 
-        <h2 className="terminal-heading">Parámetros de la Rueda Bursátil</h2>
-        <p className="terminal-subheading">Configure las variables de mercado para la sesión olímpica:</p>
+        <h2 className="terminal-heading" style={{ fontSize: '24px', margin: '4px 0 2px 0' }}>
+          Parámetros de la Rueda Bursátil
+        </h2>
+        <p className="terminal-subheading" style={{ marginBottom: '18px' }}>
+          Configure el marco operativo, los activos cotizados y la duración de turnos para las mesas universitarias:
+        </p>
 
-        {error && <div className="terminal-alert-error">{error}</div>}
+        {error && <div className="terminal-alert-error font-mono">{error}</div>}
 
         <form onSubmit={handleCreate}>
-          {/* Duración de Turno */}
-          <div className="form-field">
-            <label className="form-label-institutional">
-              <Clock size={13} />
-              <span>Tiempo por turno operativo:</span>
+          {/* 1. Duración de Turno Operativo */}
+          <div className="form-field" style={{ marginBottom: '18px' }}>
+            <label className="form-label-institutional" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Clock size={13} />
+                <span>Tiempo por Turno de Negociación:</span>
+              </span>
+              <span className="font-mono text-ifi" style={{ fontSize: '11px', fontWeight: 600 }}>
+                {turnSeconds} segundos por mesa
+              </span>
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+
+            <div className="time-pill-grid">
               {[
-                { val: 30, lbl: '30 seg' },
-                { val: 60, lbl: '1 min' },
-                { val: 90, lbl: '1:30 min' },
-                { val: 120, lbl: '2 min' },
+                { val: 30, lbl: '30 seg', desc: 'Rápido' },
+                { val: 45, lbl: '45 seg', desc: 'Dinámico' },
+                { val: 60, lbl: '1 min', desc: 'Estándar' },
+                { val: 90, lbl: '1:30 min', desc: 'Analítico' },
               ].map(opt => (
-                <button
+                <div
                   key={opt.val}
-                  type="button"
-                  className="btn-control"
-                  style={{
-                    padding: '8px 4px',
-                    textAlign: 'center',
-                    fontFamily: 'var(--font-mono)',
-                    borderColor: turnSeconds === opt.val ? 'var(--ifi-secondary)' : 'var(--line)',
-                    backgroundColor: turnSeconds === opt.val ? 'var(--ifi-subtle)' : 'transparent',
-                    color: turnSeconds === opt.val ? 'var(--ifi-secondary)' : 'var(--ink)',
-                    fontWeight: turnSeconds === opt.val ? 700 : 400,
-                  }}
+                  className={`time-pill-card ${turnSeconds === opt.val ? 'active' : ''}`}
                   onClick={() => setTurnSeconds(opt.val)}
                 >
-                  {opt.lbl}
-                </button>
+                  <span className="time-pill-value">{opt.lbl}</span>
+                  <span className="time-pill-label font-mono">{opt.desc}</span>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Tarjetas y Límite */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          {/* 2. Rondas (Tarjetas) y Capacidad */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px' }}>
             <div className="form-field">
               <label className="form-label-institutional">
                 <Layers size={13} />
-                <span>Tarjetas por equipo:</span>
+                <span>Tarjetas por mesa (Rondas):</span>
               </label>
-              <input
-                type="number"
-                min="1"
-                max="20"
-                value={handSize}
-                onChange={e => setHandSize(parseInt(e.target.value || '6', 10))}
-                className="form-input-institutional"
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="number"
+                  min="2"
+                  max="15"
+                  value={handSize}
+                  onChange={e => setHandSize(parseInt(e.target.value || '6', 10))}
+                  className="terminal-input font-mono"
+                  style={{ width: '100%', padding: '10px 12px', fontSize: '14px', fontWeight: 700 }}
+                />
+                <span style={{ position: 'absolute', right: '12px', top: '11px', fontSize: '11px', color: 'var(--ink-muted)', fontFamily: 'var(--font-mono)' }}>
+                  {handSize} rondas
+                </span>
+              </div>
             </div>
 
             <div className="form-field">
               <label className="form-label-institutional">
                 <Users size={13} />
-                <span>Límite de equipos (opcional):</span>
+                <span>Capacidad máxima de mesas:</span>
               </label>
               <input
                 type="number"
                 min="2"
-                placeholder="Ilimitado"
+                max="50"
+                placeholder="Ilimitado (Salas 30+)"
                 value={maxTeams}
                 onChange={e => setMaxTeams(e.target.value)}
-                className="form-input-institutional"
+                className="terminal-input font-mono"
+                style={{ width: '100%', padding: '10px 12px', fontSize: '14px' }}
               />
             </div>
           </div>
 
-          {/* Tarjetas autorizadas */}
-          <div className="form-field">
-            <label className="form-label-institutional">
-              <Layers size={13} />
-              <span>Tarjetas autorizadas para la sesión:</span>
+          {/* 3. Selección de Emisores Bursátiles con Plantillas de Bolivia */}
+          <div className="form-field" style={{ marginBottom: '20px' }}>
+            <label className="form-label-institutional" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Building2 size={13} />
+                <span>Emisores y Tickers Bursátiles (5 Activos Cotizados):</span>
+              </span>
+              <span className="font-mono" style={{ fontSize: '10.5px', color: 'var(--ink-muted)' }}>
+                Base: Bs 100 · 260 Acciones
+              </span>
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              {CARD_TYPES.map(card => (
-                <label
-                  key={card.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--border-radius-sm)',
-                    background: 'var(--surface-subtle)',
-                    border: '1px solid var(--line)',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontFamily: 'var(--font-mono)',
-                  }}
-                >
+
+            {/* Selector de Plantillas Rápidas */}
+            <div className="preset-selector-bar">
+              <button
+                type="button"
+                className={`preset-tab-btn ${activePreset === 'bbv' ? 'active' : ''}`}
+                onClick={() => applyPreset('bbv')}
+              >
+                <Sparkles size={12} />
+                <span>Oficial BBV</span>
+              </button>
+              <button
+                type="button"
+                className={`preset-tab-btn ${activePreset === 'banking' ? 'active' : ''}`}
+                onClick={() => applyPreset('banking')}
+              >
+                <span>Banca & Finanzas</span>
+              </button>
+              <button
+                type="button"
+                className={`preset-tab-btn ${activePreset === 'industry' ? 'active' : ''}`}
+                onClick={() => applyPreset('industry')}
+              >
+                <span>Industria & Energía</span>
+              </button>
+              <button
+                type="button"
+                className={`preset-tab-btn ${activePreset === 'custom' ? 'active' : ''}`}
+                onClick={() => setActivePreset('custom')}
+              >
+                <span>Personalizado</span>
+              </button>
+            </div>
+
+            {/* Lista de Empresas con Ticker y Color */}
+            <div className="company-edit-grid">
+              {companies.map((c, idx) => (
+                <div key={c.id} className="company-edit-row">
+                  <span className="company-color-indicator" style={{ backgroundColor: c.color }} />
                   <input
-                    type="checkbox"
-                    checked={selectedCards.includes(card.id)}
-                    onChange={() => toggleCard(card.id)}
+                    type="text"
+                    value={c.name}
+                    onChange={e => updateCompanyName(idx, e.target.value)}
+                    placeholder="Razón Social del Emisor"
+                    className="company-name-input"
                   />
-                  <span>
-                    <strong>{card.label}</strong>
+                  <input
+                    type="text"
+                    value={c.ticker}
+                    onChange={e => updateCompanyTicker(idx, e.target.value)}
+                    placeholder="TICK"
+                    maxLength={4}
+                    className="company-ticker-pill"
+                    title="Ticker nemotécnico (hasta 4 letras)"
+                  />
+                  <span className="company-price-tag font-mono">
+                    Bs {c.price || 100}
                   </span>
-                </label>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Empresas emisoras */}
-          <div style={{ marginBottom: '20px' }}>
-            <button
-              type="button"
-              className="btn-control"
-              style={{ width: '100%', justifyContent: 'center', padding: '8px', fontSize: '12px' }}
-              onClick={() => setShowCompanyEdit(!showCompanyEdit)}
-            >
-              <Building2 size={14} />
-              <span>{showCompanyEdit ? 'Ocultar emisores' : 'Personalizar emisores bursátiles (Auspicios)'}</span>
-            </button>
+          {/* 4. Tarjetas Tácticas Autorizadas con Impacto Visual */}
+          <div className="form-field" style={{ marginBottom: '22px' }}>
+            <label className="form-label-institutional" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Layers size={13} />
+                <span>Tarjetas Reglamentarias Habilitadas:</span>
+              </span>
+              <span className="font-mono text-ifi" style={{ fontSize: '11px', fontWeight: 600 }}>
+                {selectedCards.length} de {CARD_TYPES.length} activas
+              </span>
+            </label>
 
-            {showCompanyEdit && (
-              <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                {companies.map((c, idx) => (
-                  <div key={c.id} style={{ display: 'flex', gap: '6px' }}>
+            <div className="card-tiles-grid">
+              {CARD_TYPES.map(card => {
+                const isSelected = selectedCards.includes(card.id);
+                const Icon = card.icon;
+
+                return (
+                  <div
+                    key={card.id}
+                    className={`card-tile-item ${isSelected ? 'is-selected' : ''}`}
+                    onClick={() => toggleCard(card.id)}
+                  >
                     <input
-                      type="text"
-                      value={c.name}
-                      onChange={e => updateCompanyName(idx, e.target.value)}
-                      placeholder="Nombre del emisor"
-                      className="form-input-institutional"
-                      style={{ flex: 1, padding: '7px 10px', fontSize: '12px' }}
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => {}} // controlado por el contenedor
+                      className="card-tile-checkbox"
                     />
-                    <input
-                      type="text"
-                      value={c.ticker}
-                      onChange={e => updateCompanyTicker(idx, e.target.value)}
-                      placeholder="TICK"
-                      className="form-input-institutional"
-                      style={{ width: '70px', padding: '7px 10px', fontSize: '12px', textAlign: 'center' }}
-                    />
+                    <div className="card-tile-content">
+                      <div className="card-tile-header">
+                        <span className="card-tile-code">{card.label}</span>
+                        <span className="card-tile-title">{card.title}</span>
+                      </div>
+                      <p className="card-tile-desc">{card.desc}</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
+                );
+              })}
+            </div>
           </div>
 
-          <button type="submit" className="btn-primary-action" style={{ width: '100%' }} disabled={isSubmitting}>
-            <Play size={15} />
-            <span>{isSubmitting ? 'Aperturando sesión...' : 'Aperturar Sala Bursátil'}</span>
+          {/* Botones de Envío */}
+          <button
+            type="submit"
+            className="btn-primary-action"
+            style={{ width: '100%', padding: '12px', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            disabled={isSubmitting}
+          >
+            <Play size={16} />
+            <span>{isSubmitting ? 'Aperturando sesión...' : 'Aperturar Sala Bursátil (Generar PIN)'}</span>
           </button>
 
-          <button type="button" className="btn-secondary-action" style={{ width: '100%', marginTop: '8px' }} onClick={onBack}>
+          <button
+            type="button"
+            className="btn-control"
+            style={{ width: '100%', marginTop: '8px', padding: '10px', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+            onClick={onBack}
+          >
             <ArrowLeft size={14} />
-            <span>Volver</span>
+            <span>Volver a Selección de Rol</span>
           </button>
         </form>
+
+        {/* Sello de Auditoría */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--line)', color: 'var(--ink-muted)', fontSize: '10.5px', fontFamily: 'var(--font-mono)' }}>
+          <ShieldCheck size={13} className="text-ifi" />
+          <span>PARÁMETROS REGULADOS POR EL COMITÉ TÉCNICO · OLIMPIADAS IFI 2026</span>
+        </div>
       </div>
     </div>
   );

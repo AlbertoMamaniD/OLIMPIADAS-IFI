@@ -40,7 +40,9 @@ class RoomManager {
   }
 
   createRoom(brokerSocketId, options = {}) {
+    this.cleanPreviousSocketRooms(brokerSocketId);
     const code = this.generateCode();
+    const brokerToken = 'brk_' + Math.random().toString(36).substring(2, 11);
     const companies = options.companies && options.companies.length >= 3
       ? options.companies
       : DEFAULT_COMPANIES;
@@ -48,6 +50,7 @@ class RoomManager {
     const room = {
       code,
       brokerSocketId,
+      brokerToken,
       settings: {
         maxTeams: options.maxTeams ? parseInt(options.maxTeams, 10) : null,
         handSize: options.handSize ? parseInt(options.handSize, 10) : 6,
@@ -67,6 +70,52 @@ class RoomManager {
 
     this.rooms.set(code, room);
     return room;
+  }
+
+  reconnectBroker(code, brokerToken, socketId) {
+    const room = this.getRoom(code);
+    if (!room) throw new Error('Sala no encontrada');
+    if (room.brokerToken !== brokerToken) throw new Error('Token de broker no válido');
+    room.brokerSocketId = socketId;
+    return room;
+  }
+
+  cleanPreviousSocketRooms(socketId) {
+    if (!socketId) return;
+    for (const [code, room] of this.rooms.entries()) {
+      const isBroker = room.brokerSocketId === socketId;
+      const isTeam = room.teams.some(t => t.socketId === socketId);
+
+      if (isBroker || isTeam) {
+        const humanTeams = room.teams.filter(t => !t.isBot);
+        const shouldDestroy =
+          room.game?.gameOver ||
+          humanTeams.length <= 1 ||
+          (isBroker && humanTeams.length === 0);
+
+        if (shouldDestroy) {
+          this.destroyRoom(code);
+        } else if (isBroker) {
+          room.brokerSocketId = null;
+        } else if (isTeam) {
+          const myTeam = room.teams.find(t => t.socketId === socketId);
+          if (myTeam) myTeam.connected = false;
+        }
+      }
+    }
+  }
+
+  destroyRoom(code) {
+    if (!code) return;
+    const normalized = code.trim().toUpperCase();
+    const room = this.rooms.get(normalized);
+    if (room) {
+      if (room.timerHandle) {
+        clearInterval(room.timerHandle);
+        room.timerHandle = null;
+      }
+      this.rooms.delete(normalized);
+    }
   }
 
   getRoom(code) {
@@ -105,9 +154,12 @@ class RoomManager {
     if (room.settings.maxTeams && room.teams.length >= room.settings.maxTeams) {
       throw new Error('La sala ya alcanzó el cupo máximo de equipos');
     }
-    if (room.teams.some(t => t.name.toLowerCase() === cleanName.toLowerCase())) {
+    if (room.teams.some(t => t.name.toLowerCase() === cleanName.toLowerCase() && t.socketId !== socketId)) {
       throw new Error('Ya existe un equipo con ese nombre en esta sala');
     }
+
+    // Si este socket ya tenía un equipo previo en el lobby de esta sala, reemplazarlo limpiamente
+    room.teams = room.teams.filter(t => t.socketId !== socketId);
 
     const team = {
       id: 'team_' + Math.random().toString(36).substring(2, 9),
@@ -141,10 +193,13 @@ class RoomManager {
   }
 
   createSoloDemoGame(socketId, playerName, io) {
+    this.cleanPreviousSocketRooms(socketId);
     const code = this.generateCode();
+    const brokerToken = 'brk_' + Math.random().toString(36).substring(2, 11);
     const room = {
       code,
       brokerSocketId: socketId,
+      brokerToken,
       settings: {
         maxTeams: 4,
         handSize: 5,
@@ -197,6 +252,7 @@ class RoomManager {
       startingCash: 1000,
       turnSeconds: room.settings.turnSeconds,
     });
+    room.game.roomCode = room.code;
     // Propagar bandera isBot al estado del juego
     room.game.teams.forEach(gt => {
       const rt = room.teams.find(t => t.id === gt.id);
@@ -229,12 +285,18 @@ class RoomManager {
   }
 
   startAuthoritativeClock(room, io) {
-    if (room.timerHandle) clearInterval(room.timerHandle);
+    if (room.timerHandle) {
+      clearInterval(room.timerHandle);
+      room.timerHandle = null;
+    }
 
     room.timerHandle = setInterval(() => {
       const g = room.game;
       if (!g || g.gameOver) {
-        clearInterval(room.timerHandle);
+        if (room.timerHandle) {
+          clearInterval(room.timerHandle);
+          room.timerHandle = null;
+        }
         if (g && g.gameOver && !room.savedToDb) {
           room.savedToDb = true;
           saveFinishedMatch(g, room.code, room.settings);
@@ -248,6 +310,7 @@ class RoomManager {
         const auctionRemaining = Math.max(0, AUCTION_SECONDS - elapsed);
 
         io.to(room.code).emit('clock_tick', {
+          roomCode: room.code,
           phase: 'auction',
           auctionRemaining,
           timeRemaining: null,
@@ -275,6 +338,7 @@ class RoomManager {
       // Si está pausado
       if (g.paused || g.manualPause) {
         io.to(room.code).emit('clock_tick', {
+          roomCode: room.code,
           phase: 'paused',
           timeRemaining: g.currentTurn.timeRemaining,
           paused: true,
@@ -291,6 +355,7 @@ class RoomManager {
       g.currentTurn.timeRemaining = remaining;
 
       io.to(room.code).emit('clock_tick', {
+        roomCode: room.code,
         phase: 'turn',
         timeRemaining: remaining,
         paused: false,

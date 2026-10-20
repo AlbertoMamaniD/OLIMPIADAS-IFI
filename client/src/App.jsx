@@ -13,7 +13,7 @@ import { TeamGameScreen } from './screens/TeamGameScreen';
 import { GameOverScreen } from './screens/GameOverScreen';
 
 export function App() {
-  const { role, room, game, resetAll } = useGameSocket();
+  const { role, room, game, resetAll, restoringSession } = useGameSocket();
 
   const [selectedRole, setSelectedRole] = useState(null); // 'broker' | 'team' | null
   const [showRules, setShowRules] = useState(false);
@@ -29,8 +29,19 @@ export function App() {
       />
 
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* 1. Fin de partida */}
-        {game?.gameOver ? (
+        {restoringSession ? (
+          <div className="terminal-centered" style={{ minHeight: '65vh' }}>
+            <div className="terminal-panel" style={{ maxWidth: '440px', textAlign: 'center', padding: '36px 28px' }}>
+              <div className="status-pulse-dot" style={{ width: '14px', height: '14px', margin: '0 auto 16px auto', background: 'var(--ifi-primary)' }} />
+              <h3 className="terminal-heading" style={{ fontSize: '18px', marginBottom: '8px' }}>
+                Reanudando Rueda Bursátil...
+              </h3>
+              <p className="terminal-subheading" style={{ fontSize: '12.5px', margin: 0 }}>
+                Restableciendo terminal, cartera de títulos y conexión con el recinto olímpico.
+              </p>
+            </div>
+          </div>
+        ) : game?.gameOver ? (
           <GameOverScreen
             onPlayAgain={() => {
               setSelectedRole(null);
