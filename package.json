@@ -1,0 +1,12 @@
+{
+  "name": "ifi-trader-league-juego-bolsa",
+  "version": "1.0.0",
+  "description": "Juego de la Bolsa (BBV) - Arquitectura tiempo real con Node.js, Socket.io y React",
+  "scripts": {
+    "start": "node server/src/index.js",
+    "test": "node server/test/engine.test.js",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build"
+  }
+}

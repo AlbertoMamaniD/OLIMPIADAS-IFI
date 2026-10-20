@@ -1,0 +1,1806 @@
+<style>
+  #bbv-app-root {
+    --bg: #ffffff;
+    --surface: #f7f6f2;
+    --surface-2: #eeece4;
+    --ink: #14181d;
+    --ink-soft: #5b6470;
+    --line: #dcd8cd;
+    --up: #1f7a4d;
+    --down: #a8402f;
+    --brass: #9c7a22;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+  #bbv-app-root[data-theme="dark"] {
+    --bg: #14181d;
+    --surface: #1c2229;
+    --surface-2: #232a32;
+    --ink: #eae7dd;
+    --ink-soft: #9aa2ac;
+    --line: #333c46;
+    --brass: #c9a227;
+  }
+  #bbv-app-root {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    box-sizing: border-box;
+    min-height: 480px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  #bbv-app-root * { box-sizing: border-box; }
+
+  .bbv-topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+  .bbv-topbar-title { font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+  .bbv-theme-toggle { background: transparent; border: 1px solid var(--line); color: var(--ink-soft); border-radius: 3px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+  .bbv-theme-toggle:hover { color: var(--ink); border-color: var(--brass); }
+
+  .bbv-content { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+  .bbv-card { width: 100%; max-width: 420px; }
+  .bbv-eyebrow { font-family: var(--font-mono); font-size: 12.5px; color: var(--brass); margin: 0 0 6px 0; }
+  .bbv-title { font-family: var(--font-display); font-weight: 600; font-size: 30px; line-height: 1.1; margin: 0 0 8px 0; }
+  .bbv-sub { font-size: 14px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 26px 0; }
+  .bbv-role-row { display: flex; flex-direction: column; gap: 12px; }
+  .bbv-role-btn { text-align: left; background: transparent; border: 1px solid var(--line); color: var(--ink); padding: 16px 18px; border-radius: 3px; cursor: pointer; }
+  .bbv-role-btn:hover { border-color: var(--brass); background: var(--surface); }
+  .bbv-role-btn .rt { display: block; font-family: var(--font-display); font-size: 18px; margin-bottom: 3px; }
+  .bbv-role-btn .rd { display: block; font-size: 12.5px; color: var(--ink-soft); }
+  label.bbv-field { display: block; font-size: 12.5px; color: var(--ink-soft); margin: 0 0 6px 0; }
+  input.bbv-input, select.bbv-input { width: 100%; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 3px; padding: 12px 14px; font-family: var(--font-mono); font-size: 16px; margin-bottom: 18px; }
+  input.bbv-input:focus, select.bbv-input:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+  .bbv-btn { width: 100%; background: var(--brass); color: #1a1406; border: none; border-radius: 3px; padding: 13px 16px; font-weight: 600; font-size: 15px; cursor: pointer; }
+  .bbv-btn:hover { filter: brightness(1.08); }
+  .bbv-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .bbv-btn-ghost { width: 100%; background: transparent; color: var(--ink-soft); border: 1px solid var(--line); border-radius: 3px; padding: 11px 16px; font-size: 13.5px; cursor: pointer; margin-top: 10px; }
+  .bbv-btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+  .bbv-error { font-size: 13px; color: var(--down); margin: -10px 0 16px 0; min-height: 16px; }
+  .bbv-code-block { border: 1px solid var(--line); border-top: 3px solid var(--brass); padding: 20px; margin-bottom: 22px; text-align: center; background: var(--surface); }
+  .bbv-code-label { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 8px; }
+  .bbv-code { font-family: var(--font-mono); font-size: 40px; letter-spacing: 0.12em; }
+  .bbv-live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--up); margin-right: 7px; animation: bbv-pulse 1.8s ease-in-out infinite; }
+  @keyframes bbv-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .bbv-section-label { font-size: 12.5px; color: var(--ink-soft); display: flex; align-items: center; margin-bottom: 12px; }
+  ul.bbv-team-list { list-style: none; margin: 0 0 24px 0; padding: 0; border-top: 1px solid var(--line); }
+  ul.bbv-team-list li { display: flex; justify-content: space-between; align-items: center; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+  ul.bbv-team-list li .you-tag { font-family: var(--font-mono); font-size: 10.5px; color: #1a1406; background: var(--brass); padding: 2px 6px; border-radius: 2px; }
+  .bbv-empty-row { padding: 18px 2px; color: var(--ink-soft); font-size: 13.5px; font-style: italic; }
+  .bbv-hint { font-size: 12.5px; color: var(--ink-soft); margin-top: -8px; margin-bottom: 20px; }
+  .bbv-guide-section { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .bbv-guide-section:last-of-type { border-bottom: none; }
+  .bbv-guide-section h4 { font-family: var(--font-display); font-size: 15px; margin: 0 0 5px 0; }
+  .bbv-guide-section p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+
+  .bbv-turn-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--line); font-size: 13.5px; width: 100%; }
+  .bbv-turn-banner.not-your-turn { color: var(--ink-soft); }
+  .bbv-timer { font-family: var(--font-mono); font-size: 15px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 3px; white-space: nowrap; }
+  .bbv-timer.warn { border-color: var(--brass); color: var(--brass); }
+  .bbv-timer.danger { border-color: var(--down); color: var(--down); animation: bbv-blink 1s step-start infinite; }
+  .bbv-timer.paused { color: var(--ink-soft); }
+  @keyframes bbv-blink { 50% { opacity: 0.25; } }
+
+  .bbv-main { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; padding: 18px 20px; align-items: start; width: 100%; }
+  @media (max-width: 720px) { .bbv-main { grid-template-columns: 1fr; } }
+  .bbv-section-title { font-size: 12px; color: var(--ink-soft); margin: 0 0 10px 0; }
+  .bbv-company-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .bbv-company-card { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
+  @media (max-width: 560px) { .bbv-company-card { grid-template-columns: auto 1fr; row-gap: 8px; } .bbv-company-card .bbv-co-price-wrap, .bbv-company-card .bbv-co-actions { grid-column: 1 / -1; justify-content: flex-start; } }
+  .bbv-ticker-hex { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: #fff; clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%); flex-shrink: 0; }
+  .bbv-co-name { font-size: 14.5px; }
+  .bbv-co-stats { font-size: 11.5px; color: var(--ink-soft); display: flex; gap: 12px; }
+  .bbv-co-price { font-family: var(--font-mono); font-size: 16px; text-align: right; min-width: 56px; }
+  .bbv-co-price-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+  .bbv-price-delta { font-family: var(--font-mono); font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .bbv-price-delta.up { color: var(--up); }
+  .bbv-price-delta.down { color: var(--down); }
+  .bbv-dividend-badge { font-size: 10.5px; color: var(--brass); background: rgba(156,122,34,0.15); border: 1px solid var(--brass); border-radius: 999px; padding: 2px 7px; white-space: nowrap; }
+  .bbv-co-actions { display: flex; gap: 6px; }
+  .bbv-btn-buy, .bbv-btn-sell { border: none; border-radius: 3px; padding: 7px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: #fff; }
+  .bbv-btn-buy { background: var(--up); }
+  .bbv-btn-sell { background: var(--down); }
+  .bbv-btn-buy:disabled, .bbv-btn-sell:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .bbv-card-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .bbv-play-card { border: 1px solid var(--line); border-radius: 4px; background: var(--surface); cursor: pointer; overflow: hidden; }
+  .bbv-play-card.disabled { opacity: 0.5; cursor: default; }
+  .bbv-play-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; }
+  .bbv-card-left { display: flex; align-items: center; gap: 10px; }
+  .bbv-card-label { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+  .bbv-card-target { font-size: 11.5px; color: var(--ink-soft); }
+  .bbv-card-desc { font-size: 12.5px; color: var(--ink-soft); padding: 0 12px 12px 56px; border-top: 1px dashed var(--line); margin-top: 2px; padding-top: 8px; }
+  .bbv-btn-play { background: var(--brass); color: #1a1406; border: none; border-radius: 3px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+  .bbv-btn-play:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .bbv-portfolio { border: 1px solid var(--line); border-radius: 4px; padding: 14px 16px; background: var(--surface); margin-bottom: 20px; }
+  .bbv-portfolio-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .bbv-portfolio-row:last-child { border-bottom: none; font-weight: 600; padding-top: 10px; }
+  .bbv-portfolio-row .val { font-family: var(--font-mono); }
+  .bbv-log-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+  .bbv-log-row { display: flex; gap: 8px; font-size: 12px; color: var(--ink-soft); line-height: 1.4; }
+  .bbv-log-turn { font-family: var(--font-mono); color: var(--brass); flex-shrink: 0; }
+
+  .bbv-chart-wrap { border: 1px solid var(--line); border-radius: 4px; background: var(--surface); padding: 14px 16px; margin-top: 18px; }
+  .bbv-chart-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 11px; color: var(--ink-soft); }
+  .bbv-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+
+  .bbv-panel { border: 1px solid var(--brass); border-radius: 4px; background: var(--surface); padding: 14px 16px; margin: 0 20px 18px 20px; }
+  .bbv-panel h4 { font-family: var(--font-display); margin: 0 0 6px 0; font-size: 16px; }
+  .bbv-panel p { font-size: 13px; color: var(--ink-soft); margin: 0 0 12px 0; }
+  .bbv-auction-banner { margin: 0 20px 18px 20px; padding: 14px 18px; border-radius: 6px; border: 2px solid var(--brass); background: linear-gradient(0deg, var(--surface), var(--surface-2)); box-shadow: 0 2px 10px rgba(156,122,34,0.25); }
+  .bbv-auction-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+  .bbv-auction-head h3 { font-family: var(--font-display); font-size: 19px; margin: 0; flex: 1; }
+  .bbv-auction-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: #1a1406; background: var(--brass); padding: 3px 9px; border-radius: 999px; animation: bbv-pulse 1.6s ease-in-out infinite; }
+  .bbv-auction-banner p { font-size: 12.5px; color: var(--ink-soft); margin: 6px 0; }
+  .bbv-auction-banner .bbv-inline-row { flex-wrap: wrap; margin: 10px 0 4px 0; }
+  .bbv-inline-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .bbv-inline-row input { width: 80px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--bg); color: var(--ink); font-family: var(--font-mono); }
+  .bbv-btn-sm { background: var(--brass); color: #1a1406; border: none; border-radius: 3px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .bbv-btn-sm.alt { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .bbv-btn-sm:disabled { background: var(--surface-2); color: var(--ink-soft); cursor: not-allowed; border: 1px solid var(--line); }
+  .bbv-btn-sm.alt:disabled { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+
+  .bbv-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
+  .bbv-modal { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 20px; width: 100%; max-width: 340px; }
+  .bbv-modal h3 { font-family: var(--font-display); margin: 0 0 4px 0; font-size: 18px; }
+  .bbv-modal p { font-size: 13px; color: var(--ink-soft); margin: 0 0 14px 0; }
+  .bbv-modal select, .bbv-modal input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 3px; background: var(--surface); color: var(--ink); font-family: var(--font-mono); margin-bottom: 12px; }
+  .bbv-modal-actions { display: flex; gap: 8px; }
+  .bbv-modal-actions button { flex: 1; padding: 10px; border-radius: 3px; font-size: 13.5px; cursor: pointer; }
+  .bbv-modal-confirm { background: var(--brass); border: none; color: #1a1406; font-weight: 600; }
+  .bbv-modal-cancel { background: transparent; border: 1px solid var(--line); color: var(--ink-soft); }
+  .bbv-footer-turn { display: flex; justify-content: flex-end; padding: 0 20px 20px 20px; }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<div id="bbv-app-root"></div>
+
+<script>
+(function () {
+  const root = document.getElementById('bbv-app-root');
+
+  // Se usa desde el atributo onchange del <select> de "otra empresa": así la elección
+  // queda guardada en el estado de la app apenas se elige, sin depender de leer el DOM
+  // más tarde (evita que un redibujado de por medio la resetee al valor por defecto).
+  window.__bbvSetOtherCompany = function (value) {
+    if (app.modal && app.modal.type === 'other-company') app.modal.otherCompanyId = value;
+  };
+
+  // ================= MOTOR DE REGLAS (gameEngine.js embebido) =================
+// ============================================================
+// JUEGO DE LA BOLSA — Motor de reglas (Sesión 1)
+// Lógica pura, sin UI. Todo el estado es un objeto plano (serializable a JSON),
+// pensado para vivir luego en window.storage (shared) y sincronizarse por polling.
+// ============================================================
+
+const PRICE_FLOOR = 10;
+const PRICE_CEIL = 250;
+const TURN_SECONDS = 120; // valor por defecto si no se especifica al crear la partida
+const TURN_SECONDS_OPTIONS = [30, 60, 90, 120]; // duraciones de turno que el broker puede elegir
+const AUCTION_LOT_SIZE = 30;
+const AUCTION_MAX_CONTRIBUTION_PER_TEAM = 5;
+const CRISIS_BUYBACK_PRICE = 20;
+const MAX_SHARES_PER_COMPANY = 260; // total emitido; empieza todo en inventario del broker
+
+// ---------- Definición de tarjetas ----------
+// Cada tarjeta describe su efecto de forma declarativa.
+// "target" = la empresa de la tarjeta. "other" = otra empresa elegida por el equipo (si aplica).
+const CARD_DEFS = {
+  '100_10': {
+    label: '100 / 10',
+    needsOtherCompany: false,
+    apply: (state, targetId) => {
+      applyDelta(state, targetId, +100);
+      allCompaniesExcept(state, targetId).forEach(c => applyDelta(state, c.id, -10));
+    },
+  },
+  '20_50': {
+    label: '20 / 50',
+    needsOtherCompany: false,
+    apply: (state, targetId) => {
+      applyDelta(state, targetId, -50);
+      allCompaniesExcept(state, targetId).forEach(c => applyDelta(state, c.id, +20));
+    },
+  },
+  '80_40': {
+    label: '80 / 40',
+    needsOtherCompany: true,
+    apply: (state, targetId, otherId) => {
+      applyDelta(state, targetId, +80);
+      applyDelta(state, otherId, -40);
+    },
+  },
+  '2x': {
+    label: '2x',
+    needsOtherCompany: true,
+    apply: (state, targetId, otherId) => {
+      applyMultiplier(state, targetId, 2);
+      applyMultiplier(state, otherId, 0.5);
+    },
+  },
+  'half_2x': {
+    label: '1/2x',
+    needsOtherCompany: true,
+    apply: (state, targetId, otherId) => {
+      applyMultiplier(state, targetId, 0.5);
+      applyMultiplier(state, otherId, 2);
+    },
+  },
+  'auction': {
+    label: 'Subasta',
+    needsOtherCompany: false,
+    apply: (state, targetId) => {
+      startAuction(state, targetId);
+    },
+  },
+};
+
+// ---------- Helpers de precio ----------
+function getCompany(state, companyId) {
+  const c = state.companies.find(c => c.id === companyId);
+  if (!c) throw new Error(`Empresa no encontrada: ${companyId}`);
+  return c;
+}
+
+function allCompaniesExcept(state, excludeId) {
+  return state.companies.filter(c => c.id !== excludeId);
+}
+
+function clampPrice(price) {
+  return Math.max(PRICE_FLOOR, Math.min(PRICE_CEIL, price));
+}
+
+// Aplica un delta absoluto de precio, y encola eventos de piso/techo si corresponde.
+function applyDelta(state, companyId, delta) {
+  const company = getCompany(state, companyId);
+  company.price = company.price + delta;
+  checkPriceEvents(state, company);
+}
+
+function applyMultiplier(state, companyId, factor) {
+  const company = getCompany(state, companyId);
+  company.price = Math.round(company.price * factor);
+  checkPriceEvents(state, company);
+}
+
+// Detecta techo (dividendo, automático) y piso (crisis, requiere decisión).
+function checkPriceEvents(state, company) {
+  company.lastPriceEvent = null; // 'dividend' | 'crisis' | null, se recalcula en cada cambio de precio
+  if (company.price > PRICE_CEIL) {
+    const excess = company.price - PRICE_CEIL;
+    payDividend(state, company, excess);
+    company.price = PRICE_CEIL;
+    company.lastPriceEvent = 'dividend';
+  }
+  if (company.price <= PRICE_FLOOR) {
+    company.price = PRICE_FLOOR;
+    triggerCrisis(state, company);
+    company.lastPriceEvent = 'crisis';
+  }
+  company.priceHistory = company.priceHistory || [];
+  company.priceHistory.push(company.price);
+}
+
+// Dividendo: automático, se paga a cada accionista por acción poseída.
+function payDividend(state, company, excessPerShare) {
+  state.teams.forEach(team => {
+    const qty = team.holdings[company.id] || 0;
+    if (qty > 0) {
+      const payout = qty * excessPerShare;
+      team.cash += payout;
+      logEvent(state, `Dividendo: ${team.name} recibe ${payout} por ${qty} acciones de ${company.name}`);
+    }
+  });
+}
+
+// Crisis: no es automático del todo — cada accionista debe decidir.
+// Se registra como decisión pendiente; el motor no avanza el turno hasta resolverlas.
+function triggerCrisis(state, company) {
+  const shareholders = state.teams.filter(t => (t.holdings[company.id] || 0) > 0 && !t.eliminated);
+  if (shareholders.length === 0) return;
+  state.pendingDecisions = state.pendingDecisions || [];
+  shareholders.forEach(team => {
+    state.pendingDecisions.push({
+      type: 'crisis',
+      companyId: company.id,
+      teamId: team.id,
+      resolved: false,
+    });
+  });
+  state.paused = true; // el reloj se detiene durante una crisis (regla del manual)
+  logEvent(state, `Crisis en ${company.name}: precio tocó el piso (${PRICE_FLOOR})`);
+}
+
+// El equipo decide: 'keep' (paga 20/acción) o 'return' (devuelve todas al broker).
+function resolveCrisisDecision(state, teamId, companyId, decision) {
+  const pending = state.pendingDecisions?.find(
+    d => d.type === 'crisis' && d.teamId === teamId && d.companyId === companyId && !d.resolved
+  );
+  if (!pending) throw new Error('No hay decisión de crisis pendiente para ese equipo/empresa');
+
+  const team = getTeam(state, teamId);
+  const qty = team.holdings[companyId] || 0;
+
+  if (decision === 'keep') {
+    const cost = qty * CRISIS_BUYBACK_PRICE;
+    if (team.cash < cost) throw new Error('Fondos insuficientes para conservar las acciones');
+    team.cash -= cost;
+    logEvent(state, `${team.name} conserva ${qty} acciones pagando ${cost}`);
+  } else if (decision === 'return') {
+    team.holdings[companyId] = 0;
+    getCompany(state, companyId).brokerShares += qty;
+    logEvent(state, `${team.name} devuelve ${qty} acciones al broker`);
+  } else {
+    throw new Error("decision debe ser 'keep' o 'return'");
+  }
+  pending.resolved = true;
+  checkElimination(state, team);
+  if (!hasPendingDecisions(state) && !state.auction) {
+    state.paused = false;
+    state.currentTurn.turnStartedAt = Date.now(); // reanuda el reloj desde cero
+  }
+}
+
+function hasPendingDecisions(state) {
+  return (state.pendingDecisions || []).some(d => !d.resolved);
+}
+
+// ---------- Equipos / compra-venta ----------
+function getTeam(state, teamId) {
+  const t = state.teams.find(t => t.id === teamId);
+  if (!t) throw new Error(`Equipo no encontrado: ${teamId}`);
+  return t;
+}
+
+function currentTeam(state) {
+  return getTeam(state, state.currentTurn.teamId);
+}
+
+// phase: 'before' | 'after'. Restringe recomprar/vender la misma empresa operada en "before".
+function trade(state, teamId, companyId, qty, side, phase) {
+  if (state.currentTurn.teamId !== teamId) throw new Error('No es el turno de este equipo');
+  if (state.currentTurn.phase !== phase) throw new Error(`No se puede operar en fase ${phase} ahora mismo`);
+  if (phase === 'after' && state.currentTurn.operatedCompanyBefore === companyId) {
+    throw new Error('No puedes volver a operar la misma empresa que operaste antes de la tarjeta');
+  }
+  if (state.currentTurn.isLastTurn && side === 'buy') {
+    throw new Error('Último turno del juego: solo se puede vender');
+  }
+
+  const team = getTeam(state, teamId);
+  const company = getCompany(state, companyId);
+
+  if (side === 'buy') {
+    const cost = qty * company.price;
+    if (team.cash < cost) throw new Error('Fondos insuficientes');
+    if (company.brokerShares < qty) throw new Error('El broker no tiene suficientes acciones disponibles');
+    team.cash -= cost;
+    company.brokerShares -= qty;
+    team.holdings[companyId] = (team.holdings[companyId] || 0) + qty;
+    logEvent(state, `${team.name} compra ${qty} de ${company.name} a ${company.price}`);
+  } else if (side === 'sell') {
+    const held = team.holdings[companyId] || 0;
+    if (held < qty) throw new Error('No tienes suficientes acciones para vender');
+    team.holdings[companyId] = held - qty;
+    company.brokerShares += qty;
+    team.cash += qty * company.price;
+    logEvent(state, `${team.name} vende ${qty} de ${company.name} a ${company.price}`);
+  } else {
+    throw new Error("side debe ser 'buy' o 'sell'");
+  }
+
+  if (phase === 'before') {
+    state.currentTurn.operatedCompanyBefore = companyId;
+  }
+}
+
+function sellDuringAuction(state, teamId, companyId, qty) {
+  if (!state.auction) throw new Error('Solo se puede vender libremente mientras hay una subasta activa');
+  const team = getTeam(state, teamId);
+  const company = getCompany(state, companyId);
+  const held = team.holdings[companyId] || 0;
+  if (held < qty) throw new Error('No tienes suficientes acciones para vender');
+  team.holdings[companyId] = held - qty;
+  company.brokerShares += qty;
+  team.cash += qty * company.price;
+  logEvent(state, `${team.name} vende ${qty} de ${company.name} a ${company.price} (liquidez para la subasta)`);
+}
+
+// ---------- Tarjetas ----------
+// Cada carta en mano ya trae su empresa fija de efecto (targetCompanyId), como una
+// carta física impresa. Si la carta lo requiere, el equipo elige "otra empresa" recién
+// al jugarla (ej. 80/40, 2x, 1/2x muestran un menú para elegir la afectada).
+let _cardInstanceCounter = 0;
+function makeCardInstance(cardId, targetCompanyId) {
+  _cardInstanceCounter += 1;
+  return { instanceId: `card_${_cardInstanceCounter}`, cardId, targetCompanyId };
+}
+
+function playCard(state, teamId, instanceId, otherCompanyId) {
+  if (state.currentTurn.teamId !== teamId) throw new Error('No es el turno de este equipo');
+  if (state.currentTurn.cardPlayed) throw new Error('Ya se jugó una tarjeta este turno');
+
+  const team = getTeam(state, teamId);
+  const idxInHand = team.hand.findIndex(c => c.instanceId === instanceId);
+  if (idxInHand === -1) throw new Error('El equipo no tiene esa tarjeta en mano');
+  const instance = team.hand[idxInHand];
+
+  const def = CARD_DEFS[instance.cardId];
+  if (!def) throw new Error(`Tarjeta desconocida: ${instance.cardId}`);
+  if (def.needsOtherCompany && !otherCompanyId) {
+    throw new Error('Esta tarjeta requiere elegir otra empresa afectada');
+  }
+  if (otherCompanyId === instance.targetCompanyId) {
+    throw new Error('La otra empresa debe ser distinta de la empresa de la tarjeta');
+  }
+
+  // Tarjeta jugada no se cambia: se retira de la mano y se aplica de inmediato.
+  team.hand.splice(idxInHand, 1);
+  team.played.push(instance);
+
+  def.apply(state, instance.targetCompanyId, otherCompanyId);
+
+  state.currentTurn.cardPlayed = { cardId: instance.cardId, targetCompanyId: instance.targetCompanyId, otherCompanyId };
+  state.currentTurn.phase = 'after';
+  logEvent(state, `${team.name} juega ${def.label} sobre ${getCompany(state, instance.targetCompanyId).name}`);
+}
+
+// ---------- Subasta ----------
+// Todos los accionistas de la empresa aportan de forma OBLIGATORIA hasta 5 acciones
+// (o todas las que tengan, si tienen menos de 5) apenas se juega la tarjeta de subasta.
+// El broker completa el resto del lote desde su inventario.
+function startAuction(state, companyId) {
+  const company = getCompany(state, companyId);
+  const priceAtStart = company.price;
+  const shareholders = state.teams.filter(t => (t.holdings[companyId] || 0) > 0 && !t.eliminated);
+
+  const contributions = {};
+  shareholders.forEach(team => {
+    const held = team.holdings[companyId] || 0;
+    const qty = Math.min(held, AUCTION_MAX_CONTRIBUTION_PER_TEAM);
+    team.holdings[companyId] = held - qty;
+    contributions[team.id] = qty;
+  });
+
+  const contributedTotal = Object.values(contributions).reduce((a, b) => a + b, 0);
+  const neededFromBroker = AUCTION_LOT_SIZE - contributedTotal;
+  const brokerGives = Math.min(neededFromBroker, company.brokerShares);
+  company.brokerShares -= brokerGives;
+
+  state.auction = {
+    companyId,
+    lotSize: AUCTION_LOT_SIZE,
+    priceAtStart,
+    contributions,
+    brokerShares: brokerGives,
+    bids: [],
+    status: 'bidding',
+    initiatorTeamId: state.currentTurn.teamId,
+    auctionStartedAt: Date.now(),
+  };
+  state.paused = true; // el reloj se detiene durante la subasta (regla del manual)
+  logEvent(state, `Subasta obligatoria: ${AUCTION_LOT_SIZE} acciones de ${company.name} (aportaron ${contributedTotal}, broker completa ${brokerGives})`);
+}
+
+const AUCTION_BID_INCREMENT = 10;
+const AUCTION_SECONDS = 30;
+function nextAuctionBidAmount(state) {
+  const auction = state.auction;
+  if (!auction) return null;
+  const highest = auction.bids[auction.bids.length - 1];
+  return highest ? highest.amountPerShare + AUCTION_BID_INCREMENT : AUCTION_BID_INCREMENT;
+}
+
+function placeBid(state, teamId) {
+  const auction = state.auction;
+  if (!auction || auction.status !== 'bidding') throw new Error('No hay subasta en fase de puja');
+  const amountPerShare = nextAuctionBidAmount(state);
+  const team = getTeam(state, teamId);
+  if (team.cash < amountPerShare * auction.lotSize) throw new Error('Fondos insuficientes para pujar ese monto por el lote completo');
+  auction.bids.push({ teamId, amountPerShare });
+}
+
+function payAuctionContributors(state, auction) {
+  Object.entries(auction.contributions).forEach(([teamId, qty]) => {
+    if (qty > 0) {
+      const team = getTeam(state, teamId);
+      const payout = qty * auction.priceAtStart;
+      team.cash += payout;
+      logEvent(state, `${team.name} recibe ${payout} por sus ${qty} acciones liquidadas en la subasta`);
+    }
+  });
+}
+
+function closeAuction(state) {
+  state.auction = null;
+  if (!hasPendingDecisions(state)) {
+    state.paused = false;
+    state.currentTurn.turnStartedAt = Date.now();
+  }
+}
+
+// Adjudica la subasta a la puja más alta que AÚN pueda pagarse. Un equipo puede haber vendido
+// o gastado efectivo después de pujar; en ese caso se lo descarta (con registro en el log) y se
+// pasa a la siguiente mejor puja. Si ninguna puede pagarse, el lote vuelve al broker. Nunca lanza
+// error por falta de fondos, para que la subasta siempre pueda cerrarse.
+function finalizeAuctionWithWinner(state, auction) {
+  const disqualified = new Set();
+  for (let i = auction.bids.length - 1; i >= 0; i--) {
+    const bid = auction.bids[i];
+    if (disqualified.has(bid.teamId)) continue;
+    const team = getTeam(state, bid.teamId);
+    const totalPaid = bid.amountPerShare * auction.lotSize;
+    if (team.cash < totalPaid) {
+      disqualified.add(bid.teamId);
+      logEvent(state, `${team.name} ya no tiene fondos para su puja de ${bid.amountPerShare}/acción y queda fuera de la subasta`);
+      continue;
+    }
+    team.cash -= totalPaid;
+    team.holdings[auction.companyId] = (team.holdings[auction.companyId] || 0) + auction.lotSize;
+    payAuctionContributors(state, auction);
+    logEvent(state, `Subasta adjudicada a ${team.name} por ${bid.amountPerShare}/acción (total ${totalPaid})`);
+    closeAuction(state);
+    return;
+  }
+  // Ninguna puja pudo pagarse: el lote vuelve al inventario del broker.
+  const company = getCompany(state, auction.companyId);
+  company.brokerShares += auction.lotSize;
+  payAuctionContributors(state, auction);
+  logEvent(state, `Subasta cerrada: ninguna puja pudo pagarse, el lote vuelve al inventario del broker`);
+  closeAuction(state);
+}
+
+function resolveAuction(state) {
+  const auction = state.auction;
+  if (!auction || auction.status !== 'bidding') throw new Error('La subasta no está en fase de puja');
+  if (auction.bids.length === 0) throw new Error('No hay pujas para adjudicar');
+  finalizeAuctionWithWinner(state, auction);
+}
+
+function forceResolveAuctionOnTimeout(state) {
+  const auction = state.auction;
+  if (!auction) return;
+  if (auction.bids.length === 0) {
+    const company = getCompany(state, auction.companyId);
+    company.brokerShares += auction.lotSize;
+    payAuctionContributors(state, auction);
+    logEvent(state, `Subasta cerrada sin pujas: el lote vuelve al inventario del broker`);
+    closeAuction(state);
+  } else {
+    finalizeAuctionWithWinner(state, auction);
+  }
+}
+
+// ---------- Eliminación ----------
+function checkElimination(state, team) {
+  const totalShares = Object.values(team.holdings).reduce((a, b) => a + b, 0);
+  if (team.cash <= 0 && totalShares === 0) {
+    team.eliminated = true;
+    logEvent(state, `${team.name} queda eliminado (sin dinero ni acciones)`);
+  }
+}
+
+// ---------- Turnos ----------
+function endTurn(state) {
+  if (!state.currentTurn.cardPlayed) throw new Error('Debes jugar una tarjeta antes de terminar el turno');
+  if (hasPendingDecisions(state)) throw new Error('Hay decisiones de crisis pendientes antes de cerrar el turno');
+  if (state.auction) throw new Error('Hay una subasta activa, resuélvela antes de continuar');
+
+  checkElimination(state, currentTeam(state));
+
+  const activeTeams = state.teams.filter(t => !t.eliminated);
+  const allHandsEmpty = activeTeams.every(t => t.hand.length === 0);
+  if (allHandsEmpty) {
+    endGame(state);
+    return;
+  }
+
+  advanceToNextTeam(state);
+}
+
+// Es el último turno de la partida cuando al equipo en turno le queda exactamente 1 tarjeta
+// y ningún otro equipo activo tiene tarjetas: al jugarla, todas las manos quedan vacías.
+// Se calcula al inicio de cada turno (las manos de los demás no cambian durante él).
+function computeIsLastTurn(state, teamId) {
+  const team = getTeam(state, teamId);
+  if (team.hand.length !== 1) return false;
+  return state.teams.every(t => t.id === teamId || t.eliminated || t.hand.length === 0);
+}
+
+function advanceToNextTeam(state) {
+  const order = state.turnOrder;
+  let idx = order.indexOf(state.currentTurn.teamId);
+  let nextTeam;
+  do {
+    idx = (idx + 1) % order.length;
+    nextTeam = getTeam(state, order[idx]);
+  } while (nextTeam.eliminated || nextTeam.hand.length === 0);
+
+  state.turnNumber += 1;
+  state.currentTurn = {
+    teamId: nextTeam.id,
+    phase: 'before',
+    operatedCompanyBefore: null,
+    cardPlayed: null,
+    timeRemaining: state.turnSeconds ?? TURN_SECONDS,
+    turnStartedAt: Date.now(),
+    isLastTurn: computeIsLastTurn(state, nextTeam.id),
+  };
+}
+
+function forceEndTurn(state) {
+  // Se usa cuando se acaba el tiempo del turno sin jugar tarjeta, o si el broker salta el turno.
+  const team = currentTeam(state);
+  if (!state.currentTurn.cardPlayed && team.hand.length > 0) {
+    const idx = Math.floor(Math.random() * team.hand.length);
+    const discarded = team.hand.splice(idx, 1)[0];
+    logEvent(state, `Se acabó el tiempo: se descarta al azar la tarjeta ${CARD_DEFS[discarded.cardId].label} de ${team.name}`);
+  } else {
+    logEvent(state, `Se fuerza el fin del turno de ${team.name}`);
+  }
+  checkElimination(state, team);
+  const activeTeams = state.teams.filter(t => !t.eliminated);
+  const allHandsEmpty = activeTeams.every(t => t.hand.length === 0);
+  if (allHandsEmpty) { endGame(state); return; }
+  advanceToNextTeam(state);
+}
+
+function endGame(state) {
+  state.teams.forEach(team => {
+    Object.entries(team.holdings).forEach(([companyId, qty]) => {
+      const company = getCompany(state, companyId);
+      team.cash += qty * company.price;
+      team.holdings[companyId] = 0;
+    });
+  });
+  state.gameOver = true;
+  const ranking = [...state.teams].sort((a, b) => b.cash - a.cash);
+  state.winnerTeamId = ranking[0].id;
+  logEvent(state, `Juego terminado. Gana ${ranking[0].name} con ${ranking[0].cash}`);
+}
+
+function logEvent(state, text) {
+  state.log.push({ turn: state.turnNumber, text });
+}
+
+// ---------- Inicialización ----------
+// hands: array paralelo a teamNames, cada elemento es una lista de cardIds (ej. ['100_10','2x']).
+// El motor le asigna a cada carta una empresa objetivo al azar (como una carta física impresa),
+// a menos que se pase explícitamente { cardId, targetCompanyId } para pruebas deterministas.
+function initGameState(companies, teamNames, hands, options = {}) {
+  const startingCash = options.startingCash ?? 1000;
+  const turnSeconds = options.turnSeconds ?? TURN_SECONDS;
+  const state = {
+    turnSeconds,
+    companies: companies.map(c => ({ ...c, brokerShares: MAX_SHARES_PER_COMPANY, priceHistory: [c.price] })),
+    teams: teamNames.map((entry, i) => {
+      const isObj = typeof entry === 'object' && entry !== null;
+      const id = isObj ? entry.id : `team_${i + 1}`;
+      const name = isObj ? entry.name : entry;
+      return {
+        id,
+        name,
+        cash: startingCash,
+        holdings: {},
+        hand: hands[i].map(cardEntry => {
+          if (typeof cardEntry === 'string') {
+            const randomCompany = companies[Math.floor(Math.random() * companies.length)];
+            return makeCardInstance(cardEntry, randomCompany.id);
+          }
+          return makeCardInstance(cardEntry.cardId, cardEntry.targetCompanyId);
+        }),
+        played: [],
+        eliminated: false,
+      };
+    }),
+    turnOrder: teamNames.map((entry, i) => (typeof entry === 'object' && entry !== null) ? entry.id : `team_${i + 1}`),
+    turnNumber: 1,
+    lastTurnNumber: null, // en desuso: el último turno se detecta con currentTurn.isLastTurn
+    currentTurn: null,
+    auction: null,
+    paused: false,
+    manualPause: false,
+    manualPauseStartedAt: null,
+    pendingDecisions: [],
+    gameOver: false,
+    log: [],
+  };
+  state.currentTurn = {
+    teamId: state.turnOrder[0],
+    phase: 'before',
+    operatedCompanyBefore: null,
+    cardPlayed: null,
+    timeRemaining: turnSeconds,
+    turnStartedAt: Date.now(),
+    isLastTurn: false,
+  };
+  state.currentTurn.isLastTurn = computeIsLastTurn(state, state.currentTurn.teamId);
+  return state;
+}
+
+
+  // ================= DATOS POR DEFECTO =================
+  const DEFAULT_COMPANIES = [
+    { id: 'c1', name: 'Empresa 1', ticker: 'E1', color: '#6a5acd', price: 100 },
+    { id: 'c2', name: 'Empresa 2', ticker: 'E2', color: '#2a8fbd', price: 100 },
+    { id: 'c3', name: 'Empresa 3', ticker: 'E3', color: '#c07a2e', price: 100 },
+    { id: 'c4', name: 'Empresa 4', ticker: 'E4', color: '#b23a7a', price: 100 },
+    { id: 'c5', name: 'Empresa 5', ticker: 'E5', color: '#3f9142', price: 100 },
+  ];
+  const DEFAULT_HAND_SIZE = 6;
+  const ALL_CARD_IDS = Object.keys(CARD_DEFS);
+  const DEFAULT_TURN_SECONDS = 120;
+  const TURN_DURATION_CHOICES = [
+    { seconds: 30, label: '30 seg' },
+    { seconds: 60, label: '1 min' },
+    { seconds: 90, label: '1:30 min' },
+    { seconds: 120, label: '2 min' },
+  ];
+
+  // Segundos de gracia antes de que un cliente "de respaldo" cierre un turno o una subasta
+  // que el cliente principal no cerró (por ejemplo, porque se desconectó). El principal actúa
+  // primero; los demás esperan un poco más para no pisarse entre sí.
+  const TURN_FALLBACK_GRACE = { current: 0, broker: 4, team: 8 };
+  const AUCTION_FALLBACK_GRACE = { initiator: 0, broker: 3, team: 6 };
+
+  const CARD_INFO = {
+    '100_10': { label: '100 / 10', desc: 'La empresa de la tarjeta aumenta 100, mientras que las demás reducen 10.' },
+    '20_50':  { label: '20 / 50',  desc: 'La empresa de la tarjeta reduce 50, mientras que las demás aumentan 20.' },
+    '80_40':  { label: '80 / 40',  desc: 'La empresa de la tarjeta aumenta 80. Además, eliges otra empresa que reduce 40.' },
+    '2x':     { label: '2x',       desc: 'La empresa de la tarjeta duplica su precio. Además, eliges otra empresa que baja a la mitad.' },
+    'half_2x':{ label: '1/2x',     desc: 'La empresa de la tarjeta baja a la mitad. Además, eliges otra empresa que duplica su precio.' },
+    'auction':{ label: 'Subasta',  desc: 'Se activa una subasta de 30 acciones de la empresa de la tarjeta.' },
+  };
+
+  function dealRandomHand(size, allowedIds) {
+    const pool = (allowedIds && allowedIds.length) ? allowedIds : ALL_CARD_IDS;
+    return Array.from({ length: size || DEFAULT_HAND_SIZE }, () => pool[Math.floor(Math.random() * pool.length)]);
+  }
+
+  // ================= ESTADO DE LA APP =================
+  let app = {
+    screen: 'role-select',
+    theme: 'light',
+    error: '',
+    roomCode: null,
+    myTeamId: null,
+    myTeamName: null,
+    pollHandle: null,
+    tickHandle: null,
+    room: null,
+    game: null,
+    modal: null,
+    expandedCardInstanceId: null,
+    actionInFlight: false,
+    setupDraft: null,
+    autoBusyTurn: false,
+    autoBusyAuction: false,
+  };
+
+  // Evita que clics repetidos disparen varias acciones a la vez (causa de "fondos insuficientes"
+  // falsos y de pujas duplicadas): mientras una acción está en curso, se ignoran las demás.
+  async function runAction(fn) {
+    if (app.actionInFlight) return;
+    app.actionInFlight = true;
+    render();
+    try {
+      await fn();
+    } finally {
+      app.actionInFlight = false;
+      render();
+    }
+  }
+
+  function stopTimers() {
+    if (app.pollHandle) { clearInterval(app.pollHandle); app.pollHandle = null; }
+    if (app.tickHandle) { clearInterval(app.tickHandle); app.tickHandle = null; }
+  }
+
+  function setScreen(screen) {
+    stopTimers();
+    app.screen = screen;
+    app.error = '';
+    render();
+  }
+
+  // ================= STORAGE =================
+  async function getJSON(key) {
+    try {
+      const res = await window.storage.get(key, true);
+      return res ? JSON.parse(res.value) : null;
+    } catch (e) { return null; }
+  }
+  async function setJSON(key, value) {
+    await window.storage.set(key, JSON.stringify(value), true);
+  }
+  const roomKey = (code) => 'room:' + code;
+  const gameKey = (code) => 'game:' + code;
+
+  const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  async function generateUniqueCode() {
+    for (let attempt = 0; attempt < 6; attempt++) {
+      let code = '';
+      for (let i = 0; i < 5; i++) code += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+      if (!(await getJSON(roomKey(code)))) return code;
+    }
+    throw new Error('No se pudo generar un código, intenta de nuevo');
+  }
+
+  // Guarda lo escrito/marcado en la pantalla de configuración del broker para que un
+  // redibujado (cambiar la duración, un error de validación) no lo borre.
+  function captureSetupDraft() {
+    const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const cards = {};
+    Object.keys(CARD_INFO).forEach(id => {
+      const el = document.getElementById('bbv-card-' + id);
+      cards[id] = el ? el.checked : true;
+    });
+    app.setupDraft = { maxTeams: val('bbv-max-teams'), handSize: val('bbv-hand-size'), cards };
+  }
+
+  // ================= ACCIONES DE LOBBY =================
+  async function createRoom(maxTeamsRaw, handSizeRaw, enabledCardIds, turnSecondsRaw) {
+    app.error = '';
+    let maxTeams = null;
+    if (maxTeamsRaw && maxTeamsRaw.trim() !== '') {
+      const n = parseInt(maxTeamsRaw, 10);
+      if (isNaN(n) || n < 2) { app.error = 'El límite debe ser un número de 2 o más'; render(); return; }
+      maxTeams = n;
+    }
+    let handSize = DEFAULT_HAND_SIZE;
+    if (handSizeRaw && handSizeRaw.trim() !== '') {
+      const h = parseInt(handSizeRaw, 10);
+      if (isNaN(h) || h < 1 || h > 20) { app.error = 'La cantidad de tarjetas debe ser entre 1 y 20'; render(); return; }
+      handSize = h;
+    }
+    let turnSeconds = DEFAULT_TURN_SECONDS;
+    const t = parseInt(turnSecondsRaw, 10);
+    if (TURN_DURATION_CHOICES.some(opt => opt.seconds === t)) turnSeconds = t;
+    if (!enabledCardIds || enabledCardIds.length === 0) {
+      app.error = 'Elige al menos un tipo de tarjeta para la partida';
+      render();
+      return;
+    }
+    try {
+      const code = await generateUniqueCode();
+      const room = { code, maxTeams, handSize, turnSeconds, enabledCardIds, started: false, teams: [], createdAt: Date.now() };
+      await setJSON(roomKey(code), room);
+      app.roomCode = code;
+      app.room = room;
+      setScreen('broker-waiting');
+      startPolling(async () => {
+        const r = await getJSON(roomKey(app.roomCode));
+        if (r) { app.room = r; if (r.started) { await loadGameAndSwitch('broker-started'); } else render(); }
+      });
+    } catch (e) { app.error = e.message; render(); }
+  }
+
+  async function joinRoom(codeRaw, nameRaw) {
+    app.error = '';
+    const code = (codeRaw || '').trim().toUpperCase();
+    const name = (nameRaw || '').trim();
+    if (code.length < 4) { app.error = 'Ingresa el código completo de la sala'; render(); return; }
+    if (!name) { app.error = 'Ingresa el nombre de tu equipo'; render(); return; }
+
+    const room = await getJSON(roomKey(code));
+    if (!room) { app.error = 'No existe una sala con ese código'; render(); return; }
+
+    if (room.started) {
+      // La partida ya empezó: si hay un equipo con ese mismo nombre, es una reconexión, no un ingreso nuevo.
+      const game = await getJSON(gameKey(code));
+      const existingTeam = game && game.teams.find(t => t.name.toLowerCase() === name.toLowerCase());
+      if (!existingTeam) {
+        app.error = 'Esa partida ya comenzó y no hay ningún equipo con ese nombre para reintegrarte';
+        render();
+        return;
+      }
+      app.roomCode = code;
+      app.myTeamId = existingTeam.id;
+      app.myTeamName = existingTeam.name;
+      app.room = room;
+      app.game = game;
+      stopTimers();
+      app.screen = 'game';
+      startGamePolling();
+      startTicker();
+      render();
+      return;
+    }
+
+    if (room.maxTeams && room.teams.length >= room.maxTeams) { app.error = 'La sala ya está completa'; render(); return; }
+    if (room.teams.some(t => t.name.toLowerCase() === name.toLowerCase())) { app.error = 'Ya hay un equipo con ese nombre'; render(); return; }
+
+    const teamId = 'team_' + Math.random().toString(36).slice(2, 9);
+    const latest = await getJSON(roomKey(code)) || room;
+    if (latest.maxTeams && latest.teams.length >= latest.maxTeams) { app.error = 'La sala ya está completa'; render(); return; }
+    latest.teams.push({ id: teamId, name });
+    await setJSON(roomKey(code), latest);
+
+    app.roomCode = code;
+    app.myTeamId = teamId;
+    app.myTeamName = name;
+    app.room = latest;
+    setScreen('team-guide');
+    startPolling(async () => {
+      const r = await getJSON(roomKey(app.roomCode));
+      if (r) { app.room = r; if (r.started && app.screen !== 'team-guide') { await loadGameAndSwitch('game'); } else if (app.screen !== 'team-guide') { render(); } }
+    });
+  }
+
+  async function startGame() {
+    const room = await getJSON(roomKey(app.roomCode));
+    if (!room || room.teams.length < 2) return;
+    const teamsForEngine = room.teams.map(t => ({ id: t.id, name: t.name }));
+    const allowedIds = (room.enabledCardIds && room.enabledCardIds.length) ? room.enabledCardIds : ALL_CARD_IDS;
+    const hands = teamsForEngine.map(() => dealRandomHand(room.handSize, allowedIds));
+    const game = initGameState(DEFAULT_COMPANIES, teamsForEngine, hands, { startingCash: 1000, turnSeconds: room.turnSeconds ?? DEFAULT_TURN_SECONDS });
+    await setJSON(gameKey(room.code), game);
+    room.started = true;
+    await setJSON(roomKey(room.code), room);
+    app.room = room;
+    app.game = game;
+    render();
+  }
+
+  async function loadGameAndSwitch(nextScreen) {
+    const g = await getJSON(gameKey(app.roomCode));
+    if (g) app.game = g;
+    if (app.screen !== nextScreen) {
+      stopTimers();
+      app.screen = nextScreen;
+      if (nextScreen === 'game') { startGamePolling(); startTicker(); }
+      else { startBrokerGamePolling(); startBrokerTicker(); }
+      render();
+    }
+  }
+
+  function startBrokerGamePolling() {
+    app.pollHandle = setInterval(async () => {
+      const g = await getJSON(gameKey(app.roomCode));
+      if (g && Date.now() > (app.suppressPollUntil || 0)) { app.game = g; render(); }
+    }, 1500);
+  }
+
+  // El broker también actúa como respaldo: si el equipo en turno (o el que disparó la
+  // subasta) se desconectó, el broker cierra el turno / la subasta pasado un margen de gracia.
+  function startBrokerTicker() {
+    app.tickHandle = setInterval(() => {
+      if (app.screen === 'broker-started' && app.game && !app.game.gameOver) {
+        maybeAutoEndTurn();
+        maybeAutoResolveAuction();
+        render();
+      }
+    }, 1000);
+  }
+
+  async function doTogglePause() {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      if (!latest.manualPause) {
+        latest.manualPause = true;
+        latest.manualPauseStartedAt = Date.now();
+        logEvent(latest, 'El broker pausó la partida');
+      } else {
+        const pausedMs = Date.now() - (latest.manualPauseStartedAt || Date.now());
+        latest.currentTurn.turnStartedAt = (latest.currentTurn.turnStartedAt || Date.now()) + pausedMs;
+        latest.manualPause = false;
+        latest.manualPauseStartedAt = null;
+        logEvent(latest, 'El broker reanudó la partida');
+      }
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    render();
+  }
+
+  async function doSkipTurn() {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      forceEndTurn(latest);
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    render();
+  }
+
+  function startPolling(fn) {
+    stopTimers();
+    fn();
+    app.pollHandle = setInterval(fn, 1500);
+  }
+
+  function isUserTyping() {
+    const el = document.activeElement;
+    return !!(el && root.contains(el) && (el.tagName === 'INPUT' || el.tagName === 'SELECT'));
+  }
+
+  function startGamePolling() {
+    app.pollHandle = setInterval(async () => {
+      const g = await getJSON(gameKey(app.roomCode));
+      if (g && Date.now() > (app.suppressPollUntil || 0)) { app.game = g; if (!app.modal && !isUserTyping()) render(); }
+    }, 1500);
+  }
+
+  // Los cierres automáticos (turno y subasta) no dependen de que haya un modal abierto:
+  // solo tocan el estado compartido, no la pantalla.
+  function startTicker() {
+    app.tickHandle = setInterval(() => {
+      if (app.screen === 'game' && app.game && !app.game.gameOver) {
+        maybeAutoEndTurn();
+        maybeAutoResolveAuction();
+        if (!app.modal && !isUserTyping()) render();
+      }
+    }, 1000);
+  }
+
+  // ================= LÓGICA DE JUEGO (usa el motor) =================
+  function timeRemainingFor(game) {
+    if (game.paused || game.manualPause) return null;
+    const elapsed = Math.floor((Date.now() - (game.currentTurn.turnStartedAt || Date.now())) / 1000);
+    return Math.max(0, (game.turnSeconds ?? TURN_SECONDS) - elapsed);
+  }
+
+  // Segundos transcurridos después de vencido el turno (negativo si aún queda tiempo).
+  function secondsPastTurnDeadline(game) {
+    const elapsed = Math.floor((Date.now() - (game.currentTurn.turnStartedAt || Date.now())) / 1000);
+    return elapsed - (game.turnSeconds ?? TURN_SECONDS);
+  }
+
+  async function saveGame() {
+    await setJSON(gameKey(app.roomCode), app.game);
+  }
+
+  // Cierra el turno cuando se acaba el tiempo. Lo intenta primero el equipo en turno; si no
+  // lo logra (desconectado, pestaña dormida), lo intenta el broker y luego cualquier otro equipo.
+  // Antes de escribir se relee el estado y se verifica que sea el MISMO turno, para no
+  // saltar dos turnos si dos clientes coinciden.
+  async function maybeAutoEndTurn() {
+    const g = app.game;
+    if (!g || g.gameOver || g.paused || g.manualPause || g.auction) return;
+    if (app.autoBusyTurn) return;
+    const isBroker = app.screen === 'broker-started';
+    const isCurrent = g.currentTurn.teamId === app.myTeamId;
+    const grace = isCurrent ? TURN_FALLBACK_GRACE.current : (isBroker ? TURN_FALLBACK_GRACE.broker : TURN_FALLBACK_GRACE.team);
+    if (secondsPastTurnDeadline(g) < grace) return;
+    app.autoBusyTurn = true;
+    try {
+      const latest = await getJSON(gameKey(app.roomCode));
+      if (latest && !latest.gameOver && !latest.paused && !latest.manualPause && !latest.auction &&
+          latest.turnNumber === g.turnNumber &&
+          latest.currentTurn.teamId === g.currentTurn.teamId &&
+          latest.currentTurn.turnStartedAt === g.currentTurn.turnStartedAt &&
+          secondsPastTurnDeadline(latest) >= grace) {
+        forceEndTurn(latest); // si no jugó tarjeta, esto ya descarta una al azar
+        app.game = latest;
+        markLocalWrite();
+        await saveGame();
+      }
+    } catch (e) { /* silencioso: es un intento en segundo plano */ }
+    finally { app.autoBusyTurn = false; }
+  }
+
+  // Cierra la subasta a los 30 s. Primero lo intenta el equipo que la disparó; si no, el
+  // broker (3 s después) o cualquier otro equipo (6 s después). Así la subasta nunca queda
+  // trabada por un dispositivo desconectado.
+  async function maybeAutoResolveAuction() {
+    const g = app.game;
+    if (!g || !g.auction || app.autoBusyAuction) return;
+    const isBroker = app.screen === 'broker-started';
+    const isInitiator = g.auction.initiatorTeamId === app.myTeamId;
+    const grace = isInitiator ? AUCTION_FALLBACK_GRACE.initiator : (isBroker ? AUCTION_FALLBACK_GRACE.broker : AUCTION_FALLBACK_GRACE.team);
+    const elapsed = Math.floor((Date.now() - (g.auction.auctionStartedAt || Date.now())) / 1000);
+    if (elapsed < AUCTION_SECONDS + grace) return;
+    app.autoBusyAuction = true;
+    try {
+      const latest = await getJSON(gameKey(app.roomCode));
+      if (latest && latest.auction && latest.auction.auctionStartedAt === g.auction.auctionStartedAt) {
+        forceResolveAuctionOnTimeout(latest);
+        app.game = latest;
+        markLocalWrite();
+        await saveGame();
+      }
+    } catch (e) { /* silencioso */ }
+    finally { app.autoBusyAuction = false; }
+  }
+
+  function markLocalWrite() {
+    app.suppressPollUntil = Date.now() + 2200; // da tiempo a que la escritura se propague antes de confiar en el sondeo
+  }
+
+  async function doTrade(companyId, side, qty) {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      if (side === 'sell' && latest.auction) {
+        sellDuringAuction(latest, app.myTeamId, companyId, qty);
+      } else {
+        trade(latest, app.myTeamId, companyId, qty, side, latest.currentTurn.phase);
+      }
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    app.modal = null;
+    render();
+  }
+
+  async function doPlayCard(instanceId, otherCompanyId) {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      playCard(latest, app.myTeamId, instanceId, otherCompanyId || undefined);
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    app.modal = null;
+    render();
+  }
+
+  async function doEndTurn() {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      endTurn(latest);
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    render();
+  }
+
+  async function doCrisisDecision(companyId, decision) {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      resolveCrisisDecision(latest, app.myTeamId, companyId, decision);
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    render();
+  }
+
+  async function doAuctionBid() {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      placeBid(latest, app.myTeamId);
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    render();
+  }
+
+  async function doAuctionResolve() {
+    try {
+      const latest = await getJSON(gameKey(app.roomCode)) || app.game;
+      resolveAuction(latest);
+      app.game = latest;
+      markLocalWrite();
+      await saveGame();
+    } catch (e) { app.error = e.message; }
+    render();
+  }
+
+  function companyById(id) { return app.game.companies.find(c => c.id === id); }
+  function myTeamAvailableOtherCompany(targetCompanyId) {
+    const other = app.game.companies.find(c => c.id !== targetCompanyId);
+    return other ? other.id : null;
+  }
+  function myTeam() { return app.game.teams.find(t => t.id === app.myTeamId); }
+  function formatBs(n) { return 'Bs ' + Math.round(n).toLocaleString('es-BO'); }
+  function escapeHtml(str) { return String(str).replace(/[&<>"']/g, s => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s])); }
+
+  // ================= VISTAS: LOBBY =================
+  function view_roleSelect() {
+    return `
+      <div class="bbv-card">
+        <p class="bbv-eyebrow">Bolsa Boliviana de Valores</p>
+        <h1 class="bbv-title">Juego de la Bolsa</h1>
+        <p class="bbv-sub">Invierte, decide, compite. Elige tu rol para entrar a la sala.</p>
+        <div class="bbv-role-row">
+          <button class="bbv-role-btn" data-action="go-broker"><span class="rt">Soy el broker</span><span class="rd">Creo la sala y dirijo la partida</span></button>
+          <button class="bbv-role-btn" data-action="go-team"><span class="rt">Soy un equipo</span><span class="rd">Me uno con el código de la sala</span></button>
+        </div>
+      </div>`;
+  }
+
+  function view_brokerSetup() {
+    const draft = app.setupDraft || { maxTeams: '', handSize: '', cards: {} };
+    const cardCheckboxes = Object.entries(CARD_INFO).map(([id, info]) => `
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;">
+        <input type="checkbox" id="bbv-card-${id}" ${draft.cards[id] === false ? '' : 'checked'} style="width:16px;height:16px;">
+        <span><strong>${info.label}</strong> — ${info.desc}</span>
+      </label>`).join('');
+    const selectedTurnSeconds = app.selectedTurnSeconds ?? DEFAULT_TURN_SECONDS;
+    const turnDurationButtons = TURN_DURATION_CHOICES.map(opt => `
+      <label style="flex:1;text-align:center;padding:9px 4px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;cursor:pointer;${opt.seconds === selectedTurnSeconds ? 'background:var(--brass);color:#1a1406;font-weight:600;border-color:var(--brass);' : ''}">
+        <input type="radio" name="bbv-turn-seconds" value="${opt.seconds}" data-action="select-turn-seconds" ${opt.seconds === selectedTurnSeconds ? 'checked' : ''} style="display:none;">
+        ${opt.label}
+      </label>`).join('');
+    return `
+      <div class="bbv-card" style="max-width:480px;">
+        <p class="bbv-eyebrow">Nueva sala</p>
+        <h1 class="bbv-title">Configura la partida</h1>
+        <p class="bbv-sub">5 empresas y Bs 1.000 de capital inicial por equipo, listos por defecto.</p>
+        <label class="bbv-field" for="bbv-max-teams">Límite de equipos (opcional)</label>
+        <input class="bbv-input" id="bbv-max-teams" type="number" min="2" placeholder="Sin límite" value="${escapeHtml(draft.maxTeams)}">
+        <label class="bbv-field" for="bbv-hand-size">Cantidad de tarjetas por equipo</label>
+        <input class="bbv-input" id="bbv-hand-size" type="number" min="1" max="20" placeholder="6 (por defecto)" value="${escapeHtml(draft.handSize)}">
+        <label class="bbv-field">Duración de cada turno</label>
+        <div style="display:flex;gap:8px;margin-bottom:18px;">${turnDurationButtons}</div>
+        <label class="bbv-field">Tarjetas disponibles en la partida</label>
+        <div style="margin-bottom:18px;">${cardCheckboxes}</div>
+        <div class="bbv-error">${app.error}</div>
+        <button class="bbv-btn" data-action="create-room">Crear sala</button>
+        <button class="bbv-btn-ghost" data-action="back-to-role">Volver</button>
+      </div>`;
+  }
+
+  function view_brokerWaiting() {
+    const room = app.room;
+    const teams = room ? room.teams : [];
+    const canStart = teams.length >= 2;
+    const teamRows = teams.length ? teams.map(t => `<li><span>${escapeHtml(t.name)}</span></li>`).join('') : `<li class="bbv-empty-row">Todavía no se unió ningún equipo</li>`;
+    return `
+      <div class="bbv-card">
+        <p class="bbv-eyebrow">Sala de espera</p>
+        <div class="bbv-code-block"><div class="bbv-code-label">Código para los equipos</div><div class="bbv-code">${app.roomCode}</div></div>
+        <p class="bbv-hint">Duración del turno: ${(TURN_DURATION_CHOICES.find(o => o.seconds === (room && room.turnSeconds)) || TURN_DURATION_CHOICES[3]).label}</p>
+        <div class="bbv-section-label"><span class="bbv-live-dot"></span>${teams.length} equipo${teams.length === 1 ? '' : 's'} conectado${teams.length === 1 ? '' : 's'}${room && room.maxTeams ? ' de ' + room.maxTeams : ''}</div>
+        <ul class="bbv-team-list">${teamRows}</ul>
+        <button class="bbv-btn" data-action="start-game" ${canStart ? '' : 'disabled'}>Iniciar partida</button>
+        ${canStart ? '' : '<p class="bbv-hint">Se necesitan al menos 2 equipos para empezar.</p>'}
+        <button class="bbv-btn-ghost" data-action="back-to-role">Cerrar sala</button>
+      </div>`;
+  }
+
+  function view_teamJoin() {
+    return `
+      <div class="bbv-card">
+        <p class="bbv-eyebrow">Unirse a una sala</p>
+        <h1 class="bbv-title">Entra con tu equipo</h1>
+        <p class="bbv-sub">Si tu partida ya empezó y se te cerró la pestaña, usa el mismo código y el mismo nombre de equipo para reconectarte donde ibas.</p>
+        <label class="bbv-field" for="bbv-room-code">Código de la sala</label>
+        <input class="bbv-input" id="bbv-room-code" placeholder="EJ. K7M2P" style="text-transform: uppercase;" maxlength="6">
+        <label class="bbv-field" for="bbv-team-name">Nombre del equipo</label>
+        <input class="bbv-input" id="bbv-team-name" placeholder="Ej. Toros del Sur" maxlength="24">
+        <div class="bbv-error">${app.error}</div>
+        <button class="bbv-btn" data-action="join-room">Unirse</button>
+        <button class="bbv-btn-ghost" data-action="back-to-role">Volver</button>
+      </div>`;
+  }
+
+  function guideSectionsHtml() {
+    return `
+      <div class="bbv-guide-section">
+        <h4>Objetivo</h4>
+        <p>Cada equipo compra y vende acciones de 5 empresas, juega tarjetas que mueven el mercado, y compite por terminar con más dinero que los demás.</p>
+      </div>
+      <div class="bbv-guide-section">
+        <h4>Revisa el temporizador</h4>
+        <p>Cada turno tiene un tiempo límite que definió el broker al crear la sala — revisa el temporizador en tu pantalla para saber cuánto te queda. El cronómetro corre para todos. Si se acaba y no jugaste ninguna tarjeta, se te descarta una al azar y el turno pasa solo al siguiente equipo — no hace falta que nadie lo cierre por ti.</p>
+      </div>
+      <div class="bbv-guide-section">
+        <h4>Jugar una tarjeta es obligatorio</h4>
+        <p>Cada turno debes jugar exactamente una tarjeta. <strong>Toca la tarjeta (no el botón "Jugar") para leer qué hace</strong> antes de jugarla — cada una explica en palabras simples su efecto sobre el precio.</p>
+      </div>
+      <div class="bbv-guide-section">
+        <h4>Orden de tu turno</h4>
+        <p>1) Antes de la tarjeta puedes comprar o vender (opcional). 2) Juegas tu tarjeta (obligatorio). 3) Después de la tarjeta puedes volver a comprar o vender — pero <strong>no de la misma empresa que ya operaste antes de jugarla</strong>. 4) Terminas tu turno.</p>
+      </div>
+      <div class="bbv-guide-section">
+        <h4>Techo y piso de precio</h4>
+        <p>Ninguna acción vale menos de Bs 10 ni más de Bs 250. Si supera 250, el excedente se paga como dividendo a los accionistas y el precio vuelve a 250. Si toca 10, es una crisis: cada accionista decide pagar Bs 20 por acción para conservarlas, o devolverlas al broker.</p>
+      </div>
+      <div class="bbv-guide-section">
+        <h4>Subasta</h4>
+        <p>Cuando sale una tarjeta de Subasta, todos los que tengan acciones de esa empresa aportan de forma obligatoria hasta 5 al lote (el broker completa el resto hasta 30). La puja empieza en Bs 10 y sube de 10 en 10. A los 30 segundos se cierra sola y se adjudica al mejor postor que pueda pagarla — si alguien vendió y ya no le alcanza el efectivo, pasa a la siguiente mejor puja. Los que aportaron cobran al precio que tenía la acción cuando empezó la subasta.</p>
+      </div>
+      <div class="bbv-guide-section">
+        <h4>Fin del juego</h4>
+        <p>Termina cuando todos los equipos agotaron sus tarjetas. En el último turno de la partida solo se puede vender (no comprar). Las acciones que te queden se venden al broker al precio final del tablero, y gana el equipo con más dinero.</p>
+      </div>`;
+  }
+
+  function view_teamGuide() {
+    return `
+      <div class="bbv-card" style="max-width:560px;">
+        <p class="bbv-eyebrow">Antes de empezar</p>
+        <h1 class="bbv-title">Cómo se juega</h1>
+        ${guideSectionsHtml()}
+        <button class="bbv-btn" data-action="guide-continue" style="margin-top:8px;">Entendido, continuar</button>
+      </div>`;
+  }
+
+  function view_teamWaiting() {
+    const room = app.room;
+    const teams = room ? room.teams : [];
+    const teamRows = teams.map(t => `<li><span>${escapeHtml(t.name)}</span>${t.id === app.myTeamId ? '<span class="you-tag">tu equipo</span>' : ''}</li>`).join('');
+    return `
+      <div class="bbv-card">
+        <p class="bbv-eyebrow">Sala ${app.roomCode}</p>
+        <h1 class="bbv-title">Esperando al broker</h1>
+        <p class="bbv-sub">Capital inicial: Bs 1.000</p>
+        <div class="bbv-section-label"><span class="bbv-live-dot"></span>Equipos en la sala</div>
+        <ul class="bbv-team-list">${teamRows}</ul>
+        <button class="bbv-btn-ghost" data-action="show-guide">Ver reglas de nuevo</button>
+        <button class="bbv-btn-ghost" data-action="back-to-role">Salir de la sala</button>
+      </div>`;
+  }
+
+  function view_brokerStarted() {
+    const g = app.game;
+    const currentTeam = g.teams.find(t => t.id === g.currentTurn.teamId);
+    const remaining = timeRemainingFor(g);
+
+    let bannerText, timerHtml;
+    if (g.gameOver) {
+      const ranking = [...g.teams].sort((a, b) => b.cash - a.cash);
+      bannerText = `Partida terminada. Gana <strong>${escapeHtml(ranking[0].name)}</strong> con ${formatBs(ranking[0].cash)}.`;
+      timerHtml = '';
+    } else if (g.auction) {
+      bannerText = `Subasta en curso: ${escapeHtml(companyById(g.auction.companyId).name)}`;
+      timerHtml = `<span class="bbv-timer paused">En subasta</span>`;
+    } else if ((g.pendingDecisions || []).some(d => !d.resolved)) {
+      bannerText = `Esperando decisión de crisis de algún equipo`;
+      timerHtml = `<span class="bbv-timer paused">Pausado</span>`;
+    } else if (g.manualPause) {
+      bannerText = `Turno de ${escapeHtml(currentTeam ? currentTeam.name : '')} — partida pausada por el broker`;
+      timerHtml = `<span class="bbv-timer paused">Pausado</span>`;
+    } else {
+      const m = Math.floor(remaining / 60), s = remaining % 60;
+      const cls = remaining <= 10 ? 'danger' : remaining <= 30 ? 'warn' : '';
+      bannerText = `Turno de ${escapeHtml(currentTeam ? currentTeam.name : '')}${g.currentTurn.isLastTurn ? ' — último turno de la partida' : ''}`;
+      timerHtml = `<span class="bbv-timer ${cls}">${m}:${s.toString().padStart(2, '0')}</span>`;
+    }
+
+    const canToggleControls = !g.gameOver && !g.auction && !(g.pendingDecisions || []).some(d => !d.resolved);
+
+    const teamsSectionHtml = g.gameOver
+      ? view_leaderboardRows([...g.teams].sort((a, b) => b.cash - a.cash))
+      : (() => {
+          const rows = g.teams.map(t => {
+            const valued = Object.entries(t.holdings).reduce((sum, [id, qty]) => sum + qty * companyById(id).price, 0);
+            const isTurn = t.id === g.currentTurn.teamId && !g.gameOver;
+            return `
+              <div class="bbv-company-card" style="${isTurn ? 'border-color:var(--brass);' : ''}">
+                <div class="bbv-ticker-hex" style="background:${isTurn ? 'var(--brass)' : '#888'}">${t.name.slice(0,2).toUpperCase()}</div>
+                <div>
+                  <div class="bbv-co-name">${escapeHtml(t.name)}${isTurn ? ' <span style="color:var(--brass);font-size:11px;">(en turno)</span>' : ''}${t.eliminated ? ' <span style="color:var(--down);font-size:11px;">(eliminado)</span>' : ''}</div>
+                  <div class="bbv-co-stats"><span>Efectivo: ${formatBs(t.cash)}</span><span>Acciones: ${formatBs(valued)}</span><span>Tarjetas: ${t.hand.length}</span></div>
+                </div>
+                <div class="bbv-co-price">${formatBs(t.cash + valued)}</div>
+              </div>`;
+          }).join('');
+          return `<div class="bbv-company-list">${rows}</div>`;
+        })();
+
+    const marketRows = g.companies.map(c => `
+      <div class="bbv-company-card">
+        <div class="bbv-ticker-hex" style="background:${c.color || '#888'}">${c.ticker || c.name.slice(0,2).toUpperCase()}</div>
+        <div><div class="bbv-co-name">${escapeHtml(c.name)}</div><div class="bbv-co-stats"><span>Acc. broker: ${c.brokerShares}</span></div></div>
+        <div class="bbv-co-price-wrap">${view_priceDelta(c)}<span class="bbv-co-price">${c.price}</span></div>
+      </div>`).join('');
+
+    return `
+      <div class="bbv-turn-banner">
+        <span>${bannerText}</span>
+        ${timerHtml}
+      </div>
+      <div class="bbv-main">
+        <div>
+          <p class="bbv-section-title">${g.gameOver ? 'Resultado final' : 'Equipos'}</p>
+          ${teamsSectionHtml}
+          <p class="bbv-section-title">Mercado</p>
+          <div class="bbv-company-list">${marketRows}</div>
+        </div>
+        <div>
+          <p class="bbv-section-title">Controles</p>
+          <div class="bbv-portfolio" style="margin-bottom:12px;">
+            <div class="bbv-inline-row" style="margin-bottom:8px;">
+              <button class="bbv-btn-sm" data-action="toggle-pause" ${(canToggleControls || g.manualPause) && !app.actionInFlight ? '' : 'disabled'}>${g.manualPause ? 'Reanudar partida' : 'Pausar partida'}</button>
+            </div>
+            <div class="bbv-inline-row">
+              <button class="bbv-btn-sm alt" data-action="skip-turn" ${canToggleControls && !g.manualPause && !app.actionInFlight ? '' : 'disabled'}>Saltar turno actual</button>
+            </div>
+            ${!canToggleControls && !g.manualPause ? '<p class="bbv-hint">Hay una subasta o crisis en curso; espera a que se resuelva.</p>' : ''}
+          </div>
+          ${view_eventLog()}
+        </div>
+      </div>`;
+  }
+
+  // ================= VISTAS: JUEGO =================
+  function view_turnBanner() {
+    const g = app.game;
+    const isMyTurn = g.currentTurn.teamId === app.myTeamId;
+    if (g.gameOver) {
+      const ranking = [...g.teams].sort((a, b) => b.cash - a.cash);
+      return `<div class="bbv-turn-banner"><span>Partida terminada. Gana <strong>${escapeHtml(ranking[0].name)}</strong> con ${formatBs(ranking[0].cash)}.</span></div>`;
+    }
+    if (g.manualPause) {
+      return `<div class="bbv-turn-banner"><span>El broker pausó la partida.</span><span class="bbv-timer paused">Pausado</span></div>`;
+    }
+    if (g.paused) {
+      return `<div class="bbv-turn-banner"><span>Juego en pausa (subasta o crisis en curso).</span><span class="bbv-timer paused">Pausado</span></div>`;
+    }
+    if (isMyTurn) {
+      const remaining = timeRemainingFor(g);
+      const cls = remaining <= 10 ? 'danger' : remaining <= 30 ? 'warn' : '';
+      const m = Math.floor(remaining / 60), s = remaining % 60;
+      const msg = g.currentTurn.isLastTurn
+        ? '¡Último turno de la partida! Solo puedes vender; luego juega tu tarjeta.'
+        : '¡Es el turno de tu equipo! Puedes comprar/vender y luego jugar tu tarjeta.';
+      return `
+        <div class="bbv-turn-banner">
+          <span>${msg}</span>
+          <span class="bbv-timer ${cls}">${m}:${s.toString().padStart(2, '0')}</span>
+        </div>`;
+    }
+    const turnTeam = g.teams.find(t => t.id === g.currentTurn.teamId);
+    return `<div class="bbv-turn-banner not-your-turn"><span>Esperando el turno de ${escapeHtml(turnTeam ? turnTeam.name : '')}…${g.currentTurn.isLastTurn ? ' (último turno de la partida)' : ''}</span></div>`;
+  }
+
+  function view_priceDelta(c) {
+    const hist = c.priceHistory || [];
+    if (hist.length < 2) return '';
+    const delta = hist[hist.length - 1] - hist[hist.length - 2];
+    const dividendBadge = c.lastPriceEvent === 'dividend' ? `<span class="bbv-dividend-badge">💰 dividendo</span>` : '';
+    if (delta === 0) return dividendBadge;
+    const isUp = delta > 0;
+    const arrow = isUp ? '▲' : '▼';
+    const sign = isUp ? '+' : '';
+    return `<span class="bbv-price-delta ${isUp ? 'up' : 'down'}">${arrow} ${sign}${delta}</span>${dividendBadge}`;
+  }
+
+  function view_market() {
+    const g = app.game;
+    const team = myTeam();
+    const isMyTurn = g.currentTurn.teamId === app.myTeamId && !g.paused && !g.manualPause;
+    const rows = g.companies.map(c => {
+      const held = team.holdings[c.id] || 0;
+      const lockedByBefore = g.currentTurn.phase === 'after' && g.currentTurn.operatedCompanyBefore === c.id && isMyTurn;
+      const canBuy = isMyTurn && !lockedByBefore && !g.auction && !g.currentTurn.isLastTurn;
+      const canSell = g.auction ? held > 0 : (isMyTurn && !lockedByBefore && held > 0);
+      return `
+        <div class="bbv-company-card">
+          <div class="bbv-ticker-hex" style="background:${c.color || '#888'}">${c.ticker || c.name.slice(0,2).toUpperCase()}</div>
+          <div><div class="bbv-co-name">${escapeHtml(c.name)}</div><div class="bbv-co-stats"><span>Tienes: ${held}</span><span>Acc. broker: ${c.brokerShares}</span></div></div>
+          <div class="bbv-co-price-wrap">${view_priceDelta(c)}<span class="bbv-co-price">${c.price}</span></div>
+          <div class="bbv-co-actions">
+            <button class="bbv-btn-buy" data-action="open-trade" data-company="${c.id}" data-side="buy" ${canBuy ? '' : 'disabled'}>Comprar</button>
+            <button class="bbv-btn-sell" data-action="open-trade" data-company="${c.id}" data-side="sell" ${canSell ? '' : 'disabled'}>Vender</button>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div><p class="bbv-section-title">Mercado</p><div class="bbv-company-list">${rows}</div></div>`;
+  }
+
+  function view_cards() {
+    const g = app.game;
+    const team = myTeam();
+    const isMyTurn = g.currentTurn.teamId === app.myTeamId && !g.paused && !g.manualPause;
+    const canPlay = isMyTurn && !g.currentTurn.cardPlayed;
+    const rows = team.hand.map(card => {
+      const info = CARD_INFO[card.cardId];
+      const def = CARD_DEFS[card.cardId];
+      const company = companyById(card.targetCompanyId);
+      const expanded = app.expandedCardInstanceId === card.instanceId;
+      return `
+        <div class="bbv-play-card ${canPlay ? '' : 'disabled'}">
+          <div class="bbv-play-card-head" data-action="toggle-card-desc" data-instance="${card.instanceId}">
+            <div class="bbv-card-left">
+              <div class="bbv-ticker-hex" style="background:${company.color || '#888'}">${company.ticker || company.name.slice(0,2).toUpperCase()}</div>
+              <div><div class="bbv-card-label">${info.label}</div><div class="bbv-card-target">${escapeHtml(company.name)}</div></div>
+            </div>
+            <button class="bbv-btn-play" data-action="play-card" data-instance="${card.instanceId}" ${canPlay && !app.actionInFlight ? '' : 'disabled'}>Jugar</button>
+          </div>
+          ${expanded ? `<div class="bbv-card-desc">${info.desc}</div>` : ''}
+        </div>`;
+    }).join('') || `<p style="font-size:13px;color:var(--ink-soft)">No te quedan tarjetas.</p>`;
+    return `<div><p class="bbv-section-title">Tus tarjetas (${team.hand.length})</p><div class="bbv-card-list">${rows}</div></div>`;
+  }
+
+  function view_portfolio() {
+    const team = myTeam();
+    const valued = Object.entries(team.holdings).reduce((sum, [id, qty]) => sum + qty * companyById(id).price, 0);
+    return `
+      <div class="bbv-portfolio">
+        <p class="bbv-section-title" style="margin-bottom:8px;">Tu portafolio</p>
+        <div class="bbv-portfolio-row"><span>Acciones valuadas</span><span class="val">${formatBs(valued)}</span></div>
+        <div class="bbv-portfolio-row"><span>Efectivo</span><span class="val">${formatBs(team.cash)}</span></div>
+        <div class="bbv-portfolio-row"><span>Total</span><span class="val">${formatBs(valued + team.cash)}</span></div>
+      </div>`;
+  }
+
+  function view_eventLog() {
+    const g = app.game;
+    const entries = (g.log || []).slice(-10).reverse();
+    const rows = entries.length
+      ? entries.map(e => `<div class="bbv-log-row"><span class="bbv-log-turn">T${e.turn}</span><span>${escapeHtml(e.text)}</span></div>`).join('')
+      : `<p style="font-size:12.5px;color:var(--ink-soft);">Todavía no pasó nada en esta partida.</p>`;
+    return `
+      <div class="bbv-portfolio">
+        <p class="bbv-section-title" style="margin-bottom:8px;">Qué está pasando</p>
+        <div class="bbv-log-list">${rows}</div>
+      </div>`;
+  }
+
+  function view_chart() {
+    const g = app.game;
+    const w = 560, h = 160, pad = 8;
+    const allPrices = g.companies.flatMap(c => c.priceHistory && c.priceHistory.length ? c.priceHistory : [c.price]);
+    const min = Math.min(...allPrices), max = Math.max(...allPrices);
+    const range = (max - min) || 1;
+    const pointsFor = c => {
+      const hist = (c.priceHistory && c.priceHistory.length) ? c.priceHistory : [c.price];
+      return hist.map((p, i) => {
+        const x = hist.length > 1 ? pad + (i / (hist.length - 1)) * (w - pad * 2) : pad;
+        const y = h - pad - ((p - min) / range) * (h - pad * 2);
+        return `${x},${y}`;
+      }).join(' ');
+    };
+    const legend = g.companies.map(c => `<span><span class="bbv-legend-dot" style="background:${c.color || '#888'}"></span>${c.ticker || c.name}</span>`).join('');
+    const lines = g.companies.map(c => `<polyline points="${pointsFor(c)}" fill="none" stroke="${c.color || '#888'}" stroke-width="2" />`).join('');
+    return `<div class="bbv-chart-wrap"><p class="bbv-section-title">Ruedo virtual</p><div class="bbv-chart-legend">${legend}</div><svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block;">${lines}</svg></div>`;
+  }
+
+  function view_crisisOverlay() {
+    const g = app.game;
+    const pending = (g.pendingDecisions || []).filter(d => !d.resolved && d.teamId === app.myTeamId);
+    if (pending.length === 0) return '';
+    const d = pending[0];
+    const company = companyById(d.companyId);
+    const held = myTeam().holdings[d.companyId] || 0;
+    const cost = held * 20;
+    return `
+      <div class="bbv-modal-backdrop">
+        <div class="bbv-modal" onclick="event.stopPropagation()">
+          <h3>Crisis en ${escapeHtml(company.name)}</h3>
+          <p>El precio tocó el piso (Bs 10). Decide qué hacer con tus ${held} acciones antes de continuar.</p>
+          <div class="bbv-modal-actions">
+            <button class="bbv-modal-cancel" data-action="crisis-return" data-company="${d.companyId}" ${app.actionInFlight ? 'disabled' : ''}>Devolverlas al broker</button>
+            <button class="bbv-modal-confirm" data-action="crisis-keep" data-company="${d.companyId}" ${app.actionInFlight ? 'disabled' : ''}>Conservarlas (Bs ${cost})</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function view_auctionBanner() {
+    const g = app.game;
+    if (!g.auction) return '';
+    const a = g.auction;
+    const company = companyById(a.companyId);
+    const highestBid = a.bids.length ? a.bids[a.bids.length - 1] : null;
+    const nextAmount = nextAuctionBidAmount(g);
+    const nextTotal = nextAmount * a.lotSize;
+    const myContribution = a.contributions[app.myTeamId] || 0;
+    const elapsed = Math.floor((Date.now() - (a.auctionStartedAt || Date.now())) / 1000);
+    const secondsLeft = Math.max(0, AUCTION_SECONDS - elapsed);
+
+    const contribLines = Object.entries(a.contributions).filter(([, qty]) => qty > 0).map(([teamId, qty]) => {
+      const t = g.teams.find(tm => tm.id === teamId);
+      return `${escapeHtml(t ? t.name : teamId)}: ${qty} acc.`;
+    }).join(' · ') || 'nadie tenía acciones para aportar';
+
+    return `
+      <div class="bbv-auction-banner">
+        <div class="bbv-auction-head">
+          <span class="bbv-auction-badge">🔔 Subasta en vivo</span>
+          <h3>${escapeHtml(company.name)}</h3>
+          <span class="bbv-timer ${secondsLeft <= 10 ? 'danger' : 'warn'}">${secondsLeft}s</span>
+        </div>
+        <p>Lote obligatorio de ${a.lotSize} acciones (aportes: ${contribLines}; broker completó ${a.brokerShares}). Al cerrarse, quienes aportaron se liquidan a Bs ${a.priceAtStart}/acción${myContribution ? ` — te tocan Bs ${myContribution * a.priceAtStart}` : ''}.</p>
+        <div class="bbv-inline-row">
+          <span style="font-size:13px;">Puja actual: <strong>${highestBid ? `Bs ${highestBid.amountPerShare}/acción` : 'ninguna todavía'}</strong></span>
+          <button class="bbv-btn-sm" data-action="auction-bid" ${(highestBid && highestBid.teamId === app.myTeamId) || app.actionInFlight ? 'disabled' : ''}>Pujar Bs ${nextAmount} (lote: ${formatBs(nextTotal)})</button>
+        </div>
+        <p class="bbv-hint">La subasta se cierra sola cuando llega a 0s — se adjudica al mejor postor en ese momento que aún pueda pagar el lote.${highestBid && highestBid.teamId === app.myTeamId ? ' Tienes la puja más alta: espera a que otro equipo supere tu oferta.' : ''}</p>
+        <p class="bbv-hint">¿Necesitas efectivo para pujar? Usa el botón "Vender" de cualquier empresa en el Mercado — funciona aunque no sea tu turno mientras dure la subasta. Ojo: si vendes después de pujar y ya no te alcanza para pagar el lote, tu puja queda descalificada.</p>
+      </div>`;
+  }
+
+  function view_modal() {
+    // Prioridad: crisis (obligatoria) > modal normal de comprar/vender. La subasta ya no bloquea la pantalla.
+    const g = app.game;
+    const crisisHtml = view_crisisOverlay();
+    if (crisisHtml) return crisisHtml;
+
+    if (!app.modal) return '';
+    if (app.modal.type === 'rules') {
+      return `
+        <div class="bbv-modal-backdrop" data-action="close-modal">
+          <div class="bbv-modal" style="max-width:520px;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
+            <h3>Cómo se juega</h3>
+            ${guideSectionsHtml()}
+            <button class="bbv-modal-confirm" data-action="close-modal" style="margin-top:10px;">Cerrar</button>
+          </div>
+        </div>`;
+    }
+    if (app.modal.type === 'trade') {
+      const company = companyById(app.modal.companyId);
+      const team = myTeam();
+      const maxQty = app.modal.side === 'buy'
+        ? Math.min(company.brokerShares, Math.floor(team.cash / company.price))
+        : (team.holdings[company.id] || 0);
+      return `
+        <div class="bbv-modal-backdrop" data-action="close-modal">
+          <div class="bbv-modal" onclick="event.stopPropagation()">
+            <h3>${app.modal.side === 'buy' ? 'Comprar' : 'Vender'} ${escapeHtml(company.name)}</h3>
+            <p>Precio actual: ${company.price} · Máximo: ${maxQty}</p>
+            <input type="number" id="bbv-trade-qty" min="1" max="${maxQty}" value="1" oninput="document.getElementById('bbv-trade-total').textContent = 'Bs ' + ((parseInt(this.value,10)||0) * ${company.price}).toLocaleString('es-BO')">
+            <div class="bbv-portfolio-row" style="border:none;padding:0 0 14px 0;"><span>Total a ${app.modal.side === 'buy' ? 'pagar' : 'recibir'}</span><span class="val" id="bbv-trade-total">Bs ${company.price.toLocaleString('es-BO')}</span></div>
+            <div class="bbv-modal-actions">
+              <button class="bbv-modal-cancel" data-action="close-modal">Cancelar</button>
+              <button class="bbv-modal-confirm" data-action="confirm-trade" ${app.actionInFlight ? 'disabled' : ''}>Confirmar</button>
+            </div>
+          </div>
+        </div>`;
+    }
+    if (app.modal.type === 'other-company') {
+      const target = companyById(app.modal.targetCompanyId);
+      const options = g.companies.filter(c => c.id !== target.id).map(c => `<option value="${c.id}" ${c.id === app.modal.otherCompanyId ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
+      return `
+        <div class="bbv-modal-backdrop" data-action="close-modal">
+          <div class="bbv-modal" onclick="event.stopPropagation()">
+            <h3>Elige la otra empresa</h3>
+            <p>Esta tarjeta también afecta a otra empresa distinta de ${escapeHtml(target.name)}.</p>
+            <select id="bbv-other-company" onchange="window.__bbvSetOtherCompany(this.value)">${options}</select>
+            <div class="bbv-modal-actions">
+              <button class="bbv-modal-cancel" data-action="close-modal">Cancelar</button>
+              <button class="bbv-modal-confirm" data-action="confirm-play-card" ${app.actionInFlight ? 'disabled' : ''}>Confirmar</button>
+            </div>
+          </div>
+        </div>`;
+    }
+    return '';
+  }
+
+  function view_leaderboardRows(ranking) {
+    const medals = ['🥇', '🥈', '🥉'];
+    return `<div class="bbv-company-list">${ranking.map((t, i) => `
+      <div class="bbv-company-card" style="${i === 0 ? 'border-color:var(--brass);border-width:2px;' : ''}">
+        <div class="bbv-ticker-hex" style="background:${i < 3 ? 'var(--brass)' : '#888'};font-size:16px;">${medals[i] || (i + 1)}</div>
+        <div><div class="bbv-co-name">${escapeHtml(t.name)}${t.eliminated ? ' <span style="color:var(--down);font-size:11px;">(eliminado)</span>' : ''}</div><div class="bbv-co-stats"><span>Puesto ${i + 1}</span></div></div>
+        <div class="bbv-co-price">${formatBs(t.cash)}</div>
+      </div>`).join('')}</div>`;
+  }
+
+  function view_gameOverBlock() {
+    const g = app.game;
+    const ranking = [...g.teams].sort((a, b) => b.cash - a.cash);
+    const myRank = ranking.findIndex(t => t.id === app.myTeamId) + 1;
+    return `
+      <div class="bbv-content">
+        <div class="bbv-card" style="max-width:480px;">
+          <p class="bbv-eyebrow">Partida terminada</p>
+          <h1 class="bbv-title">🏆 ${escapeHtml(ranking[0].name)}</h1>
+          <p class="bbv-sub">Gana con ${formatBs(ranking[0].cash)}. ${myRank ? `Tu equipo terminó en el puesto ${myRank} de ${ranking.length}.` : ''}</p>
+          ${view_leaderboardRows(ranking)}
+        </div>
+      </div>`;
+  }
+
+  function view_game() {
+    const g = app.game;
+    if (g.gameOver) return view_gameOverBlock();
+    const isMyTurn = g.currentTurn.teamId === app.myTeamId && !g.paused && !g.manualPause;
+    const canEndTurn = isMyTurn && !!g.currentTurn.cardPlayed;
+    return `
+      ${view_turnBanner()}
+      ${view_auctionBanner()}
+      <div class="bbv-error" style="padding:0 20px;">${app.error}</div>
+      <div class="bbv-main">
+        <div>${view_market()}${view_chart()}</div>
+        <div>${view_cards()}${view_portfolio()}${view_eventLog()}</div>
+      </div>
+      ${canEndTurn ? `<div class="bbv-footer-turn"><button class="bbv-btn-sm" data-action="end-turn" ${app.actionInFlight ? 'disabled' : ''}>Terminar mi turno</button></div>` : ''}
+      ${view_modal()}
+    `;
+  }
+
+  // ================= RENDER PRINCIPAL =================
+  function render() {
+    root.setAttribute('data-theme', app.theme);
+    let inner = '';
+    if (app.screen === 'role-select') inner = view_roleSelect();
+    else if (app.screen === 'broker-setup') inner = view_brokerSetup();
+    else if (app.screen === 'broker-waiting') inner = view_brokerWaiting();
+    else if (app.screen === 'team-join') inner = view_teamJoin();
+    else if (app.screen === 'team-waiting') inner = view_teamWaiting();
+    else if (app.screen === 'team-guide') inner = view_teamGuide();
+    else if (app.screen === 'broker-started') inner = `<div class="bbv-card"><p class="bbv-sub">Cargando la partida…</p></div>`;
+
+    if (app.screen === 'game' && app.game) {
+      root.innerHTML = `
+        <div class="bbv-topbar"><span class="bbv-topbar-title">Juego de la Bolsa</span><div style="display:flex;gap:8px;"><button class="bbv-theme-toggle" data-action="open-rules">Reglas</button><button class="bbv-theme-toggle" data-action="toggle-theme">${app.theme === 'light' ? 'Modo oscuro' : 'Modo claro'}</button></div></div>
+        ${view_game()}
+      `;
+    } else if (app.screen === 'broker-started' && app.game) {
+      root.innerHTML = `
+        <div class="bbv-topbar"><span class="bbv-topbar-title">Juego de la Bolsa · Sala ${app.roomCode}</span><button class="bbv-theme-toggle" data-action="toggle-theme">${app.theme === 'light' ? 'Modo oscuro' : 'Modo claro'}</button></div>
+        ${view_brokerStarted()}
+      `;
+    } else {
+      root.innerHTML = `
+        <div class="bbv-topbar"><span class="bbv-topbar-title">Juego de la Bolsa</span><button class="bbv-theme-toggle" data-action="toggle-theme">${app.theme === 'light' ? 'Modo oscuro' : 'Modo claro'}</button></div>
+        <div class="bbv-content">${inner}</div>
+      `;
+    }
+    bindEvents();
+  }
+
+  function bindEvents() {
+    root.querySelectorAll('[data-action]').forEach(el => el.addEventListener('click', onAction));
+  }
+
+  function onAction(e) {
+    const action = e.currentTarget.getAttribute('data-action');
+    if (action === 'toggle-theme') {
+      if (app.screen === 'broker-setup') captureSetupDraft();
+      app.theme = app.theme === 'light' ? 'dark' : 'light';
+      render();
+    }
+    else if (action === 'go-broker') setScreen('broker-setup');
+    else if (action === 'go-team') setScreen('team-join');
+    else if (action === 'back-to-role') { stopTimers(); app = { ...app, screen: 'role-select', error: '', roomCode: null, myTeamId: null, room: null, game: null }; render(); }
+    else if (action === 'open-rules') { app.modal = { type: 'rules' }; render(); }
+    else if (action === 'show-guide') { app.screen = 'team-guide'; render(); }
+    else if (action === 'guide-continue') {
+      if (app.room && app.room.started) { loadGameAndSwitch('game'); }
+      else { app.screen = 'team-waiting'; render(); }
+    }
+    else if (action === 'select-turn-seconds') {
+      captureSetupDraft(); // conserva lo ya escrito antes de redibujar
+      app.selectedTurnSeconds = parseInt(e.currentTarget.value, 10);
+      render();
+    }
+    else if (action === 'create-room') {
+      captureSetupDraft(); // si hay un error de validación, el redibujado no borra los campos
+      const enabledCardIds = Object.keys(CARD_INFO).filter(id => document.getElementById('bbv-card-' + id).checked);
+      createRoom(document.getElementById('bbv-max-teams').value, document.getElementById('bbv-hand-size').value, enabledCardIds, app.selectedTurnSeconds ?? DEFAULT_TURN_SECONDS);
+    }
+    else if (action === 'join-room') joinRoom(document.getElementById('bbv-room-code').value, document.getElementById('bbv-team-name').value);
+    else if (action === 'start-game') startGame();
+    else if (action === 'open-trade') { app.modal = { type: 'trade', companyId: e.currentTarget.getAttribute('data-company'), side: e.currentTarget.getAttribute('data-side') }; render(); }
+    else if (action === 'close-modal') { app.modal = null; render(); }
+    else if (action === 'confirm-trade') {
+      const qty = parseInt(document.getElementById('bbv-trade-qty').value, 10);
+      if (qty > 0) runAction(() => doTrade(app.modal.companyId, app.modal.side, qty));
+      else { app.modal = null; render(); }
+    }
+    else if (action === 'toggle-card-desc') {
+      const id = e.currentTarget.getAttribute('data-instance');
+      app.expandedCardInstanceId = app.expandedCardInstanceId === id ? null : id;
+      render();
+    }
+    else if (action === 'play-card') {
+      e.stopPropagation();
+      const instanceId = e.currentTarget.getAttribute('data-instance');
+      const card = myTeam().hand.find(c => c.instanceId === instanceId);
+      const def = CARD_DEFS[card.cardId];
+      if (def.needsOtherCompany) {
+        const firstOtherCompany = myTeamAvailableOtherCompany(card.targetCompanyId);
+        app.modal = { type: 'other-company', instanceId, targetCompanyId: card.targetCompanyId, otherCompanyId: firstOtherCompany };
+        render();
+      }
+      else runAction(() => doPlayCard(instanceId, null));
+    }
+    else if (action === 'confirm-play-card') {
+      const otherCompanyId = app.modal.otherCompanyId;
+      runAction(() => doPlayCard(app.modal.instanceId, otherCompanyId));
+    }
+    else if (action === 'end-turn') runAction(() => doEndTurn());
+    else if (action === 'crisis-keep') runAction(() => doCrisisDecision(e.currentTarget.getAttribute('data-company'), 'keep'));
+    else if (action === 'crisis-return') runAction(() => doCrisisDecision(e.currentTarget.getAttribute('data-company'), 'return'));
+    else if (action === 'auction-bid') runAction(() => doAuctionBid());
+    else if (action === 'auction-resolve') runAction(() => doAuctionResolve());
+    else if (action === 'toggle-pause') runAction(() => doTogglePause());
+    else if (action === 'skip-turn') runAction(() => doSkipTurn());
+  }
+
+  render();
+})();
+</script>
