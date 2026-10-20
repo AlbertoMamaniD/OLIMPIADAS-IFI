@@ -1,13 +1,66 @@
 import React, { useState } from 'react';
-import { Layers, Zap, Play, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Layers,
+  Zap,
+  Play,
+  ChevronDown,
+  ChevronUp,
+  Gavel,
+  TrendingUp,
+  TrendingDown,
+  ArrowRightLeft,
+  CheckCircle2,
+} from 'lucide-react';
 
-const CARD_INFO = {
-  '100_10': { label: '100 / 10', desc: 'La empresa objetivo sube Bs 100; las demás bajan Bs 10.', needsOther: false },
-  '20_50':  { label: '20 / 50',  desc: 'La empresa objetivo baja Bs 50; las demás suben Bs 20.', needsOther: false },
-  '80_40':  { label: '80 / 40',  desc: 'La empresa objetivo sube Bs 80. Otra empresa elegida baja Bs 40.', needsOther: true },
-  '2x':     { label: '2x',       desc: 'La empresa objetivo duplica su precio. Otra empresa elegida reduce a la mitad.', needsOther: true },
-  'half_2x':{ label: '1/2x',     desc: 'La empresa objetivo reduce a la mitad. Otra empresa elegida duplica su precio.', needsOther: true },
-  'auction':{ label: 'Subasta',  desc: 'Inicia subasta obligatoria de 30 acciones de la empresa objetivo.', needsOther: false },
+const CARD_CONFIG = {
+  '100_10': {
+    label: '+100 / -10',
+    type: 'Alza Sistémica',
+    impact: 'La empresa objetivo sube +Bs 100; las demás 4 bajan -Bs 10.',
+    icon: TrendingUp,
+    badgeClass: 'badge-bullish',
+    needsOther: false,
+  },
+  '20_50': {
+    label: '-50 / +20',
+    type: 'Corrección / Rally',
+    impact: 'La empresa objetivo baja -Bs 50; las demás 4 suben +Bs 20.',
+    icon: TrendingDown,
+    badgeClass: 'badge-bearish',
+    needsOther: false,
+  },
+  '80_40': {
+    label: '+80 / -40',
+    type: 'Arbitraje Directo',
+    impact: 'La empresa objetivo sube +Bs 80; una contraparte elegida baja -Bs 40.',
+    icon: ArrowRightLeft,
+    badgeClass: 'badge-arbitrage',
+    needsOther: true,
+  },
+  '2x': {
+    label: '2x / 0.5x',
+    type: 'Multiplicador Doble',
+    impact: 'La empresa objetivo duplica su cotización (x2); la elegida reduce a la mitad (x0.5).',
+    icon: Zap,
+    badgeClass: 'badge-multiplier',
+    needsOther: true,
+  },
+  'half_2x': {
+    label: '0.5x / 2x',
+    type: 'Inversión de Mitad',
+    impact: 'La empresa objetivo reduce a la mitad (x0.5); la elegida duplica su cotización (x2).',
+    icon: Zap,
+    badgeClass: 'badge-multiplier',
+    needsOther: true,
+  },
+  'auction': {
+    label: 'Subasta Pública',
+    type: 'Liquidez Obligatoria',
+    impact: 'Convoca a subasta extraordinaria de 30 acciones del objetivo a precio base.',
+    icon: Gavel,
+    badgeClass: 'badge-auction',
+    needsOther: false,
+  },
 };
 
 export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, actionInProgress }) {
@@ -17,86 +70,119 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
     setExpandedId(prev => (prev === id ? null : id));
   };
 
-  const getCompanyName = id => {
-    const c = companies.find(comp => comp.id === id);
-    return c ? c.name : id;
+  const getCompany = id => {
+    return companies.find(comp => comp.id === id) || { name: `Empresa ${id}`, ticker: `E${id}` };
   };
 
   const canPlay = isMyTurn && !cardPlayed && !actionInProgress;
 
   return (
-    <div className="terminal-card">
+    <div className="terminal-card card-deck-card">
       <div className="terminal-card-header">
         <div className="header-icon-label">
-          <Layers size={15} color="var(--ifi-secondary)" />
-          <span>Cartera de Tarjetas ({hand?.length || 0})</span>
+          <Layers size={18} className="text-ifi" />
+          <span className="card-title-strong">Cartera de Tarjetas Tácticas ({hand?.length || 0})</span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--ink-secondary)', textTransform: 'none', letterSpacing: 'normal' }}>
-          {cardPlayed ? 'Tarjeta de turno ejecutada' : 'Obligatorio ejecutar 1 por turno'}
-        </span>
+        <div className="card-deck-status">
+          {cardPlayed ? (
+            <span className="turn-step-executed font-mono">
+              <CheckCircle2 size={13} />
+              <span>Ejecutada en este turno</span>
+            </span>
+          ) : (
+            <span className="turn-step-pending font-mono">
+              Obligatorio: 1 orden por turno
+            </span>
+          )}
+        </div>
       </div>
 
-      {(!hand || hand.length === 0) ? (
-        <div style={{ padding: '16px 0', textAlign: 'center', color: 'var(--ink-muted)', fontSize: '13px', fontStyle: 'italic' }}>
-          Sin tarjetas disponibles en cartera
-        </div>
-      ) : (
-        hand.map(card => {
-          const info = CARD_INFO[card.cardId] || { label: card.cardId, desc: '', needsOther: false };
-          const isExpanded = expandedId === card.instanceId;
-          const targetName = getCompanyName(card.targetCompanyId);
+      <div className="cards-list-container">
+        {(!hand || hand.length === 0) ? (
+          <div className="empty-deck-notice font-mono">
+            <span>Sin tarjetas disponibles en cartera</span>
+          </div>
+        ) : (
+          hand.map(card => {
+            const config = CARD_CONFIG[card.cardId] || {
+              label: card.cardId,
+              type: 'Estratégica',
+              impact: 'Impacto táctico sobre cotizaciones',
+              icon: Zap,
+              badgeClass: 'badge-default',
+              needsOther: false,
+            };
+            const Icon = config.icon;
+            const isExpanded = expandedId === card.instanceId;
+            const targetComp = getCompany(card.targetCompanyId);
 
-          return (
-            <div
-              key={card.instanceId}
-              className="card-entry-row"
-              onClick={() => toggleExpand(card.instanceId)}
-            >
-              <div className="card-entry-header">
-                <div>
-                  <div className="card-name-label">
-                    <Zap size={14} />
-                    <span>{info.label}</span>
-                  </div>
-                  <div className="card-target-label">
-                    Objetivo: <strong style={{ color: 'var(--ink)' }}>{targetName}</strong>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <button
-                    className="btn-primary-action"
-                    style={{ padding: '6px 12px', fontSize: '11.5px', textTransform: 'uppercase' }}
-                    disabled={!canPlay}
-                    onClick={e => {
-                      e.stopPropagation();
-                      onPlayCard(card, info.needsOther);
-                    }}
-                  >
-                    <Play size={11} />
-                    <span>Ejecutar</span>
-                  </button>
-
-                  <div style={{ color: 'var(--ink-muted)' }}>
-                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                  </div>
-                </div>
-              </div>
-
-              {isExpanded && (
-                <div className="card-description-box">
-                  <div>{info.desc}</div>
-                  {info.needsOther && (
-                    <div style={{ color: 'var(--accent)', marginTop: '4px', fontWeight: 600, fontSize: '11px' }}>
-                      Requiere seleccionar una segunda empresa en pantalla.
+            return (
+              <div
+                key={card.instanceId}
+                className={`tactical-card-item ${isExpanded ? 'is-expanded' : ''} ${config.badgeClass}`}
+                onClick={() => toggleExpand(card.instanceId)}
+              >
+                <div className="tactical-card-header">
+                  <div className="tactical-card-left">
+                    <div className="tactical-card-badge">
+                      <Icon size={14} />
+                      <span className="font-mono">{config.label}</span>
                     </div>
-                  )}
+                    <div className="tactical-card-meta">
+                      <div className="tactical-target-line">
+                        <span className="meta-label">Objetivo:</span>
+                        <span className="meta-ticker-chip font-mono">
+                          [{targetComp.ticker || `E${targetComp.id}`}]
+                        </span>
+                        <span className="meta-name">{targetComp.name}</span>
+                      </div>
+                      <span className="tactical-type-tag">{config.type}</span>
+                    </div>
+                  </div>
+
+                  <div className="tactical-card-actions" onClick={e => e.stopPropagation()}>
+                    <button
+                      className="btn-execute-card"
+                      disabled={!canPlay}
+                      onClick={() => onPlayCard(card, config.needsOther)}
+                      title={
+                        !isMyTurn
+                          ? 'Esperando turno de tu mesa'
+                          : cardPlayed
+                          ? 'Ya se ejecutó una tarjeta en este turno'
+                          : 'Ejecutar orden táctica en el mercado'
+                      }
+                    >
+                      <Play size={12} fill="currentColor" />
+                      <span>EJECUTAR</span>
+                    </button>
+                    <button
+                      className="btn-expand-card"
+                      onClick={() => toggleExpand(card.instanceId)}
+                      title={isExpanded ? 'Colapsar detalles' : 'Ver impacto completo'}
+                    >
+                      {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
-          );
-        })
-      )}
+
+                {isExpanded && (
+                  <div className="tactical-card-detail">
+                    <div className="impact-description">
+                      <strong>Efecto en Rueda:</strong> {config.impact}
+                    </div>
+                    {config.needsOther && (
+                      <div className="dual-target-alert font-mono">
+                        * Requiere seleccionar una segunda empresa en pantalla al ejecutar.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
     </div>
   );
 }

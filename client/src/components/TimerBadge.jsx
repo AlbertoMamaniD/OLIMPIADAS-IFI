@@ -4,9 +4,9 @@ import { Clock, Pause } from 'lucide-react';
 export function TimerBadge({ seconds, paused, isAuction }) {
   if (paused) {
     return (
-      <div className="institutional-timer" style={{ color: 'var(--ink-secondary)' }}>
-        <Pause size={14} />
-        <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PAUSADO</span>
+      <div className="terminal-timer-badge is-paused">
+        <Pause size={13} />
+        <span className="timer-label">PAUSA MESA</span>
       </div>
     );
   }
@@ -16,19 +16,21 @@ export function TimerBadge({ seconds, paused, isAuction }) {
   const secs = s % 60;
   const formatted = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
 
-  let alertClass = '';
-  if (s <= 10) alertClass = 'critical';
-  else if (s <= 30) alertClass = 'warn';
+  let alertState = 'is-normal';
+  if (s <= 10) alertState = 'is-critical';
+  else if (s <= 25) alertState = 'is-warn';
 
   return (
-    <div className={`institutional-timer ${alertClass}`}>
-      <Clock size={15} />
-      <span style={{ fontSize: '10.5px', textTransform: 'uppercase', color: 'var(--ink-secondary)', letterSpacing: '0.04em' }}>
-        {isAuction ? 'Subasta' : 'Turno'}
-      </span>
-      <span className="val-num" style={{ fontWeight: 700 }}>
-        {formatted}
-      </span>
+    <div className={`terminal-timer-badge ${alertState}`}>
+      <Clock size={14} className="timer-icon" />
+      <div className="timer-info">
+        <span className="timer-label font-mono">
+          {isAuction ? 'SUBASTA' : 'TIEMPO TURNO'}
+        </span>
+        <span className="timer-value font-mono">
+          {formatted}
+        </span>
+      </div>
     </div>
   );
 }

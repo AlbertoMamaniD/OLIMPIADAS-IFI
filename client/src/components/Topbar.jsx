@@ -1,77 +1,78 @@
 import React from 'react';
-import { BookOpen, Sun, Moon, LogOut, Shield } from 'lucide-react';
+import { BookOpen, Sun, Moon, LogOut, Shield, Trophy } from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 
-export function Topbar({ onOpenRules }) {
+export function Topbar({ onOpenRules, onOpenHistory }) {
   const { room, role, myTeam, theme, toggleTheme, resetAll } = useGameSocket();
 
   return (
     <header className="topbar">
       <div className="topbar-brand">
-        <img
-          src="/logo-ifi.png"
-          alt="Olimpiadas IFI 2026"
-          className="brand-logo-img"
-          onError={e => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+        <div className="brand-logo-frame">
+          <img
+            src="/logo-ifi.png"
+            alt="Olimpiadas IFI 2026"
+            className="brand-logo-img"
+            onError={e => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
         <div className="brand-title-wrap">
-          <span className="brand-main-title">
-            IFI Trader League {room?.code ? `· Sala ${room.code}` : ''}
-          </span>
-          <span className="brand-sub-badge">Olimpiadas IFI 2026 · BBV</span>
+          <div className="brand-title-row">
+            <span className="brand-main-title">IFI TRADER LEAGUE</span>
+            {room?.code && (
+              <span className="room-code-badge font-mono">
+                SALA {room.code}
+              </span>
+            )}
+          </div>
+          <div className="brand-meta-row">
+            <span className="live-feed-dot" />
+            <span className="brand-sub-badge">BOLSA BOLIVIANA DE VALORES · OLIMPIADAS IFI 2026</span>
+          </div>
         </div>
       </div>
 
       <div className="topbar-actions">
         {myTeam && (
-          <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)', marginRight: '6px' }}>
-            Mesa: <strong style={{ color: 'var(--ink)' }}>{myTeam.name}</strong>
-          </span>
+          <div className="user-seat-pill">
+            <span className="seat-label">MESA ASIGNADA:</span>
+            <span className="seat-team-name font-mono">{myTeam.name}</span>
+          </div>
         )}
 
         {role === 'broker' && (
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '11px',
-              fontFamily: 'var(--font-mono)',
-              background: 'var(--ifi-subtle)',
-              color: 'var(--ifi-secondary)',
-              border: '1px solid var(--ifi-secondary)',
-              padding: '2px 8px',
-              borderRadius: 'var(--border-radius-sm)',
-              fontWeight: 700,
-            }}
-          >
-            <Shield size={12} />
-            BROKER
-          </span>
+          <div className="broker-auth-pill">
+            <Shield size={14} />
+            <span>MESA DE CONTROL (BROKER)</span>
+          </div>
         )}
 
-        <button className="btn-control" onClick={onOpenRules}>
-          <BookOpen size={14} />
+        <button className="btn-control btn-history" onClick={onOpenHistory} title="Ver clasificación y podio histórico de las Olimpiadas">
+          <Trophy size={15} />
+          <span>Historial & Podio</span>
+        </button>
+
+        <button className="btn-control btn-rules" onClick={onOpenRules} title="Ver reglamento oficial de competencia">
+          <BookOpen size={15} />
           <span>Reglamento</span>
         </button>
 
-        <button className="btn-control" onClick={toggleTheme}>
-          {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
+        <button className="btn-control btn-theme-toggle" onClick={toggleTheme} title="Alternar modo claro / oscuro">
+          {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
           <span>{theme === 'light' ? 'Oscuro' : 'Claro'}</span>
         </button>
 
         {room && (
           <button
-            className="btn-control"
-            style={{ color: 'var(--down)', borderColor: 'var(--down-border)' }}
+            className="btn-control btn-exit-danger"
             onClick={() => {
-              if (window.confirm('¿Desea salir de la sala actual?')) resetAll();
+              if (window.confirm('¿Desea salir de la sala de negociación actual?')) resetAll();
             }}
-            title="Salir al menú principal"
+            title="Abandonar sala y regresar a la pantalla principal"
           >
-            <LogOut size={14} />
+            <LogOut size={15} />
             <span>Salir</span>
           </button>
         )}

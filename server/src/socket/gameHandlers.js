@@ -5,6 +5,7 @@ import {
   endTurn,
   resolveCrisisDecision,
 } from '../engine/rulesEngine.js';
+import { saveFinishedMatch } from '../db/supabase.js';
 
 export function registerGameHandlers(io, socket) {
   // Operar en el mercado (Comprar o Vender acciones)
@@ -48,6 +49,10 @@ export function registerGameHandlers(io, socket) {
       }
 
       endTurn(room.game);
+      if (room.game.gameOver && !room.savedToDb) {
+        room.savedToDb = true;
+        saveFinishedMatch(room.game, room.code, room.settings);
+      }
       io.to(room.code).emit('game_updated', room.game);
 
       if (typeof callback === 'function') callback({ success: true });

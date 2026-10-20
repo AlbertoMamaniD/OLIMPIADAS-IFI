@@ -3,7 +3,7 @@ import { KeyRound, Users, Play, CheckCircle2, Clock } from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 
 export function BrokerLobbyScreen() {
-  const { room, startGame, error, setError } = useGameSocket();
+  const { room, startGame, error, setError, addBot } = useGameSocket();
   const [starting, setStarting] = useState(false);
 
   const teams = room?.teams || [];
@@ -47,7 +47,7 @@ export function BrokerLobbyScreen() {
 
         {/* Equipos registrados */}
         <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid var(--line)', paddingBottom: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line)', paddingBottom: '8px' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
               <Users size={14} color="var(--ifi-secondary)" />
               <span>
@@ -55,9 +55,20 @@ export function BrokerLobbyScreen() {
                 {room?.settings?.maxTeams ? ` / ${room.settings.maxTeams}` : ''})
               </span>
             </span>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: canStart ? 'var(--up)' : 'var(--accent)' }}>
-              {canStart ? 'QUÓRUM ALCANZADO' : `FALTAN ${minTeamsNeeded - teams.length} EQUIPOS PARA INICIAR`}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                className="btn-control"
+                style={{ fontSize: '11px', padding: '4px 8px' }}
+                onClick={() => addBot()}
+                title="Añadir una mesa operada por inteligencia artificial"
+              >
+                + Añadir Bot (CPU)
+              </button>
+              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: canStart ? 'var(--up)' : 'var(--accent)' }}>
+                {canStart ? 'LISTO' : `FALTAN ${minTeamsNeeded - teams.length}`}
+              </span>
+            </div>
           </div>
 
           {teams.length === 0 ? (

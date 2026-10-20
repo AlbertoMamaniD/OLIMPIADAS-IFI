@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useGameSocket } from './context/SocketContext';
 import { Topbar } from './components/Topbar';
 import { RulesModal } from './components/RulesModal';
+import { HistoryModal } from './components/HistoryModal';
 import { RoleSelectScreen } from './screens/RoleSelectScreen';
 import { BrokerSetupScreen } from './screens/BrokerSetupScreen';
 import { BrokerLobbyScreen } from './screens/BrokerLobbyScreen';
@@ -16,12 +17,16 @@ export function App() {
 
   const [selectedRole, setSelectedRole] = useState(null); // 'broker' | 'team' | null
   const [showRules, setShowRules] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const activeRole = role || selectedRole;
 
   return (
     <div className="app-container">
-      <Topbar onOpenRules={() => setShowRules(true)} />
+      <Topbar
+        onOpenRules={() => setShowRules(true)}
+        onOpenHistory={() => setShowHistory(true)}
+      />
 
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* 1. Fin de partida */}
@@ -63,6 +68,7 @@ export function App() {
       </main>
 
       {showRules && <RulesModal onClose={() => setShowRules(false)} />}
+      {showHistory && <HistoryModal onClose={() => setShowHistory(false)} />}
     </div>
   );
 }

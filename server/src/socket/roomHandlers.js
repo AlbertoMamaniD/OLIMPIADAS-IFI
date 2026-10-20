@@ -23,13 +23,48 @@ export function registerRoomHandlers(io, socket) {
     }
   });
 
+  // Modo Solo / Demostración rápida con Bots (sin requerir otras personas)
+  socket.on('create_solo_demo', ({ playerName }, callback) => {
+    try {
+      const { room, team, game } = roomManager.createSoloDemoGame(socket.id, playerName, io);
+      socket.join(room.code);
+
+      if (typeof callback === 'function') {
+        callback({
+          success: true,
+          roomCode: room.code,
+          teamId: team.id,
+          teamName: team.name,
+          room: {
+            code: room.code,
+            settings: room.settings,
+            teams: room.teams,
+            started: true,
+          },
+          game,
+        });
+      }
+    } catch (err) {
+      if (typeof callback === 'function') callback({ success: false, error: err.message });
+    }
+  });
+
+  // Agregar un equipo Bot a la sala (Broker)
+  socket.on('add_bot', ({ roomCode }, callback) => {
+    try {
+      const bot = roomManager.addBot(roomCode, io);
+      if (typeof callback === 'function') callback({ success: true, bot });
+    } catch (err) {
+      if (typeof callback === 'function') callback({ success: false, error: err.message });
+    }
+  });
+
   // Unirse a sala (Equipo / Alumno)
   socket.on('join_room', ({ roomCode, teamName }, callback) => {
     try {
       const { room, team, reconnected } = roomManager.joinRoom(roomCode, teamName, socket.id);
       socket.join(room.code);
 
-      // Notificar a todos en la sala la lista actualizada de equipos
       io.to(room.code).emit('room_teams_updated', {
         teams: room.teams,
         total: room.teams.length,
