@@ -7,6 +7,7 @@ import { EventLog } from '../components/EventLog';
 
 export function BrokerLiveDashboard() {
   const { room, game, clock, togglePause, skipTurn } = useGameSocket();
+  const [showSkipModal, setShowSkipModal] = React.useState(false);
 
   if (!game) return null;
 
@@ -93,17 +94,84 @@ export function BrokerLiveDashboard() {
           <button
             className="btn-control"
             style={{ color: 'var(--down)', borderColor: 'var(--down-border)' }}
-            onClick={() => {
-              if (window.confirm('¿Confirma forzar el término del turno para el equipo actual?')) {
-                skipTurn();
-              }
-            }}
+            onClick={() => setShowSkipModal(true)}
+            title="Forzar el fin del turno actual si el equipo se demora"
           >
             <SkipForward size={13} />
             <span>Saltar Turno</span>
           </button>
         </div>
       </div>
+
+      {showSkipModal && (
+        <div className="terminal-modal-overlay" onClick={() => setShowSkipModal(false)}>
+          <div
+            className="terminal-modal-window"
+            style={{ maxWidth: '440px', padding: '24px 28px', textAlign: 'left' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  background: 'var(--down-subtle)',
+                  color: 'var(--down)',
+                  border: '1px solid var(--down-border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <SkipForward size={18} />
+              </div>
+              <div>
+                <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ink-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  MESA DE CONTROL (BROKER)
+                </span>
+                <h3 style={{ margin: '2px 0 0 0', fontSize: '17px', fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'var(--ink)' }}>
+                  ¿Forzar Término de Turno?
+                </h3>
+              </div>
+            </div>
+
+            <p style={{ fontSize: '12.5px', lineHeight: 1.5, color: 'var(--ink)', marginBottom: '20px' }}>
+              Se forzará la conclusión inmediata del turno de <strong>{currentTeam.name}</strong>, descartando una tarjeta al azar si no jugaron ninguna y transfiriendo la custodia al siguiente equipo.
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button
+                type="button"
+                className="btn-control"
+                onClick={() => setShowSkipModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--down)',
+                  background: 'var(--down)',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  setShowSkipModal(false);
+                  skipTurn();
+                }}
+              >
+                Forzar Término
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Grid Principal */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.45fr 1fr', gap: '18px' }}>

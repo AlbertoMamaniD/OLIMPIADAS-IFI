@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { KeyRound, Users, Play, CheckCircle2, Clock } from 'lucide-react';
+import { KeyRound, Users, Play, CheckCircle2, Clock, X } from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 
 export function BrokerLobbyScreen() {
-  const { room, startGame, error, setError, addBot } = useGameSocket();
+  const { room, startGame, error, setError, addBot, removeTeam } = useGameSocket();
   const [starting, setStarting] = useState(false);
 
   const teams = room?.teams || [];
@@ -84,16 +84,43 @@ export function BrokerLobbyScreen() {
               Aguardando conexión de las primeras terminales estudiantiles...
             </div>
           ) : (
-            <div className="team-chips-grid">
-              {teams.map(t => (
-                <div key={t.id} className="team-indicator-chip">
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {t.name}
-                  </span>
-                  <CheckCircle2 size={13} color="var(--up)" />
-                </div>
-              ))}
-            </div>
+              <div className="team-chips-grid">
+                {teams.map(t => (
+                  <div key={t.id} className="team-indicator-chip" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
+                      <CheckCircle2 size={13} color="var(--up)" flexShrink={0} />
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {t.name}
+                      </span>
+                      {t.isBot && (
+                        <span style={{ fontSize: '9.5px', fontFamily: 'var(--font-mono)', opacity: 0.7, flexShrink: 0 }}>
+                          (CPU)
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeTeam(t.id)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--down)',
+                        cursor: 'pointer',
+                        padding: '2px 4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        opacity: 0.75,
+                        transition: 'opacity 0.15s ease',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                      onMouseLeave={e => (e.currentTarget.style.opacity = '0.75')}
+                      title={`Retirar a ${t.name} de la sala`}
+                    >
+                      <X size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
           )}
         </div>
 
