@@ -78,20 +78,23 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
 
   return (
     <div className="terminal-card card-deck-card">
-      <div className="terminal-card-header">
+      <div className="terminal-card-header deck-header-row">
         <div className="header-icon-label">
-          <Layers size={18} className="text-ifi" />
-          <span className="card-title-strong">Cartera de Tarjetas Tácticas ({hand?.length || 0})</span>
+          <Layers size={17} className="text-ifi" />
+          <span className="card-title-strong">
+            <span className="deck-title-full">Cartera de Tarjetas Tácticas ({hand?.length || 0})</span>
+            <span className="deck-title-mob">Tarjetas Tácticas ({hand?.length || 0})</span>
+          </span>
         </div>
         <div className="card-deck-status">
           {cardPlayed ? (
             <span className="turn-step-executed font-mono">
-              <CheckCircle2 size={13} />
-              <span>Ejecutada en este turno</span>
+              <CheckCircle2 size={12} />
+              <span>Ejecutada</span>
             </span>
           ) : (
             <span className="turn-step-pending font-mono">
-              Obligatorio: 1 orden por turno
+              1 obligatoria / turno
             </span>
           )}
         </div>
@@ -134,7 +137,7 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
                         <span className="meta-ticker-chip font-mono">
                           [{targetComp.ticker || `E${targetComp.id}`}]
                         </span>
-                        <span className="meta-name">{targetComp.name}</span>
+                        <strong className="meta-name-full">{targetComp.name}</strong>
                       </div>
                       <span className="tactical-type-tag">{config.type}</span>
                     </div>
@@ -169,7 +172,10 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
                 {isExpanded && (
                   <div className="tactical-card-detail">
                     <div className="impact-description">
-                      <strong>Efecto en Rueda:</strong> {config.impact}
+                      <strong>Efecto en Rueda:</strong>{' '}
+                      {config.impact
+                        .replace('La empresa objetivo', `[${targetComp.ticker || `E${targetComp.id}`}] ${targetComp.name}`)
+                        .replace('del objetivo', `de [${targetComp.ticker || `E${targetComp.id}`}] ${targetComp.name}`)}
                     </div>
                     {config.needsOther && (
                       <div className="dual-target-alert font-mono">

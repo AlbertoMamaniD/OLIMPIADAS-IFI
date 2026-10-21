@@ -231,7 +231,7 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
           </div>
 
           {/* 2. Rondas (Tarjetas) y Capacidad */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px' }}>
+          <div className="broker-setup-params-grid">
             <div className="form-field">
               <label className="form-label-institutional">
                 <Layers size={13} />
