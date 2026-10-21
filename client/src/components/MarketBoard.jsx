@@ -56,9 +56,9 @@ export function MarketBoard({
               <th className="th-asset">Activo / Emisor</th>
               <th className="th-price text-right">Cotización</th>
               <th className="th-delta text-right">Variación</th>
-              <th className="th-stats text-right">Disp. Broker</th>
-              <th className="th-stats text-right">Mi Posición</th>
-              <th className="th-actions text-center">Operación Bursátil</th>
+              <th className="th-broker text-right" title="Acciones disponibles en el broker">Broker</th>
+              <th className="th-position text-right" title="Acciones en cartera de tu mesa">Posición</th>
+              <th className="th-actions text-center">Operar</th>
             </tr>
           </thead>
           <tbody>
@@ -94,7 +94,7 @@ export function MarketBoard({
                   className={`market-row ${isCeiling ? 'row-ceiling' : ''} ${isFloor ? 'row-floor' : ''} ${held > 0 ? 'row-held' : ''}`}
                 >
                   {/* Activo / Emisor */}
-                  <td className="td-asset">
+                  <td className="td-asset" title={`${c.name} (${c.ticker || `E${c.id}`}) · Renta Variable BBV`}>
                     <div className="asset-cell">
                       <div
                         className="asset-color-bar"
@@ -105,7 +105,7 @@ export function MarketBoard({
                           <span className="ticker-badge font-mono">
                             {c.ticker || `E${c.id}`}
                           </span>
-                          <span className="asset-name">{c.name}</span>
+                          <span className="asset-name" title={c.name}>{c.name}</span>
                         </div>
                         <span className="asset-sub font-mono">Renta Variable · BBV</span>
                       </div>
@@ -156,13 +156,13 @@ export function MarketBoard({
                   </td>
 
                   {/* Disponibilidad Broker */}
-                  <td className="td-stats text-right font-mono">
+                  <td className="td-broker text-right font-mono">
                     <span className="stat-value">{c.brokerShares}</span>
                     <span className="stat-unit"> acc.</span>
                   </td>
 
                   {/* Mi Posición */}
-                  <td className="td-stats text-right font-mono">
+                  <td className="td-position text-right font-mono">
                     <span className={`stat-value ${held > 0 ? 'text-highlight' : 'text-muted'}`}>
                       {held}
                     </span>
@@ -196,7 +196,7 @@ export function MarketBoard({
                         }
                       >
                         <ArrowUpRight size={13} />
-                        <span>COMPRA</span>
+                        <span>Compra</span>
                       </button>
                       <button
                         className="btn-trade btn-trade-sell"
@@ -213,7 +213,7 @@ export function MarketBoard({
                         }
                       >
                         <ArrowDownRight size={13} />
-                        <span>VENTA</span>
+                        <span>Venta</span>
                       </button>
                     </div>
                   </td>
@@ -265,7 +265,7 @@ export function MarketBoard({
                   <div style={{ minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span className="ticker-badge font-mono">{c.ticker || `E${c.id}`}</span>
-                      <span className="asset-name" style={{ fontWeight: 700, fontSize: '13.5px', color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</span>
+                      <span className="asset-name" style={{ fontWeight: 700, fontSize: '13px', color: 'var(--ink)', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.25 }}>{c.name}</span>
                     </div>
                     <span style={{ fontSize: '10px', color: 'var(--ink-secondary)', fontFamily: 'var(--font-mono)' }}>Renta Variable · BBV</span>
                   </div>

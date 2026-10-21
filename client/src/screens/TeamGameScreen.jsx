@@ -142,56 +142,58 @@ export function TeamGameScreen() {
     <div className="game-screen-wrapper">
       {/* Barra de Comando de Ronda con Espaciado Generoso */}
       <div className="turn-command-ribbon">
-        <div className="ribbon-left">
-          <div className="turn-number-tag font-mono">
-            RONDA #{game.turnNumber}
-          </div>
+        <div className="ribbon-inner-container">
+          <div className="ribbon-left">
+            <div className="turn-number-tag font-mono">
+              RONDA #{game.turnNumber}
+            </div>
 
-          <div className="ribbon-team-pill font-mono">
-            {teamData.name}
-          </div>
+            <div className="ribbon-team-pill font-mono">
+              {teamData.name}
+            </div>
 
-          <div className={`turn-status-badge ${isMyTurn ? 'is-active' : 'is-idle'}`}>
-            <span className="status-pulse-dot" />
-            <span className="status-text font-mono">
-              {isMyTurn ? 'MESA HABILITADA PARA OPERAR' : `TURNO: ${currentTurnTeam.name.toUpperCase()}`}
-            </span>
-          </div>
-
-          {/* Stepper de Fases Operativas con Alto Contraste */}
-          {isMyTurn && (
-            <div className="phase-stepper-bar font-mono">
-              <span className={`phase-step ${currentTurn.phase === 'before' ? 'step-current' : 'step-done'}`}>
-                <span className="step-full-label">1. Pre-operación (Libre)</span>
-                <span className="step-mob-label">1. Libre</span>
-              </span>
-              <ArrowRight size={12} className="step-arrow" />
-              <span className={`phase-step ${currentTurn.cardPlayed ? 'step-done' : currentTurn.phase === 'before' ? 'step-pending' : 'step-current'}`}>
-                <span className="step-full-label">2. Tarjeta Táctica (Obligatoria)</span>
-                <span className="step-mob-label">2. Tarjeta {!currentTurn.cardPlayed ? '!' : '✓'}</span>
-              </span>
-              <ArrowRight size={12} className="step-arrow" />
-              <span className={`phase-step ${currentTurn.cardPlayed ? 'step-current' : 'step-pending'}`}>
-                <span className="step-full-label">3. Post-operación (Restante)</span>
-                <span className="step-mob-label">3. Fin</span>
+            <div className={`turn-status-badge ${isMyTurn ? 'is-active' : 'is-idle'}`}>
+              <span className="status-pulse-dot" />
+              <span className="status-text font-mono">
+                {isMyTurn ? 'MESA HABILITADA PARA OPERAR' : `TURNO: ${currentTurnTeam.name.toUpperCase()}`}
               </span>
             </div>
-          )}
 
-          {currentTurn?.isLastTurn && (
-            <div className="last-turn-warning-chip font-mono">
-              <AlertTriangle size={13} />
-              <span>ÚLTIMO TURNO · SOLO VENTAS</span>
-            </div>
-          )}
-        </div>
+            {/* Stepper de Fases Operativas con Alto Contraste */}
+            {isMyTurn && (
+              <div className="phase-stepper-bar font-mono">
+                <span className={`phase-step ${currentTurn.phase === 'before' ? 'step-current' : 'step-done'}`}>
+                  <span className="step-full-label">1. Pre-operación (Libre)</span>
+                  <span className="step-mob-label">1. Libre</span>
+                </span>
+                <ArrowRight size={12} className="step-arrow" />
+                <span className={`phase-step ${currentTurn.cardPlayed ? 'step-done' : currentTurn.phase === 'before' ? 'step-pending' : 'step-current'}`}>
+                  <span className="step-full-label">2. Tarjeta Táctica (Obligatoria)</span>
+                  <span className="step-mob-label">2. Tarjeta {!currentTurn.cardPlayed ? '!' : '✓'}</span>
+                </span>
+                <ArrowRight size={12} className="step-arrow" />
+                <span className={`phase-step ${currentTurn.cardPlayed ? 'step-current' : 'step-pending'}`}>
+                  <span className="step-full-label">3. Post-operación (Restante)</span>
+                  <span className="step-mob-label">3. Fin</span>
+                </span>
+              </div>
+            )}
 
-        <div className="ribbon-right">
-          <TimerBadge
-            seconds={clock.timeRemaining}
-            paused={game.paused || game.manualPause}
-            isAuction={!!game.auction}
-          />
+            {currentTurn?.isLastTurn && (
+              <div className="last-turn-warning-chip font-mono">
+                <AlertTriangle size={13} />
+                <span>ÚLTIMO TURNO · SOLO VENTAS</span>
+              </div>
+            )}
+          </div>
+
+          <div className="ribbon-right">
+            <TimerBadge
+              seconds={clock.timeRemaining}
+              paused={game.paused || game.manualPause}
+              isAuction={!!game.auction}
+            />
+          </div>
         </div>
       </div>
 

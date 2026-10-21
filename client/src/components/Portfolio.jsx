@@ -114,14 +114,14 @@ export function Portfolio({ team, companies }) {
               <tbody>
                 {activePositions.map(({ company, qty, positionVal }) => (
                   <tr key={company.id}>
-                    <td>
+                    <td title={`${company.name} (${company.ticker || `E${company.id}`})`}>
                       <div className="holding-ticker-cell">
                         <span
                           className="holding-color-dot"
                           style={{ backgroundColor: company.color || 'var(--ink)' }}
                         />
-                        <span className="holding-ticker">[{company.ticker || `E${company.id}`}]</span>
-                        <span className="holding-name">{company.name}</span>
+                        <span className="holding-ticker font-mono">[{company.ticker || `E${company.id}`}]</span>
+                        <span className="holding-name" title={company.name}>{company.name}</span>
                       </div>
                     </td>
                     <td className="text-right font-bold">{qty} acc.</td>

@@ -176,7 +176,7 @@ export function BrokerLiveDashboard() {
       {/* Grid Principal */}
       <div className="broker-dashboard-grid">
         {/* Columna Izquierda: Cotizaciones y Gráfico */}
-        <div>
+        <div className="broker-column-main">
           <div className="terminal-card">
             <div className="terminal-card-header">
               <div className="header-icon-label">
@@ -223,7 +223,17 @@ export function BrokerLiveDashboard() {
                       </span>
                     </div>
 
-                    <div style={{ fontWeight: 600, fontSize: '13.5px', marginBottom: '2px' }}>
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        fontSize: '13px',
+                        marginBottom: '2px',
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-word',
+                        lineHeight: 1.25,
+                      }}
+                      title={c.name}
+                    >
                       {c.name}
                     </div>
 
@@ -247,7 +257,7 @@ export function BrokerLiveDashboard() {
         </div>
 
         {/* Columna Derecha: Ranking en vivo y Auditoría */}
-        <div>
+        <div className="broker-column-side">
           {/* Clasificación en Vivo */}
           <div className="terminal-card">
             <div className="terminal-card-header">

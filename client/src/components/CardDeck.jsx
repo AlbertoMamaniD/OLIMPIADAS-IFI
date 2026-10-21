@@ -137,7 +137,7 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
                         <span className="meta-ticker-chip font-mono">
                           [{targetComp.ticker || `E${targetComp.id}`}]
                         </span>
-                        <span className="meta-name">{targetComp.name}</span>
+                        <strong className="meta-name-full">{targetComp.name}</strong>
                       </div>
                       <span className="tactical-type-tag">{config.type}</span>
                     </div>
@@ -172,7 +172,10 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
                 {isExpanded && (
                   <div className="tactical-card-detail">
                     <div className="impact-description">
-                      <strong>Efecto en Rueda:</strong> {config.impact}
+                      <strong>Efecto en Rueda:</strong>{' '}
+                      {config.impact
+                        .replace('La empresa objetivo', `[${targetComp.ticker || `E${targetComp.id}`}] ${targetComp.name}`)
+                        .replace('del objetivo', `de [${targetComp.ticker || `E${targetComp.id}`}] ${targetComp.name}`)}
                     </div>
                     {config.needsOther && (
                       <div className="dual-target-alert font-mono">
