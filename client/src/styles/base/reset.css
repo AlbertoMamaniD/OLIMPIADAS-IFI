@@ -1,0 +1,87 @@
+/* ================= RESET Y BASE ================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--ifi-subtle);
+  color: var(--ink);
+}
+
+.terminal-card-header,
+.turn-command-ribbon,
+.tape-card-left,
+.legend-pill-btn,
+.market-table th,
+.brand-title-wrap,
+.btn-control,
+.btn-trade,
+.btn-quick-qty {
+  user-select: none;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Números tabulares consistentes para finanzas */
+.font-mono,
+.val-num,
+input[type="number"],
+table td.font-mono,
+table th.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum', 'zero';
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-muted { color: var(--ink-secondary); }
+.text-ifi { color: var(--ifi-primary); }
+.font-bold { font-weight: 700; }
+
+/* Scrollbars personalizados delgados y discretos */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-muted);
+}
+

@@ -1,0 +1,297 @@
+/* ================= PIZARRA DE COTIZACIONES ================= */
+.market-limits-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.limit-chip {
+  color: var(--ink-secondary);
+}
+.limit-chip.floor { color: var(--down); font-weight: 600; }
+.limit-chip.ceiling { color: var(--accent); font-weight: 600; }
+.limit-divider { color: var(--line-strong); }
+
+.auction-active-pill {
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
+.market-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.market-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.market-table th {
+  padding: 10px 8px;
+  background: var(--surface-subtle);
+  color: var(--ink-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.market-table td {
+  padding: 11px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+/* Explicit responsive column widths */
+.market-table .th-asset {
+  width: 34%;
+}
+.market-table .th-price {
+  width: 13%;
+}
+.market-table .th-delta {
+  width: 13%;
+}
+.market-table .th-broker {
+  width: 10%;
+}
+.market-table .th-position {
+  width: 11%;
+}
+.market-table .th-actions {
+  width: 19%;
+}
+
+.market-row {
+  transition: background-color 0.1s ease;
+}
+.market-row:hover {
+  background-color: var(--surface-hover);
+}
+.market-row:last-child td {
+  border-bottom: none;
+}
+.market-row.row-held {
+  background-color: rgba(20, 61, 43, 0.02);
+}
+
+/* Celda de Activo */
+.asset-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+}
+
+.asset-color-bar {
+  width: 4px;
+  height: 32px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.asset-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.asset-header-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+  width: 100%;
+}
+
+.ticker-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--surface-subtle);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  padding: 2px 5px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.asset-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
+  min-width: 0;
+  flex: 1;
+}
+
+.asset-sub {
+  font-size: 10.5px;
+  color: var(--ink-secondary);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* Celda de Cotización */
+.price-primary {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.price-tag-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+.status-badge.ceiling-badge {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.status-badge.floor-badge {
+  background: var(--down-subtle);
+  color: var(--down);
+  border: 1px solid var(--down-border);
+}
+.status-badge.dividend-badge {
+  background: var(--up-subtle);
+  color: var(--up);
+  border: 1px solid var(--up-border);
+}
+.status-badge.crisis-badge {
+  background: var(--down-subtle);
+  color: var(--down);
+  border: 1px solid var(--down-border);
+}
+
+/* Celda de Variación */
+.delta-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.delta-display.is-up {
+  color: var(--up);
+}
+.delta-display.is-down {
+  color: var(--down);
+}
+.delta-display.is-neutral {
+  color: var(--ink-muted);
+}
+.delta-pct {
+  font-size: 10.5px;
+  opacity: 0.85;
+}
+
+/* Celda de Estadísticas */
+.stat-value {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.stat-value.text-highlight {
+  color: var(--ifi-primary);
+  font-weight: 700;
+}
+.stat-unit {
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+.position-subval {
+  font-size: 10.5px;
+  margin-top: 2px;
+}
+
+/* Botones de Operación Bursátil */
+.trade-btn-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.btn-trade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 5px 6px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.btn-trade-buy {
+  background: var(--up);
+  color: #ffffff;
+  border-color: var(--up);
+}
+.btn-trade-buy:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.35);
+}
+
+.btn-trade-sell {
+  background: var(--down);
+  color: #ffffff;
+  border-color: var(--down);
+}
+.btn-trade-sell:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 1px 4px rgba(225, 29, 72, 0.35);
+}
+
+.btn-trade:disabled {
+  opacity: 0.22;
+  cursor: not-allowed;
+  filter: grayscale(0.7);
+}
+

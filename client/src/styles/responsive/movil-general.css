@@ -1,0 +1,223 @@
+@media (max-width: 768px) {
+  /* Alternancia de títulos compactos */
+  .step-mob-label {
+    display: inline !important;
+  }
+
+  .step-full-label {
+    display: none !important;
+  }
+
+  .chart-title-mob,
+  .deck-title-mob,
+  .tape-title-mob,
+  .market-title-mob {
+    display: inline !important;
+  }
+
+  .chart-title-full,
+  .deck-title-full,
+  .tape-title-full,
+  .market-title-full {
+    display: none !important;
+  }
+
+  /* TOPBAR ULTRA-COMPACTA */
+  .topbar {
+    padding: 6px 10px;
+    min-height: 46px;
+    gap: 6px;
+  }
+
+  .topbar-brand {
+    gap: 6px;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .brand-logo-frame {
+    height: 22px;
+  }
+
+  .brand-logo-img {
+    height: 20px;
+    max-height: 22px;
+  }
+
+  .brand-title-wrap {
+    min-width: 0;
+  }
+
+  .brand-title-row {
+    gap: 5px;
+    align-items: center;
+  }
+
+  .brand-main-title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .brand-league-word {
+    display: none !important;
+  }
+
+  .brand-meta-row {
+    display: none !important;
+  }
+
+  .room-code-badge {
+    font-size: 9px;
+    padding: 1px 5px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .topbar-actions {
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .user-seat-pill {
+    display: none !important;
+  }
+
+  .broker-auth-pill {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+
+  .broker-auth-pill span {
+    display: none !important;
+  }
+
+  .btn-control {
+    padding: 4px;
+    font-size: 11px;
+    min-width: 30px;
+    min-height: 30px;
+    justify-content: center;
+    border-radius: var(--radius-xs);
+  }
+
+  .btn-control span {
+    display: none !important;
+  }
+
+  /* BARRA DE COMANDO DE RONDA Y TIMER */
+  .turn-command-ribbon {
+    padding: 6px 10px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 5px;
+    column-gap: 8px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ribbon-left {
+    grid-column: 1 / 2;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .turn-number-tag {
+    font-size: 10px;
+    padding: 2px 5px;
+    flex-shrink: 0;
+  }
+
+  .ribbon-team-pill {
+    display: inline-flex !important;
+    align-items: center;
+    background: var(--surface-subtle);
+    border: 1px solid var(--line);
+    padding: 2px 6px;
+    border-radius: var(--radius-xs);
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--ink);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
+  }
+
+  .ribbon-right {
+    grid-column: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+
+  .terminal-timer-badge {
+    padding: 2px 7px;
+    gap: 5px;
+  }
+
+  .terminal-timer-badge .timer-label {
+    font-size: 8px;
+  }
+
+  .terminal-timer-badge .timer-value {
+    font-size: 13px;
+  }
+
+  .turn-status-badge {
+    grid-column: 1 / -1;
+    width: 100%;
+    font-size: 10.5px;
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .turn-status-badge .status-text {
+    max-width: 100% !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .phase-stepper-bar {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px;
+    font-size: 9.5px;
+    gap: 2px;
+    border-radius: var(--radius-xs);
+    margin-top: 0;
+    overflow: visible;
+  }
+
+  .phase-step {
+    padding: 2px 4px;
+    text-align: center;
+  }
+
+  .step-arrow {
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .last-turn-warning-chip {
+    grid-column: 1 / -1;
+    width: 100%;
+    font-size: 9.5px;
+    padding: 2px 6px;
+    margin-top: 1px;
+    justify-content: center;
+  }
+
+}

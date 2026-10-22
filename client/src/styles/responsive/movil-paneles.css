@@ -1,0 +1,386 @@
+@media (max-width: 768px) {
+  /* ================= MAZO TÁCTICO EN MÓVIL ================= */
+  .deck-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+  }
+
+  .card-deck-status {
+    font-size: 9.5px;
+  }
+
+  .tactical-card-item {
+    margin-bottom: 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .tactical-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .tactical-card-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .tactical-card-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 6px;
+    flex-shrink: 0;
+  }
+
+  .tactical-card-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tactical-target-line {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .tactical-target-line .meta-name,
+  .tactical-target-line .meta-name-full {
+    font-weight: 700;
+    color: var(--ink);
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .tactical-type-tag {
+    font-size: 9.5px;
+    color: var(--ink-secondary);
+  }
+
+  .tactical-card-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .btn-execute-card {
+    flex: 1 !important;
+    min-height: 40px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .btn-expand-card {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--surface-subtle) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: var(--radius-xs) !important;
+    color: var(--ink-secondary) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .btn-expand-card svg {
+    display: block !important;
+    margin: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .btn-expand-card:hover {
+    background: var(--surface-hover) !important;
+    color: var(--ink) !important;
+    border-color: var(--line-strong) !important;
+  }
+
+  /* ================= SUBASTA PÚBLICA EN MÓVIL ================= */
+  .auction-execution-panel {
+    padding: 10px 12px;
+    margin: 6px 0;
+    border-radius: var(--radius-sm);
+  }
+
+  .auction-top-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .auction-countdown-pill {
+    align-self: flex-start;
+    font-size: 10.5px;
+    padding: 2px 7px;
+  }
+
+  .auction-main-heading {
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  .auction-legal-desc {
+    font-size: 10.5px;
+    line-height: 1.35;
+    margin: 4px 0 8px 0;
+  }
+
+  .auction-bid-control-strip {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .current-bid-amount {
+    font-size: 13.5px;
+  }
+
+  .auction-action-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .btn-auction-bid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 10px;
+    min-height: 44px;
+    text-align: center;
+    gap: 2px;
+  }
+
+  .btn-auction-bid .btn-bid-main {
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+
+  .btn-auction-bid .btn-bid-sub {
+    font-size: 10px;
+    opacity: 0.9;
+  }
+
+  .btn-auction-quicksell {
+    width: 100%;
+    justify-content: center;
+    min-height: 36px;
+    font-size: 11px;
+  }
+
+  /* ================= CARTERA EN MÓVIL ================= */
+  .portfolio-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .portfolio-stat-box {
+    padding: 8px 10px;
+  }
+
+  .portfolio-stat-box.highlight-box {
+    grid-column: 1 / -1;
+  }
+
+  .stat-box-val {
+    font-size: 14px;
+  }
+
+  .stat-box-val.total-equity {
+    font-size: 17px;
+  }
+
+  .portfolio-holdings-section {
+    padding: 8px 10px;
+  }
+
+  .holdings-mini-table th,
+  .holdings-mini-table td {
+    padding: 5px 6px;
+    font-size: 10.5px;
+  }
+
+  /* ================= GRÁFICO EN MÓVIL ================= */
+  .chart-header-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .chart-controls-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .chart-type-btn {
+    padding: 2px 8px;
+    font-size: 10px;
+  }
+
+  .chart-range-indicator {
+    font-size: 9.5px;
+    padding: 1px 5px;
+  }
+
+  .recharts-wrapper-container {
+    padding: 4px 0 0 0;
+    overflow: hidden;
+  }
+
+  .chart-interactive-legend-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+    align-items: center;
+  }
+
+  .legend-hint {
+    font-size: 9px;
+  }
+
+  .legend-pill-btn {
+    padding: 2px 5px;
+    font-size: 9.5px;
+    border-radius: var(--radius-xs);
+    gap: 3px;
+  }
+
+  .chart-footer-note {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 9.5px;
+  }
+
+  .chart-note-legend-desc {
+    line-height: 1.35;
+    color: var(--ink-muted);
+  }
+
+  .chart-note-focus-desc {
+    font-size: 10px;
+    align-self: flex-start;
+  }
+
+  /* ================= REGISTRO / FEED EN MÓVIL ================= */
+  .tape-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+  }
+
+  .tape-counter-badge {
+    font-size: 9.5px;
+  }
+
+  .tape-feed-scroll {
+    height: 320px;
+    max-height: 380px;
+    padding: 6px 8px;
+  }
+
+  .tape-filter-toolbar {
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-toolbar-label {
+    font-size: 9px;
+  }
+
+  .tape-filter-btn {
+    padding: 2px 6px;
+    font-size: 9.5px;
+  }
+
+  .tape-card-entry {
+    padding: 6px 8px;
+    gap: 6px;
+    margin-bottom: 5px;
+  }
+
+  .tape-card-left {
+    min-width: 50px;
+    gap: 2px;
+  }
+
+  .turn-stamp-pill {
+    font-size: 8.5px;
+    padding: 1px 3px;
+  }
+
+  .operation-badge {
+    font-size: 8px;
+    padding: 1px 3px;
+  }
+
+  .tape-narrative-text {
+    font-size: 10.5px;
+    line-height: 1.35;
+  }
+
+  /* ================= BARRA FIJA DE TURNO (DOCK) ================= */
+  .turn-completion-dock {
+    padding: 8px 10px max(8px, env(safe-area-inset-bottom)) 10px;
+  }
+
+  .dock-content {
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .dock-hint {
+    display: none !important;
+  }
+
+  .btn-complete-turn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 13px;
+    min-height: 42px;
+  }
+
+}

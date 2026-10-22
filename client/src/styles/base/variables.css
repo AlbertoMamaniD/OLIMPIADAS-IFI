@@ -1,0 +1,103 @@
+/* ============================================================
+   OLIMPIADAS IFI 2026 — TERMINAL BURSÁTIL INSTITUCIONAL (BBV)
+   Diseño de Alta Fidelidad para Competencia Universitaria de Trading.
+   Estricto respeto a la paleta institucional (Verde Bosque, Esmeralda, Rubí y Pizarra).
+   Tipografía: Inter (interfaz), IBM Plex Mono (datos numéricos), Fraunces (títulos).
+   ============================================================ */
+
+:root {
+  /* Paleta Base — Modo Claro Institucional */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-subtle: #f1f5f9;
+  --surface-hover: #eef2f6;
+  --surface-active: #e2e8f0;
+  
+  --ink: #0f172a;
+  --ink-secondary: #334155;
+  --ink-muted: #64748b;
+  
+  --line: #cbd5e1;
+  --line-subtle: #e2e8f0;
+  --line-strong: #94a3b8;
+  --line-focus: #143d2b;
+
+  /* Identidad Olimpiadas IFI (Verde bosque financiero) */
+  --ifi-primary: #143d2b;
+  --ifi-secondary: #1e5a3c;
+  --ifi-light: #2d7d54;
+  --ifi-subtle: rgba(20, 61, 43, 0.08);
+  --ifi-border: rgba(20, 61, 43, 0.22);
+
+  /* Semántica Bursátil (Velas Japonesas) */
+  --up: #059669;
+  --up-subtle: #ecfdf5;
+  --up-border: #a7f3d0;
+  
+  --down: #e11d48;
+  --down-subtle: #fff1f2;
+  --down-border: #fecdd3;
+
+  --accent: #d97706;
+  --accent-subtle: #fef3c7;
+  --accent-border: #fde68a;
+
+  /* Tipografías */
+  --font-serif: 'Fraunces', Garamond, Georgia, serif;
+  --font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Geometría */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+
+  /* Sombras Terminales Finas */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 14px 36px rgba(15, 23, 42, 0.12);
+  --shadow-overlay: 0 -4px 20px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="dark"] {
+  /* Paleta Base — Modo Oscuro Terminal Bloomberg */
+  --bg: #090d12;
+  --surface: #0f1722;
+  --surface-subtle: #162232;
+  --surface-hover: #1c2c40;
+  --surface-active: #23364f;
+
+  --ink: #f8fafc;
+  --ink-secondary: #cbd5e1;
+  --ink-muted: #94a3b8;
+
+  --line: #223246;
+  --line-subtle: #1e293b;
+  --line-strong: #334b68;
+  --line-focus: #10b981;
+
+  --ifi-primary: #10b981;
+  --ifi-secondary: #059669;
+  --ifi-light: #34d399;
+  --ifi-subtle: rgba(16, 185, 129, 0.14);
+  --ifi-border: rgba(16, 185, 129, 0.3);
+
+  --up: #10b981;
+  --up-subtle: rgba(16, 185, 129, 0.14);
+  --up-border: #047857;
+
+  --down: #f43f5e;
+  --down-subtle: rgba(244, 63, 94, 0.14);
+  --down-border: #be123c;
+
+  --accent: #f59e0b;
+  --accent-subtle: rgba(245, 158, 11, 0.16);
+  --accent-border: #b45309;
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 16px 44px rgba(0, 0, 0, 0.85);
+  --shadow-overlay: 0 -4px 20px rgba(0, 0, 0, 0.75);
+}
+

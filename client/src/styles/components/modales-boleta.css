@@ -1,0 +1,302 @@
+/* ================= MODALES Y BOLETA DE ORDEN ================= */
+.terminal-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 13, 18, 0.78);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.terminal-modal-window {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+}
+
+.order-ticket-window {
+  max-width: 500px;
+}
+
+.modal-header-ribbon {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.order-type-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.06em;
+}
+.order-type-chip.chip-buy {
+  background: var(--up-subtle);
+  color: var(--up);
+  border: 1px solid var(--up-border);
+}
+.order-type-chip.chip-sell {
+  background: var(--down-subtle);
+  color: var(--down);
+  border: 1px solid var(--down-border);
+}
+
+.order-target-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.order-target-ticker {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ifi-primary);
+}
+
+.order-target-name {
+  font-family: var(--font-serif);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.btn-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: var(--radius-xs);
+}
+.btn-modal-close:hover {
+  color: var(--ink);
+  background: var(--surface-subtle);
+}
+
+.order-quote-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  margin-bottom: 18px;
+}
+
+.quote-bar-divider {
+  color: var(--line-strong);
+}
+
+.order-input-section {
+  margin-bottom: 18px;
+}
+
+.order-input-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  margin-bottom: 7px;
+}
+
+.order-input-max {
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.order-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.order-quantity-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 17px;
+  font-weight: 700;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.order-quantity-input:focus {
+  outline: none;
+  border-color: var(--line-focus);
+}
+.order-quantity-input.input-error {
+  border-color: var(--down);
+  background: var(--down-subtle);
+  color: var(--down);
+}
+
+.order-validation-msg {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  margin-top: 6px;
+}
+.order-validation-msg.error {
+  color: var(--down);
+}
+.order-validation-msg.info {
+  color: var(--ink-secondary);
+}
+
+/* Remover flechas/spinners en todos los inputs de número */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.quick-qty-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-quick-qty {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.btn-quick-qty:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: var(--surface-active);
+}
+.btn-quick-qty:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.order-settlement-card {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 22px;
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.settlement-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settlement-row.primary-settlement {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 7px;
+  margin-bottom: 3px;
+}
+
+.modal-actions-row {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-secondary-action {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  padding: 11px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.btn-secondary-action:hover {
+  background: var(--surface-subtle);
+}
+
+.btn-primary-action {
+  flex: 1.4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: var(--ifi-secondary);
+  color: #ffffff;
+  border: 1px solid var(--ifi-secondary);
+  padding: 11px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.btn-primary-action:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-order-confirm-buy {
+  background: var(--up);
+  border-color: var(--up);
+}
+
+.btn-order-confirm-sell {
+  background: var(--down);
+  border-color: var(--down);
+}
+
+.terminal-alert-error-container {
+  padding: 0 28px;
+  margin-top: 14px;
+}
+
+.terminal-alert-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--down-subtle);
+  border: 1px solid var(--down-border);
+  color: var(--down);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+}
+

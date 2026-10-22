@@ -1,0 +1,242 @@
+/* ================= MEJORAS DE HISTORIAL Y ACTAS ================= */
+.history-kpi-ribbon {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 580px) {
+  .history-kpi-ribbon {
+    grid-template-columns: 1fr;
+  }
+}
+
+.history-kpi-card {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-kpi-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--ifi-subtle);
+  color: var(--ifi-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.history-kpi-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-kpi-label {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--ink-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.history-kpi-val {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ================= BOTÓN DE ACTA DE LIQUIDACIÓN DESTACADO (ALTO CONTRASTE Y CERO BUGS) ================= */
+.btn-expand-acta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 10px 16px !important;
+  margin-top: 10px !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+/* Estado CERRADO: Verde bosque institucional con texto blanco nítido */
+.btn-expand-acta:not(.is-open) {
+  background: #143d2b !important;
+  border: 1.5px solid #1e5a3c !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(20, 61, 43, 0.25) !important;
+}
+
+.btn-expand-acta:not(.is-open):hover,
+.btn-expand-acta:not(.is-open):focus {
+  background: #1e5a3c !important;
+  border-color: #2d7d54 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(20, 61, 43, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-expand-acta:not(.is-open) * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Estado ABIERTO: Verde esmeralda profundo institucional con texto menta de alto contraste */
+.btn-expand-acta.is-open {
+  background: #0f2d20 !important;
+  border: 1.5px solid #059669 !important;
+  color: #34d399 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15) !important;
+  transform: none !important;
+}
+
+.btn-expand-acta.is-open:hover,
+.btn-expand-acta.is-open:focus {
+  background: #143d2b !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2) !important;
+}
+
+.btn-expand-acta.is-open * {
+  color: #34d399 !important;
+  stroke: #34d399 !important;
+}
+
+.btn-expand-acta.is-open:hover *,
+.btn-expand-acta.is-open:focus * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* MODO OSCURO */
+[data-theme="dark"] .btn-expand-acta:not(.is-open) {
+  background: #065f46 !important;
+  border: 1.5px solid #059669 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .btn-expand-acta:not(.is-open):hover,
+[data-theme="dark"] .btn-expand-acta:not(.is-open):focus {
+  background: #047857 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="dark"] .btn-expand-acta.is-open {
+  background: #022c22 !important;
+  border: 1.5px solid #10b981 !important;
+  color: #34d399 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .btn-expand-acta.is-open:hover,
+[data-theme="dark"] .btn-expand-acta.is-open:focus {
+  background: #064e3b !important;
+  border-color: #34d399 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-expand-acta.is-open * {
+  color: #34d399 !important;
+  stroke: #34d399 !important;
+}
+
+[data-theme="dark"] .btn-expand-acta.is-open:hover *,
+[data-theme="dark"] .btn-expand-acta.is-open:focus * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+.btn-expand-acta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.match-details-expandable {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--ifi-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.2s ease-out;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .match-details-expandable {
+  background: #0b131e;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.match-details-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.match-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+}
+
+.match-details-table th {
+  padding: 6px 10px;
+  color: var(--ink-secondary);
+  font-weight: 700;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-subtle);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .match-details-table th {
+  background: #162232;
+  color: #cbd5e1;
+  border-color: #223246;
+}
+
+.match-details-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line-subtle);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .match-details-table td {
+  color: #f8fafc;
+  border-color: #223246;
+}
+
+.match-details-table tr:hover td {
+  background: var(--surface-subtle);
+}
+
+[data-theme="dark"] .match-details-table tr:hover td {
+  background: #162232;
+}
+

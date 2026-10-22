@@ -1,0 +1,293 @@
+@media (max-width: 768px) {
+  /* ================= BARRA DE PESTAÑAS MÓVILES (5 COLUMNAS EQUITATIVAS) ================= */
+  .mobile-nav-tabs-bar {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    align-items: stretch;
+    background: var(--surface);
+    border-bottom: 2px solid var(--line);
+    padding: 4px 4px;
+    gap: 3px;
+    position: sticky;
+    top: 46px;
+    z-index: 30;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    overflow: hidden !important;
+  }
+
+  .mobile-tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 5px 1px;
+    background: var(--surface-subtle);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    color: var(--ink-secondary);
+    font-size: 9.5px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 42px;
+    position: relative;
+    outline: none;
+    text-align: center;
+  }
+
+  .mobile-tab-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .mobile-tab-btn:hover {
+    background: var(--surface-hover);
+    color: var(--ink);
+  }
+
+  .mobile-tab-btn.active {
+    background: var(--ifi-primary);
+    border-color: var(--ifi-secondary);
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(20, 61, 43, 0.25);
+  }
+
+  .mobile-tab-btn.active * {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  .mobile-tab-btn.tab-urgent {
+    border-color: var(--accent);
+  }
+
+  .mobile-tab-btn .tab-count-pill {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 8px;
+    font-weight: 700;
+    background: var(--surface-hover);
+    border: 1px solid var(--line);
+    padding: 0 3px;
+    border-radius: 4px;
+    line-height: 1.1;
+  }
+
+  .mobile-tab-btn.active .tab-count-pill {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+  }
+
+  .mobile-tab-btn .tab-alert-badge {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--down);
+    color: #ffffff;
+    font-size: 8px;
+    font-weight: 700;
+    animation: pulse-dot 1.5s infinite;
+  }
+
+  /* PANELES DE CONTENIDO MÓVIL (CONTROLADOS POR PESTAÑAS) */
+  .trading-workspace {
+    grid-template-columns: 1fr !important;
+    padding: 8px 8px 84px 8px !important;
+    gap: 8px !important;
+    max-width: 100% !important;
+  }
+
+  .workspace-main-column,
+  .workspace-side-column {
+    display: block !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  .workspace-tab-pane {
+    display: none !important;
+  }
+
+  .workspace-tab-pane.is-active-tab {
+    display: block !important;
+    animation: fadeIn 0.18s ease-out;
+  }
+
+  /* ================= TARJETAS NATIVAS DE MERCADO EN MÓVIL ================= */
+  .desktop-market-table-wrap {
+    display: none !important;
+  }
+
+  .mobile-market-cards-list {
+    display: flex !important;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .market-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .market-limits-badge {
+    font-size: 9.5px;
+    padding: 2px 6px;
+    gap: 4px;
+  }
+
+  .mobile-market-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 10px 10px;
+    margin-bottom: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .mobile-market-card-top,
+  .mob-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .mobile-market-asset,
+  .mob-asset-info {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  .mobile-market-asset .asset-color-bar,
+  .mob-asset-info .asset-color-bar {
+    width: 4px !important;
+    height: 32px !important;
+    border-radius: 2px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mob-ticker-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 5px;
+    background: var(--surface-subtle);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xs);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .mob-asset-titles {
+    min-width: 0;
+  }
+
+  .mob-asset-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .mob-asset-category {
+    font-size: 9.5px;
+    color: var(--ink-secondary);
+  }
+
+  .mob-price-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .mob-price-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .mob-delta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  .mobile-holdings-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface-subtle);
+    padding: 4px 8px;
+    border-radius: var(--radius-xs);
+    font-size: 10px;
+    color: var(--ink-secondary);
+  }
+
+  .mob-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mob-stat-label {
+    color: var(--ink-muted);
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .mob-stat-val {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .mobile-market-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .mobile-trade-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    min-height: 38px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+}

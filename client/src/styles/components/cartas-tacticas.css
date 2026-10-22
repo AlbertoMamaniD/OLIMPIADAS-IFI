@@ -1,0 +1,201 @@
+/* ================= CARTERA DE TARJETAS TÁCTICAS ================= */
+.card-deck-status {
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+}
+
+.turn-step-executed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--up);
+  font-weight: 600;
+}
+
+.turn-step-pending {
+  color: var(--ink-secondary);
+}
+
+.cards-list-container {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-deck-notice {
+  text-align: center;
+  padding: 22px 0;
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.tactical-card-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  transition: all 0.15s ease;
+  overflow: hidden;
+  border-left: 4px solid var(--line-strong);
+}
+.tactical-card-item:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.tactical-card-item.badge-bullish { border-left-color: var(--up); }
+.tactical-card-item.badge-bearish { border-left-color: var(--down); }
+.tactical-card-item.badge-arbitrage { border-left-color: var(--ifi-secondary); }
+.tactical-card-item.badge-multiplier { border-left-color: #8b5cf6; }
+.tactical-card-item.badge-auction { border-left-color: var(--accent); }
+
+.tactical-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  gap: 12px;
+}
+
+.tactical-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.tactical-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  color: var(--ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tactical-card-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.tactical-target-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 12px;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.meta-label {
+  color: var(--ink-muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.meta-ticker-chip {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--ifi-primary);
+  flex-shrink: 0;
+}
+
+.meta-name-full,
+.meta-name {
+  font-weight: 700;
+  color: var(--ink);
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.tactical-type-tag {
+  font-size: 11px;
+  color: var(--ink-secondary);
+}
+
+.tactical-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-execute-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ifi-secondary);
+  color: #ffffff;
+  border: 1px solid var(--ifi-secondary);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.btn-execute-card:hover:not(:disabled) {
+  filter: brightness(1.12);
+  box-shadow: var(--shadow-sm);
+}
+.btn-execute-card:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-expand-card {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  color: var(--ink-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  transition: all 0.15s ease;
+}
+.btn-expand-card svg {
+  display: block;
+  margin: auto;
+}
+.btn-expand-card:hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.tactical-card-detail {
+  padding: 10px 14px 12px 14px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-subtle);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-secondary);
+}
+
+.dual-target-alert {
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 4px;
+  font-size: 11.5px;
+}
+

@@ -1,0 +1,145 @@
+/* ================= PORTAFOLIO Y ESTADO PATRIMONIAL ================= */
+.portfolio-status-pill {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.status-solvent {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--up);
+}
+
+.status-liquidated {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--down);
+}
+
+.portfolio-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.portfolio-stat-box {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-stat-box.highlight-box {
+  background: var(--ifi-subtle);
+  border-color: var(--ifi-border);
+}
+
+.stat-box-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--ink-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-box-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 5px;
+}
+
+.stat-box-val.total-equity {
+  font-size: 20px;
+  color: var(--ifi-primary);
+}
+
+.stat-box-sub {
+  font-size: 10.5px;
+  margin-top: 3px;
+}
+
+.portfolio-holdings-section {
+  padding: 14px 20px;
+}
+
+.holdings-section-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-secondary);
+  margin-bottom: 10px;
+}
+
+.no-holdings-msg {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  font-style: italic;
+  padding: 8px 0;
+}
+
+.holdings-mini-table-wrapper {
+  width: 100%;
+}
+
+.holdings-mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.holdings-mini-table th {
+  padding: 6px 8px;
+  color: var(--ink-muted);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+}
+
+.holdings-mini-table td {
+  padding: 8px 8px;
+  border-bottom: 1px solid var(--surface-subtle);
+}
+
+.holding-ticker-cell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  max-width: 220px;
+}
+
+.holding-color-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.holding-ticker {
+  font-weight: 700;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.holding-name {
+  color: var(--ink-secondary);
+  font-size: 11px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
+  min-width: 0;
+  flex: 1;
+}
+

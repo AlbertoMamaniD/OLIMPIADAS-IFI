@@ -1,0 +1,254 @@
+/* ================= TOPBAR INSTITUCIONAL ================= */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px clamp(12px, 2vw, 24px);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+  min-height: 58px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.topbar-inner-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  gap: 14px;
+  min-width: 0;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.brand-logo-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.brand-logo-img {
+  height: 34px;
+  max-height: 36px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-title-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.brand-main-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.room-code-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ifi-primary);
+  background: var(--ifi-subtle);
+  border: 1px solid var(--ifi-border);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.brand-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.live-feed-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--up);
+  box-shadow: 0 0 6px var(--up);
+  animation: pulse-dot 2s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.brand-sub-badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--ink-secondary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.user-seat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  white-space: nowrap;
+  max-width: 240px;
+  min-width: 0;
+}
+
+.seat-label {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.seat-team-name {
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.broker-auth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ifi-primary);
+  background: var(--ifi-subtle);
+  border: 1px solid var(--ifi-secondary);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Botones de Control Topbar */
+.btn-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-control .btn-control-label {
+  display: inline;
+}
+.btn-control .btn-control-compact-label {
+  display: none;
+}
+.btn-control:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: var(--surface-subtle);
+}
+.btn-control.btn-exit-danger {
+  color: var(--down);
+  border-color: var(--down-border);
+}
+.btn-control.btn-exit-danger:hover {
+  background: var(--down-subtle);
+  border-color: var(--down);
+}
+
+/* Responsive Topbar en Escritorio Intermedio (1024px - 1279px) */
+@media (min-width: 769px) and (max-width: 1279px) {
+  .topbar {
+    padding: 8px 14px;
+    min-height: 52px;
+  }
+  .topbar-actions {
+    gap: 6px;
+  }
+  .btn-control {
+    padding: 5px 9px;
+    font-size: 11.5px;
+    gap: 4px;
+  }
+  .btn-control .btn-control-label {
+    display: none;
+  }
+  .btn-control .btn-control-compact-label {
+    display: inline;
+  }
+  .brand-sub-badge {
+    font-size: 9px;
+  }
+  .seat-team-name {
+    max-width: 100px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 980px) {
+  .brand-meta-row {
+    display: none;
+  }
+  .seat-label {
+    display: none;
+  }
+}
+

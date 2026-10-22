@@ -1,0 +1,33 @@
+/* ================= PANEL EN VIVO DEL BROKER (ADMIN) ================= */
+.broker-dashboard-wrapper {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px clamp(16px, 2vw, 28px) 70px clamp(16px, 2vw, 28px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.broker-dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+}
+
+@media (max-width: 1160px) {
+  .broker-dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.broker-column-main,
+.broker-column-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  width: 100%;
+}
+

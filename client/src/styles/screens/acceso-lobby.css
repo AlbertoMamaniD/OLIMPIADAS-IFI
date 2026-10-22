@@ -1,0 +1,168 @@
+/* ================= PANTALLAS DE ACCESO Y LOBBY ================= */
+.terminal-centered {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 44px 20px;
+}
+
+.terminal-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 36px 42px;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: var(--shadow-md);
+}
+
+.terminal-heading {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.terminal-subheading {
+  font-size: 13.5px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.role-card-select {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: all 0.15s ease;
+}
+.role-card-select:hover {
+  border-color: var(--ifi-secondary);
+  background: var(--surface-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.role-icon-box {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  color: var(--ifi-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.role-card-title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.role-card-desc {
+  font-size: 12.5px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.form-field {
+  margin-bottom: 18px;
+}
+
+.form-label-institutional {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-input-institutional {
+  width: 100%;
+  background: var(--surface-subtle);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 15px;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  transition: border-color 0.15s ease;
+}
+.form-input-institutional:focus {
+  outline: none;
+  border-color: var(--line-focus);
+  background: var(--surface);
+}
+
+.pin-terminal-display {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--ifi-secondary);
+  padding: 24px;
+  text-align: center;
+  border-radius: var(--radius);
+  margin-bottom: 22px;
+}
+
+.pin-label-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+}
+
+.pin-value-code {
+  font-family: var(--font-mono);
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ifi-primary);
+}
+
+.team-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.team-indicator-chip {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.team-indicator-chip.self {
+  border-color: var(--ifi-secondary);
+  background: var(--ifi-subtle);
+}
+
