@@ -1,98 +1,144 @@
 import React from 'react';
+import { BookOpen, X } from 'lucide-react';
 
 export function RulesModal({ onClose }) {
   return (
     <div className="terminal-modal-overlay" onClick={onClose}>
       <div
-        className="terminal-modal-window"
-        style={{ maxWidth: '600px', maxHeight: '85vh', overflowY: 'auto' }}
+        className="terminal-modal-window rules-modal-window"
+        role="dialog"
+        aria-modal="true"
         onClick={e => e.stopPropagation()}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid var(--line)', paddingBottom: '10px' }}>
-          <div>
-            <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              BOLSA BOLIVIANA DE VALORES (BBV)
-            </span>
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 600, margin: '2px 0 0 0' }}>
-              Reglamento Oficial de Operaciones
-            </h2>
+        <div className="modal-head">
+          <div className="modal-icon">
+            <BookOpen size={22} />
           </div>
-          <button className="btn-control" onClick={onClose}>
-            Cerrar
+          <div className="modal-head-text">
+            <span className="modal-eyebrow">Guía del juego · BBV</span>
+            <h2 className="modal-title">Reglamento oficial</h2>
+          </div>
+          <button className="btn-modal-close" onClick={onClose} title="Cerrar" aria-label="Cerrar">
+            <X size={20} />
           </button>
         </div>
 
-        <div style={{ fontSize: '12.5px', lineHeight: 1.6, color: 'var(--ink-secondary)' }}>
-          <div style={{ marginBottom: '14px' }}>
-            <h4 style={{ color: 'var(--ink)', fontFamily: 'var(--font-serif)', fontSize: '14.5px', marginBottom: '3px' }}>
-              1. Condiciones Iniciales y Objetivo
-            </h4>
-            <p>
-              Cada equipo inicia con un capital de <strong>Bs 1.000</strong> y 0 acciones. El mercado dispone de 5 emisores con un precio base de <strong>Bs 100</strong> por acción y 260 acciones en custodia del broker. El objetivo es maximizar el valor patrimonial neto liquidado al término de la ronda.
-            </p>
-          </div>
+        <div className="rules-body">
+          <section className="rules-section">
+            <span className="rules-section-num">1</span>
+            <div className="rules-section-content">
+              <h4>Condiciones iniciales y objetivo</h4>
+              <p>
+                Cada equipo empieza con <strong>Bs 1.000</strong> en efectivo y sin acciones. En el mercado hay 5 empresas, cada una a <strong>Bs 100</strong> por acción y con 260 acciones en manos del broker. Gana el equipo que termine con el <strong>mayor patrimonio</strong> al final de la partida.
+              </p>
+            </div>
+          </section>
 
-          <div style={{ marginBottom: '14px' }}>
-            <h4 style={{ color: 'var(--ink)', fontFamily: 'var(--font-serif)', fontSize: '14.5px', marginBottom: '3px' }}>
-              2. Fases del Turno Operativo
-            </h4>
-            <p>El turno de cada equipo se divide en cuatro fases secuenciales:</p>
-            <ul style={{ paddingLeft: '18px', marginTop: '4px' }}>
-              <li><strong>Operación previa (opcional):</strong> Compra o venta de acciones de cualquier emisor con liquidez.</li>
-              <li><strong>Ejecución de tarjeta (obligatoria):</strong> Altera los precios de mercado o convoca a subasta.</li>
-              <li><strong>Operación posterior (opcional):</strong> Compra o venta, con exclusión del emisor negociado en la operación previa.</li>
-              <li><strong>Cierre de turno:</strong> Vence y transfiere la custodia al siguiente equipo. Si expira el plazo, el sistema descarta una tarjeta al azar.</li>
-            </ul>
-          </div>
+          <section className="rules-section">
+            <span className="rules-section-num">2</span>
+            <div className="rules-section-content">
+              <h4>Tu turno, paso a paso</h4>
+              <ul className="rules-steps">
+                <li>
+                  <span className="rules-step-tag rules-step-tag--opt">Opcional</span>
+                  <span><strong>Operar antes:</strong> compra o vende acciones de cualquier empresa que tenga acciones disponibles.</span>
+                </li>
+                <li>
+                  <span className="rules-step-tag rules-step-tag--req">Obligatorio</span>
+                  <span><strong>Jugar una tarjeta:</strong> cambia los precios del mercado o abre una subasta.</span>
+                </li>
+                <li>
+                  <span className="rules-step-tag rules-step-tag--opt">Opcional</span>
+                  <span><strong>Operar después:</strong> vuelve a comprar o vender, pero no la misma empresa que operaste antes.</span>
+                </li>
+                <li>
+                  <span className="rules-step-tag rules-step-tag--end">Cierre</span>
+                  <span><strong>Terminar turno:</strong> el turno pasa al siguiente equipo. Si se acaba el tiempo, el sistema descarta una de tus tarjetas al azar.</span>
+                </li>
+              </ul>
+            </div>
+          </section>
 
-          <div style={{ marginBottom: '14px' }}>
-            <h4 style={{ color: 'var(--ink)', fontFamily: 'var(--font-serif)', fontSize: '14.5px', marginBottom: '3px' }}>
-              3. Banda de Precios: Techo y Piso
-            </h4>
-            <p>
-              <strong>Techo (Bs 250):</strong> Todo excedente sobre los Bs 250 se liquida automáticamente como <strong>dividendo en efectivo</strong> a prorrata entre los accionistas vigentes, reajustando la cotización a Bs 250.
-            </p>
-            <p style={{ marginTop: '4px' }}>
-              <strong>Piso (Bs 10):</strong> Al tocar el piso se suspende el reloj e inicia la crisis: cada titular debe optar por pagar una tasa de rescate de Bs 20/acción para conservarla o devolverla sin costo al broker.
-            </p>
-          </div>
+          <section className="rules-section">
+            <span className="rules-section-num">3</span>
+            <div className="rules-section-content">
+              <h4>Techo y piso de precios</h4>
+              <div className="rules-band">
+                <div className="rules-band-tile rules-band-tile--up">
+                  <span className="rules-band-title">
+                    Techo · <span className="font-mono">Bs 250</span>
+                  </span>
+                  Lo que pase de Bs 250 se paga como <strong>dividendo en efectivo</strong> a quienes tengan acciones de esa empresa, y el precio vuelve a Bs 250.
+                </div>
+                <div className="rules-band-tile rules-band-tile--down">
+                  <span className="rules-band-title">
+                    Piso · <span className="font-mono">Bs 10</span>
+                  </span>
+                  Se pausa el reloj y empieza la <strong>crisis</strong>: cada accionista paga Bs 20 por acción para conservarla o la devuelve gratis al broker.
+                </div>
+              </div>
+            </div>
+          </section>
 
-          <div style={{ marginBottom: '14px' }}>
-            <h4 style={{ color: 'var(--ink)', fontFamily: 'var(--font-serif)', fontSize: '14.5px', marginBottom: '3px' }}>
-              4. Tarjetas de Mercado
-            </h4>
-            <ul style={{ paddingLeft: '18px' }}>
-              <li><strong>100 / 10:</strong> +100 a la empresa objetivo; -10 a las cuatro restantes.</li>
-              <li><strong>20 / 50:</strong> -50 a la empresa objetivo; +20 a las cuatro restantes.</li>
-              <li><strong>80 / 40:</strong> +80 a la empresa objetivo; -40 a una contraparte seleccionada.</li>
-              <li><strong>2x:</strong> Duplica el precio objetivo; reduce a la mitad la contraparte.</li>
-              <li><strong>1/2x:</strong> Reduce a la mitad el precio objetivo; duplica la contraparte.</li>
-              <li><strong>Subasta:</strong> Activa una subasta forzosa de 30 acciones de ese emisor.</li>
-            </ul>
-          </div>
+          <section className="rules-section">
+            <span className="rules-section-num">4</span>
+            <div className="rules-section-content">
+              <h4>Tarjetas de mercado</h4>
+              <div className="rules-cards-grid">
+                <div className="rules-card-item">
+                  <span className="rules-card-chip">100 / 10</span>
+                  <span>+100 a la empresa objetivo y −10 a las otras cuatro.</span>
+                </div>
+                <div className="rules-card-item">
+                  <span className="rules-card-chip">20 / 50</span>
+                  <span>−50 a la empresa objetivo y +20 a las otras cuatro.</span>
+                </div>
+                <div className="rules-card-item">
+                  <span className="rules-card-chip">80 / 40</span>
+                  <span>+80 a la empresa objetivo y −40 a otra empresa que tú eliges.</span>
+                </div>
+                <div className="rules-card-item">
+                  <span className="rules-card-chip">2x</span>
+                  <span>Duplica el precio de la objetivo y reduce a la mitad otra que eliges.</span>
+                </div>
+                <div className="rules-card-item">
+                  <span className="rules-card-chip">1/2x</span>
+                  <span>Reduce a la mitad la objetivo y duplica otra que eliges.</span>
+                </div>
+                <div className="rules-card-item">
+                  <span className="rules-card-chip">Subasta</span>
+                  <span>Abre una subasta obligatoria de 30 acciones de esa empresa.</span>
+                </div>
+              </div>
+            </div>
+          </section>
 
-          <div style={{ marginBottom: '14px' }}>
-            <h4 style={{ color: 'var(--ink)', fontFamily: 'var(--font-serif)', fontSize: '14.5px', marginBottom: '3px' }}>
-              5. Mecanismo de Subasta Extraordinaria
-            </h4>
-            <p>
-              Los accionistas aportan obligatoriamente hasta 5 acciones (liquidadas al precio base) y el broker completa el lote de 30. Durante 30 segundos rige una puja abierta (incrementos de Bs 10). Los participantes pueden vender otras acciones para generar liquidez inmediata. El lote se adjudica a la mejor oferta solvente.
-            </p>
-          </div>
+          <section className="rules-section">
+            <span className="rules-section-num">5</span>
+            <div className="rules-section-content">
+              <h4>Cómo funciona la subasta</h4>
+              <p>
+                Cada accionista aporta obligatoriamente hasta 5 acciones (pagadas al precio base) y el broker completa el lote de 30. Durante <strong>30 segundos</strong> se puja por el lote completo, subiendo de <strong>Bs 10 en Bs 10</strong>. Mientras tanto puedes vender otras acciones para conseguir efectivo. Gana la mejor oferta que se pueda pagar.
+              </p>
+            </div>
+          </section>
 
-          <div>
-            <h4 style={{ color: 'var(--ink)', fontFamily: 'var(--font-serif)', fontSize: '14.5px', marginBottom: '3px' }}>
-              6. Cierre y Liquidación Final
-            </h4>
-            <p>
-              En el último turno de la partida <strong>únicamente se autorizan órdenes de venta</strong>. Al agotarse las tarjetas en todos los equipos, las acciones restantes se liquidan al precio de mercado vigente y se proclama la clasificación final.
-            </p>
-          </div>
+          <section className="rules-section">
+            <span className="rules-section-num">6</span>
+            <div className="rules-section-content">
+              <h4>Final de la partida</h4>
+              <p>
+                En el último turno <strong>solo se puede vender</strong>. Cuando ningún equipo tiene tarjetas, las acciones que queden se venden al precio final del mercado y se anuncia la clasificación.
+              </p>
+            </div>
+          </section>
         </div>
 
-        <button className="btn-primary-action" style={{ width: '100%', marginTop: '18px' }} onClick={onClose}>
-          Aceptar
-        </button>
+        <div className="rules-footer">
+          <button className="btn-primary-action" onClick={onClose}>
+            Entendido
+          </button>
+        </div>
       </div>
     </div>
   );

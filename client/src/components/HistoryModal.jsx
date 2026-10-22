@@ -63,121 +63,104 @@ export function HistoryModal({ onClose }) {
     <div className="terminal-modal-overlay" onClick={onClose}>
       <div
         className="terminal-modal-window history-modal-window"
+        role="dialog"
+        aria-modal="true"
         onClick={e => e.stopPropagation()}
-        style={{
-          maxWidth: '880px',
-          width: '94%',
-          maxHeight: '90vh',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '0',
-          overflow: 'hidden',
-        }}
       >
-        {/* Encabezado Institucional Fijo */}
-        <div style={{ padding: '20px 24px 14px 24px', borderBottom: '1px solid var(--line)' }}>
-          <div className="modal-header-ribbon" style={{ marginBottom: '10px' }}>
-            <div className="modal-header-left">
-              <div className="order-type-chip chip-buy">
-                <Trophy size={14} />
-                <span className="font-mono">OLIMPIADAS IFI 2026 · LIBRO MAYOR BBV</span>
-              </div>
-              <div className="order-target-title" style={{ marginTop: '2px' }}>
-                <span className="order-target-name" style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', fontWeight: 700 }}>
-                  Cuadro de Honor y Actas de Rueda
-                </span>
-              </div>
+        {/* Encabezado */}
+        <div className="history-head">
+          <div className="modal-head">
+            <div className="modal-icon modal-icon--gold history-head-icon">
+              <Trophy size={24} />
             </div>
-            <button className="btn-modal-close" onClick={onClose} title="Cerrar ventana">
-              <X size={18} />
-            </button>
-          </div>
-
-          {/* Barra de Certificación de Auditoría */}
-          <div className="history-audit-subbar font-mono" style={{ margin: 0 }}>
-            <div className="audit-subbar-left">
-              <ShieldCheck size={14} className="text-ifi" />
-              <span className="audit-status-dot" />
-              <span className="audit-label">REGISTRO OFICIAL DE AUDITORÍA Y LIQUIDACIÓN BBV</span>
+            <div className="modal-head-text">
+              <span className="modal-eyebrow modal-eyebrow--gold">Olimpiadas IFI 2026</span>
+              <h2 className="modal-title">Cuadro de honor</h2>
+              <p className="modal-subtitle">Los mejores equipos y el resultado de cada partida jugada.</p>
             </div>
             <button
               className="btn-refresh-history"
               onClick={fetchData}
               disabled={loading}
-              title="Sincronizar actas y podios"
+              title="Actualizar clasificación y partidas"
             >
-              <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+              <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
               <span>Actualizar</span>
             </button>
+            <button className="btn-modal-close" onClick={onClose} title="Cerrar ventana" aria-label="Cerrar ventana">
+              <X size={20} />
+            </button>
           </div>
-        </div>
 
-        {/* Pestañas de Navegación Fijas */}
-        <div style={{ padding: '0 24px', background: 'var(--surface-subtle)', borderBottom: '1px solid var(--line)' }}>
-          <div className="history-nav-tabs" style={{ margin: 0, borderBottom: 'none' }}>
+          {/* Pestañas */}
+          <div className="history-nav-tabs" role="tablist">
             <button
+              role="tab"
+              aria-selected={tab === 'leaderboard'}
               className={`history-tab-btn ${tab === 'leaderboard' ? 'active' : ''}`}
               onClick={() => setTab('leaderboard')}
             >
-              <Award size={15} />
-              <span>Clasificación General y Podios</span>
+              <Award size={16} />
+              <span>Clasificación</span>
               {leaderboard.length > 0 && <span className="tab-counter-pill">{leaderboard.length}</span>}
             </button>
             <button
+              role="tab"
+              aria-selected={tab === 'matches'}
               className={`history-tab-btn ${tab === 'matches' ? 'active' : ''}`}
               onClick={() => setTab('matches')}
             >
-              <Calendar size={15} />
-              <span>Actas de Sesiones Concluidas</span>
+              <Calendar size={16} />
+              <span>Partidas jugadas</span>
               {matches.length > 0 && <span className="tab-counter-pill">{matches.length}</span>}
             </button>
           </div>
         </div>
 
-        {/* Cuerpo del Contenido con Scroll Independiente */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
-          {/* KPI Ribbon Estadístico */}
+        {/* Cuerpo con scroll propio */}
+        <div className="history-body-content">
+          {/* Indicadores */}
           <div className="history-kpi-ribbon">
             <div className="history-kpi-card">
               <div className="history-kpi-icon">
-                <FileText size={16} />
+                <FileText size={18} />
               </div>
               <div className="history-kpi-info">
-                <span className="history-kpi-label">Ruedas Concluidas</span>
-                <span className="history-kpi-val">{matches.length} sesiones</span>
+                <span className="history-kpi-label">Partidas jugadas</span>
+                <span className="history-kpi-val">{matches.length}</span>
               </div>
             </div>
 
             <div className="history-kpi-card">
               <div className="history-kpi-icon">
-                <Users size={16} />
+                <Users size={18} />
               </div>
               <div className="history-kpi-info">
-                <span className="history-kpi-label">Mesas Registradas</span>
-                <span className="history-kpi-val">{leaderboard.length} operadores</span>
+                <span className="history-kpi-label">Equipos registrados</span>
+                <span className="history-kpi-val">{leaderboard.length}</span>
               </div>
             </div>
 
-            <div className="history-kpi-card">
+            <div className="history-kpi-card history-kpi-card--gold">
               <div className="history-kpi-icon">
-                <DollarSign size={16} />
+                <DollarSign size={18} />
               </div>
               <div className="history-kpi-info">
-                <span className="history-kpi-label">Récord Patrimonial</span>
+                <span className="history-kpi-label">Récord de patrimonio</span>
                 <span className="history-kpi-val">Bs {highestRecord.toLocaleString()}</span>
               </div>
             </div>
           </div>
 
           {loading ? (
-            <div className="history-loading-state font-mono">
-              <RefreshCw size={26} className="animate-spin text-ifi" />
-              <span>Sincronizando libro de órdenes y actas de liquidación...</span>
+            <div className="history-loading-state">
+              <RefreshCw size={28} className="animate-spin text-ifi" />
+              <span>Cargando clasificación y partidas…</span>
             </div>
           ) : error ? (
-            <div className="history-error-state font-mono">
+            <div className="history-error-state">
               <p>{error}</p>
-              <button className="btn-secondary-action" onClick={fetchData} style={{ marginTop: 8 }}>
+              <button className="btn-secondary-action" onClick={fetchData}>
                 Reintentar
               </button>
             </div>
@@ -185,40 +168,24 @@ export function HistoryModal({ onClose }) {
             /* TAB 1: CLASIFICACIÓN / LEADERBOARD */
             <div>
               {/* Filtros de Tabla */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>
-                  Cuadro de Honor Oficial ({displayedLeaderboard.length} mesas clasificadas)
+              <div className="history-toolbar">
+                <span className="history-toolbar-label">
+                  {displayedLeaderboard.length} equipos clasificados
                 </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div className="history-filter-group" role="group" aria-label="Filtrar equipos">
                   <button
                     type="button"
-                    className="btn-control"
-                    style={{
-                      fontSize: '11px',
-                      padding: '3px 8px',
-                      borderColor: !filterHumanOnly ? 'var(--ifi-secondary)' : 'var(--line)',
-                      background: !filterHumanOnly ? 'var(--ifi-subtle)' : 'transparent',
-                      color: !filterHumanOnly ? 'var(--ifi-secondary)' : 'var(--ink-secondary)',
-                      fontWeight: !filterHumanOnly ? 700 : 400,
-                    }}
+                    className={`history-filter-btn ${!filterHumanOnly ? 'is-active' : ''}`}
                     onClick={() => setFilterHumanOnly(false)}
                   >
-                    Todas
+                    Todos
                   </button>
                   <button
                     type="button"
-                    className="btn-control"
-                    style={{
-                      fontSize: '11px',
-                      padding: '3px 8px',
-                      borderColor: filterHumanOnly ? 'var(--ifi-secondary)' : 'var(--line)',
-                      background: filterHumanOnly ? 'var(--ifi-subtle)' : 'transparent',
-                      color: filterHumanOnly ? 'var(--ifi-secondary)' : 'var(--ink-secondary)',
-                      fontWeight: filterHumanOnly ? 700 : 400,
-                    }}
+                    className={`history-filter-btn ${filterHumanOnly ? 'is-active' : ''}`}
                     onClick={() => setFilterHumanOnly(true)}
                   >
-                    Solo Estudiantes
+                    Solo estudiantes
                   </button>
                 </div>
               </div>
@@ -226,92 +193,103 @@ export function HistoryModal({ onClose }) {
               {displayedLeaderboard.length === 0 ? (
                 <div className="history-empty-state">
                   <div className="empty-trophy-halo">
-                    <Trophy size={48} className="empty-icon text-ifi" />
+                    <Trophy size={44} className="empty-icon" />
                   </div>
-                  <h4>Sin Registros Coincidentes</h4>
-                  <p>No se encontraron registros de mesas para el filtro seleccionado.</p>
+                  <h4>Aún no hay equipos en el cuadro de honor</h4>
+                  <p>No se encontraron equipos para el filtro seleccionado. ¡El primer lugar está esperando!</p>
                 </div>
               ) : (
-                <div className="history-table-wrapper">
-                  <table className="history-data-table font-mono">
-                    <thead>
-                      <tr>
-                        <th style={{ width: '75px' }}>PUESTO</th>
-                        <th>MESA / EQUIPO COMPETIDOR</th>
-                        <th style={{ textAlign: 'center' }}>RUEDAS</th>
-                        <th style={{ textAlign: 'center' }}>1º LUGAR</th>
-                        <th style={{ textAlign: 'center' }}>PODIOS (TOP 3)</th>
-                        <th style={{ textAlign: 'center' }}>EFICACIA</th>
-                        <th style={{ textAlign: 'right' }}>MÁX. PATRIMONIO</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {displayedLeaderboard.map((team, idx) => {
-                        const isFirst = idx === 0;
-                        const isSecond = idx === 1;
-                        const isThird = idx === 2;
-                        const played = team.matches_played || 1;
-                        const wins = team.championships_won || 0;
-                        const winRate = ((wins / played) * 100).toFixed(0);
+                <>
+                  {/* Podio visual con los tres primeros */}
+                  <div className="history-podium">
+                    {displayedLeaderboard.slice(0, 3).map((team, idx) => (
+                      <div
+                        key={team.team_name || idx}
+                        className={`hof-card hof-${idx === 0 ? 'gold' : idx === 1 ? 'silver' : 'bronze'}`}
+                      >
+                        <span className="hof-medal">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</span>
+                        <span className="hof-place">{idx + 1}.º lugar</span>
+                        <span className="hof-name">{team.team_name}</span>
+                        <span className="hof-value">Bs {Number(team.highest_net_worth || 0).toLocaleString()}</span>
+                        <span className="hof-meta">
+                          {team.championships_won || 0} {Number(team.championships_won || 0) === 1 ? 'victoria' : 'victorias'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
 
-                        return (
-                          <tr key={team.team_name || idx} className={isFirst ? 'row-champion' : ''}>
-                            <td>
-                              <div className="rank-badge-cell">
-                                {isFirst && <span className="rank-crown gold">🥇 1.º</span>}
-                                {isSecond && <span className="rank-crown silver">🥈 2.º</span>}
-                                {isThird && <span className="rank-crown bronze">🥉 3.º</span>}
-                                {!isFirst && !isSecond && !isThird && (
-                                  <span className="rank-num">#{idx + 1}</span>
-                                )}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="team-cell-title">
-                                <span className="team-cell-name font-bold">{team.team_name}</span>
-                                {team.is_bot && <span className="badge-bot font-mono">SIMULACIÓN</span>}
-                              </div>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>{team.matches_played}</td>
-                            <td style={{ textAlign: 'center', fontWeight: 'bold', color: 'var(--ifi-secondary)' }}>
-                              {team.championships_won || 0}
-                            </td>
-                            <td style={{ textAlign: 'center' }}>{team.podium_finishes || 0}</td>
-                            <td style={{ textAlign: 'center' }}>
-                              <span
-                                style={{
-                                  fontSize: '10.5px',
-                                  padding: '2px 6px',
-                                  borderRadius: '3px',
-                                  background: Number(winRate) >= 50 ? 'var(--up-subtle)' : 'var(--surface-subtle)',
-                                  color: Number(winRate) >= 50 ? 'var(--up)' : 'var(--ink-secondary)',
-                                  fontWeight: 700,
-                                }}
-                              >
-                                {winRate}%
-                              </span>
-                            </td>
-                            <td style={{ textAlign: 'right', fontWeight: 'bold' }}>
-                              Bs {Number(team.highest_net_worth || 0).toLocaleString()}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                  <div className="history-table-wrapper">
+                    <table className="history-data-table">
+                      <thead>
+                        <tr>
+                          <th className="col-rank">Puesto</th>
+                          <th>Equipo</th>
+                          <th className="col-center col-optional">Partidas</th>
+                          <th className="col-center">1.º lugar</th>
+                          <th className="col-center col-optional">Podios</th>
+                          <th className="col-center col-optional">Eficacia</th>
+                          <th className="col-right">Mejor patrimonio</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {displayedLeaderboard.map((team, idx) => {
+                          const isFirst = idx === 0;
+                          const isSecond = idx === 1;
+                          const isThird = idx === 2;
+                          const played = team.matches_played || 1;
+                          const wins = team.championships_won || 0;
+                          const winRate = ((wins / played) * 100).toFixed(0);
+
+                          return (
+                            <tr key={team.team_name || idx} className={isFirst ? 'row-champion' : ''}>
+                              <td className="col-rank">
+                                <div className="rank-badge-cell">
+                                  {isFirst && <span className="rank-crown gold">1</span>}
+                                  {isSecond && <span className="rank-crown silver">2</span>}
+                                  {isThird && <span className="rank-crown bronze">3</span>}
+                                  {!isFirst && !isSecond && !isThird && (
+                                    <span className="rank-num">{idx + 1}</span>
+                                  )}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="team-cell-title">
+                                  <span className="team-cell-name">{team.team_name}</span>
+                                  {team.is_bot && <span className="badge-bot">Bot</span>}
+                                </div>
+                              </td>
+                              <td className="col-center col-optional font-mono">{team.matches_played}</td>
+                              <td className="col-center font-mono col-wins">
+                                {team.championships_won || 0}
+                              </td>
+                              <td className="col-center col-optional font-mono">{team.podium_finishes || 0}</td>
+                              <td className="col-center col-optional">
+                                <span className={`winrate-pill ${Number(winRate) >= 50 ? 'is-high' : ''}`}>
+                                  {winRate}%
+                                </span>
+                              </td>
+                              <td className="col-right font-mono col-networth">
+                                Bs {Number(team.highest_net_worth || 0).toLocaleString()}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
               )}
             </div>
           ) : (
-            /* TAB 2: ACTAS DE RUEDAS / PARTIDAS */
+            /* TAB 2: PARTIDAS JUGADAS */
             matches.length === 0 ? (
               <div className="history-empty-state">
                 <div className="empty-trophy-halo">
-                  <Calendar size={48} className="empty-icon text-ifi" />
+                  <Calendar size={44} className="empty-icon" />
                 </div>
-                <h4>No hay actas archivadas</h4>
+                <h4>Todavía no hay partidas registradas</h4>
                 <p>
-                  Las partidas concluidas con su detalle de liquidación por títulos y saldos en efectivo aparecerán en esta sección.
+                  Cuando termine una partida, aquí verás el ganador y el detalle final de cada equipo.
                 </p>
               </div>
             ) : (
@@ -323,101 +301,104 @@ export function HistoryModal({ onClose }) {
 
                   return (
                     <div key={m.id || m.room_code} className="history-match-card">
-                      <div className="match-card-top font-mono">
+                      <div className="match-card-top">
                         <div className="match-room-tag">
-                          <span>SALA {m.room_code}</span>
-                          <span className="match-status-pill">LIQUIDACIÓN CERTIFICADA</span>
+                          <span className="match-room-code">Sala {m.room_code}</span>
+                          <span className="match-status-pill">
+                            <CheckCircle2 size={12} /> Finalizada
+                          </span>
                         </div>
                         <div className="match-date-tag">
-                          <Calendar size={12} />
+                          <Calendar size={13} />
                           <span>{dateFormatted}</span>
                         </div>
                       </div>
 
                       <div className="match-card-body">
                         <div className="match-winner-highlight">
-                          <Trophy size={20} className="text-amber-500" />
+                          <div className="match-winner-icon">
+                            <Trophy size={20} />
+                          </div>
                           <div className="winner-details">
-                            <span className="winner-label font-mono">EQUIPO GANADOR DE RUEDA:</span>
-                            <span className="winner-name font-bold">{m.winner_team_name}</span>
+                            <span className="winner-label">Equipo ganador</span>
+                            <span className="winner-name">{m.winner_team_name}</span>
                           </div>
                           <div className="winner-amount font-mono">
                             Bs {Number(m.winner_net_worth || 0).toLocaleString()}
                           </div>
                         </div>
 
-                        {/* Top 3 Standings preview */}
+                        {/* Vista previa de los 3 primeros */}
                         {m.final_standings && Array.isArray(m.final_standings) && (
-                          <div className="match-standings-preview font-mono">
+                          <div className="match-standings-preview">
                             {m.final_standings.slice(0, 3).map(s => (
                               <div key={s.id || s.name} className="standing-mini-chip">
-                                <span className="mini-rank">#{s.rank}</span>
+                                <span className="mini-rank font-mono">#{s.rank}</span>
                                 <span className="mini-name">{s.name}</span>
-                                <span className="mini-val">Bs {Number(s.netWorth || 0).toLocaleString()}</span>
+                                <span className="mini-val font-mono">Bs {Number(s.netWorth || 0).toLocaleString()}</span>
                               </div>
                             ))}
                           </div>
                         )}
 
-                        {/* Botón de Expansión de Acta Completa */}
+                        {/* Botón para ver el acta completa */}
                         {m.final_standings && Array.isArray(m.final_standings) && m.final_standings.length > 0 && (
                           <button
                             type="button"
                             className={`btn-expand-acta ${isExpanded ? 'is-open' : ''}`}
+                            aria-expanded={isExpanded}
                             onClick={() => toggleExpandMatch(m.id || m.room_code)}
                           >
                             <span className="btn-expand-acta-left">
                               <FileText size={15} />
-                              <span>{isExpanded ? 'Ocultar Acta de Liquidación' : 'Ver Acta Detallada de Liquidación y Portafolios'}</span>
+                              <span>{isExpanded ? 'Ocultar resultados completos' : 'Ver resultados completos'}</span>
                             </span>
                             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                           </button>
                         )}
 
-                        {/* Desglose Detallado Expandible */}
+                        {/* Desglose expandible */}
                         {isExpanded && m.final_standings && (
                           <div className="match-details-expandable">
                             <div className="match-details-header-row">
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <ShieldCheck size={14} className="text-ifi" />
-                                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ifi-secondary)', textTransform: 'uppercase' }}>
-                                  ACTA OFICIAL DE CIERRE Y BALANCES LIQUIDADOS AL VENCIMIENTO
-                                </span>
-                              </div>
-                              <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--ink-muted)' }}>
-                                {m.final_standings.length} mesas participantes
+                              <span className="match-details-title">
+                                <ShieldCheck size={15} />
+                                Resultado final de la partida
+                              </span>
+                              <span className="match-details-count">
+                                {m.final_standings.length} equipos
                               </span>
                             </div>
 
                             <table className="match-details-table">
                               <thead>
                                 <tr>
-                                  <th style={{ textAlign: 'center', width: '70px' }}>PUESTO</th>
-                                  <th style={{ textAlign: 'left' }}>MESA OPERADORA</th>
-                                  <th style={{ textAlign: 'center' }}>CONDICIÓN</th>
-                                  <th style={{ textAlign: 'right' }}>PATRIMONIO LIQUIDADO</th>
+                                  <th className="col-center">Puesto</th>
+                                  <th>Equipo</th>
+                                  <th className="col-center col-optional">Resultado</th>
+                                  <th className="col-right">Patrimonio final</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {m.final_standings.map((s, sIdx) => (
-                                  <tr key={s.id || s.name || sIdx} style={{ background: sIdx === 0 ? 'var(--ifi-subtle)' : 'transparent' }}>
-                                    <td style={{ textAlign: 'center', fontWeight: 700 }}>
-                                      {sIdx === 0 ? '🥇 1.º' : sIdx === 1 ? '🥈 2.º' : sIdx === 2 ? '🥉 3.º' : `#${s.rank || sIdx + 1}`}
+                                  <tr key={s.id || s.name || sIdx} className={sIdx === 0 ? 'is-winner' : ''}>
+                                    <td className="col-center">
+                                      {sIdx === 0 ? '🥇' : sIdx === 1 ? '🥈' : sIdx === 2 ? '🥉' : <span className="font-mono">#{s.rank || sIdx + 1}</span>}
                                     </td>
                                     <td>
-                                      <strong style={{ color: sIdx === 0 ? 'var(--ifi-secondary)' : 'var(--ink)' }}>{s.name}</strong>
-                                      {s.isBot && <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', opacity: 0.7, marginLeft: '6px' }}>(BOT)</span>}
+                                      <strong className="match-team-name">{s.name}</strong>
+                                      {s.isBot && <span className="badge-bot">Bot</span>}
                                     </td>
-                                    <td style={{ textAlign: 'center', fontSize: '10.5px' }}>
+                                    <td className="col-center col-optional">
                                       {sIdx === 0 ? (
-                                        <span style={{ color: 'var(--ifi-secondary)', fontWeight: 700 }}>CAMPEÓN</span>
+                                        <span className="result-tag result-tag--champion">Campeón</span>
                                       ) : sIdx < 3 ? (
-                                        <span style={{ color: 'var(--accent)', fontWeight: 600 }}>PODIO</span>
+                                        <span className="result-tag result-tag--podium">Podio</span>
                                       ) : (
-                                        <span style={{ color: 'var(--ink-muted)' }}>FINALISTA</span>
+                                        <span className="result-tag">Finalista</span>
                                       )}
                                     </td>
-                                    <td style={{ textAlign: 'right', fontWeight: 700, fontSize: '12px' }}>
+                                    <td className="col-right font-mono match-networth">
                                       Bs {Number(s.netWorth || 0).toLocaleString()}
                                     </td>
                                   </tr>
@@ -435,11 +416,11 @@ export function HistoryModal({ onClose }) {
           )}
         </div>
 
-        {/* Pie Institucional Fijo */}
-        <div className="history-modal-footer font-mono">
+        {/* Pie */}
+        <div className="history-modal-footer">
           <div className="footer-institutional-seal">
-            <ShieldCheck size={13} className="text-ifi" />
-            <span className="seal-text">Bolsa Boliviana de Valores S.A. · Libro Mayor de Olimpiadas IFI</span>
+            <ShieldCheck size={14} />
+            <span className="seal-text">Olimpiadas IFI 2026 · Simulación de la Bolsa Boliviana de Valores</span>
           </div>
           <button className="btn-close-history-modal" onClick={onClose}>
             Cerrar

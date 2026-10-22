@@ -141,48 +141,56 @@ export function TeamGameScreen() {
   return (
     <div className="game-screen-wrapper">
       {/* Barra de Comando de Ronda con Espaciado Generoso */}
-      <div className="turn-command-ribbon">
+      <div className={`turn-command-ribbon ${isMyTurn ? 'is-my-turn' : ''}`}>
         <div className="ribbon-inner-container">
           <div className="ribbon-left">
-            <div className="turn-number-tag font-mono">
-              RONDA #{game.turnNumber}
+            <div className="turn-number-tag">
+              <span className="turn-number-label">Ronda</span>
+              <span className="turn-number-value font-mono">{game.turnNumber}</span>
             </div>
 
-            <div className="ribbon-team-pill font-mono">
+            <div className="ribbon-team-pill">
               {teamData.name}
             </div>
 
             <div className={`turn-status-badge ${isMyTurn ? 'is-active' : 'is-idle'}`}>
               <span className="status-pulse-dot" />
-              <span className="status-text font-mono">
-                {isMyTurn ? 'MESA HABILITADA PARA OPERAR' : `TURNO: ${currentTurnTeam.name.toUpperCase()}`}
+              <span className="status-text">
+                {isMyTurn ? (
+                  <>¡Es tu turno! <span className="status-text-extra">Puedes operar</span></>
+                ) : (
+                  <>Turno de <strong>{currentTurnTeam.name}</strong></>
+                )}
               </span>
             </div>
 
-            {/* Stepper de Fases Operativas con Alto Contraste */}
+            {/* Pasos del turno */}
             {isMyTurn && (
-              <div className="phase-stepper-bar font-mono">
+              <div className="phase-stepper-bar" aria-label="Pasos del turno">
                 <span className={`phase-step ${currentTurn.phase === 'before' ? 'step-current' : 'step-done'}`}>
-                  <span className="step-full-label">1. Pre-operación (Libre)</span>
-                  <span className="step-mob-label">1. Libre</span>
+                  <span className="step-num font-mono">1</span>
+                  <span className="step-full-label">Operar (opcional)</span>
+                  <span className="step-mob-label">Operar</span>
                 </span>
-                <ArrowRight size={12} className="step-arrow" />
+                <ArrowRight size={14} className="step-arrow" />
                 <span className={`phase-step ${currentTurn.cardPlayed ? 'step-done' : currentTurn.phase === 'before' ? 'step-pending' : 'step-current'}`}>
-                  <span className="step-full-label">2. Tarjeta Táctica (Obligatoria)</span>
-                  <span className="step-mob-label">2. Tarjeta {!currentTurn.cardPlayed ? '!' : '✓'}</span>
+                  <span className="step-num font-mono">2</span>
+                  <span className="step-full-label">Jugar tarjeta (obligatorio)</span>
+                  <span className="step-mob-label">Tarjeta {!currentTurn.cardPlayed ? '!' : '✓'}</span>
                 </span>
-                <ArrowRight size={12} className="step-arrow" />
+                <ArrowRight size={14} className="step-arrow" />
                 <span className={`phase-step ${currentTurn.cardPlayed ? 'step-current' : 'step-pending'}`}>
-                  <span className="step-full-label">3. Post-operación (Restante)</span>
-                  <span className="step-mob-label">3. Fin</span>
+                  <span className="step-num font-mono">3</span>
+                  <span className="step-full-label">Operar y terminar</span>
+                  <span className="step-mob-label">Terminar</span>
                 </span>
               </div>
             )}
 
             {currentTurn?.isLastTurn && (
-              <div className="last-turn-warning-chip font-mono">
-                <AlertTriangle size={13} />
-                <span>ÚLTIMO TURNO · SOLO VENTAS</span>
+              <div className="last-turn-warning-chip">
+                <AlertTriangle size={14} />
+                <span>Último turno · solo puedes vender</span>
               </div>
             )}
           </div>
@@ -222,15 +230,15 @@ export function TeamGameScreen() {
         </div>
       )}
 
-      {/* Barra de Pestañas Segmentadas para Móvil (Solo visible en pantallas <= 768px) */}
-      <div className="mobile-nav-tabs-bar">
+      {/* Barra de pestañas inferior (solo móvil, <= 768px) */}
+      <nav className="mobile-nav-tabs-bar" aria-label="Secciones del juego">
         <button
           type="button"
           className={`mobile-tab-btn ${mobileTab === 'market' ? 'active' : ''}`}
           onClick={() => setMobileTab('market')}
         >
-          <TrendingUp size={15} />
-          <span>Mercado</span>
+          <TrendingUp size={20} />
+          <span className="tab-label">Mercado</span>
         </button>
 
         <button
@@ -238,9 +246,9 @@ export function TeamGameScreen() {
           className={`mobile-tab-btn ${mobileTab === 'cards' ? 'active' : ''} ${isMyTurn && !currentTurn?.cardPlayed ? 'tab-urgent' : ''}`}
           onClick={() => setMobileTab('cards')}
         >
-          <Layers size={15} />
-          <span>Cartas</span>
-          <span className="tab-count-pill font-mono">{teamData.hand?.length || 0}</span>
+          <Layers size={20} />
+          <span className="tab-label">Cartas</span>
+          <span className="tab-count-pill font-mono" aria-label="tarjetas en mano">{teamData.hand?.length || 0}</span>
           {isMyTurn && !currentTurn?.cardPlayed && <span className="tab-alert-badge">!</span>}
         </button>
 
@@ -249,8 +257,8 @@ export function TeamGameScreen() {
           className={`mobile-tab-btn ${mobileTab === 'portfolio' ? 'active' : ''}`}
           onClick={() => setMobileTab('portfolio')}
         >
-          <Briefcase size={15} />
-          <span>Cartera</span>
+          <Briefcase size={20} />
+          <span className="tab-label">Cartera</span>
         </button>
 
         <button
@@ -258,8 +266,8 @@ export function TeamGameScreen() {
           className={`mobile-tab-btn ${mobileTab === 'chart' ? 'active' : ''}`}
           onClick={() => setMobileTab('chart')}
         >
-          <LineChart size={15} />
-          <span>Gráfico</span>
+          <LineChart size={20} />
+          <span className="tab-label">Gráfico</span>
         </button>
 
         <button
@@ -267,10 +275,10 @@ export function TeamGameScreen() {
           className={`mobile-tab-btn ${mobileTab === 'tape' ? 'active' : ''}`}
           onClick={() => setMobileTab('tape')}
         >
-          <Activity size={15} />
-          <span>Registro</span>
+          <Activity size={20} />
+          <span className="tab-label">Registro</span>
         </button>
-      </div>
+      </nav>
 
       {/* Área de Trabajo de Negociación */}
       <div className="trading-workspace">
@@ -320,16 +328,16 @@ export function TeamGameScreen() {
         <div className="turn-completion-dock">
           <div className="dock-content">
             <div className="dock-hint">
-              <CheckCircle2 size={18} className="text-ifi" />
-              <span>Orden táctica registrada en el libro de la BBV. Puede realizar una operación bursátil restante o finalizar su turno ahora.</span>
+              <CheckCircle2 size={20} className="dock-hint-icon" />
+              <span><strong>Tarjeta jugada.</strong> Puedes hacer una operación más o terminar tu turno.</span>
             </div>
             <button
-              className="btn-complete-turn font-mono"
+              className="btn-complete-turn"
               disabled={actionInProgress}
               onClick={handleEndTurn}
             >
-              <Send size={15} />
-              <span>{actionInProgress ? 'Transmitiendo orden...' : 'Finalizar Turno Operativo'}</span>
+              <Send size={17} />
+              <span>{actionInProgress ? 'Enviando…' : 'Terminar turno'}</span>
             </button>
           </div>
         </div>

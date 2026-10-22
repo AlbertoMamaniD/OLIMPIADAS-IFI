@@ -1,0 +1,99 @@
+/* ==========================================================================
+   ADAPTACIÓN RESPONSIVA INTEGRAL PARA DISPOSITIVOS MÓVILES Y TABLETS
+   Diseñado específicamente para competencia en teléfonos (320px - 768px).
+   Elimina scroll horizontal y proporciona experiencia de app nativa.
+   ========================================================================== */
+
+/* Prevenir zoom involuntario en iOS */
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Ocultar elementos móviles en Escritorio (>= 769px) */
+@media (min-width: 769px) {
+  .mobile-nav-tabs-bar {
+    display: none !important;
+  }
+
+  .mobile-market-cards-list {
+    display: none !important;
+  }
+
+  .workspace-tab-pane {
+    display: block !important;
+  }
+
+  .desktop-market-table-wrap {
+    display: block !important;
+  }
+
+  .ribbon-team-pill {
+    display: none !important;
+  }
+
+  .step-mob-label {
+    display: none;
+  }
+
+  .step-full-label {
+    display: inline;
+  }
+
+  @media (max-width: 1180px) {
+    .phase-stepper-bar .step-mob-label {
+      display: inline !important;
+    }
+    .phase-stepper-bar .step-full-label {
+      display: none !important;
+    }
+  }
+
+  .chart-title-mob,
+  .deck-title-mob,
+  .tape-title-mob,
+  .market-title-mob {
+    display: none !important;
+  }
+
+  .chart-title-full,
+  .deck-title-full,
+  .tape-title-full,
+  .market-title-full {
+    display: inline !important;
+  }
+}
+
+/* --- TABLETS Y SMARTPHONES (<= 768px) --- */
+
+/* Alternancia de etiquetas compactas en móvil */
+@media (max-width: 768px) {
+  /* Alternancia de títulos compactos */
+  .step-mob-label {
+    display: inline !important;
+  }
+
+  .step-full-label {
+    display: none !important;
+  }
+
+  .chart-title-mob,
+  .deck-title-mob,
+  .tape-title-mob,
+  .market-title-mob {
+    display: inline !important;
+  }
+
+  .chart-title-full,
+  .deck-title-full,
+  .tape-title-full,
+  .market-title-full {
+    display: none !important;
+  }
+
+}

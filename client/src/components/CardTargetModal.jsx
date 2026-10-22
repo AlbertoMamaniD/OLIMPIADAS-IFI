@@ -57,34 +57,44 @@ export function CardTargetModal({ card, companies, onClose, onConfirm }) {
 
   const selectedComp = companies.find(c => c.id === selectedOtherId);
 
+  const CardIcon = config.icon;
+
   return (
     <div className="terminal-modal-overlay" onClick={onClose}>
-      <div className="terminal-modal-window modal-target-selector-window" onClick={e => e.stopPropagation()}>
+      <div
+        className="terminal-modal-window modal-target-selector-window"
+        role="dialog"
+        aria-modal="true"
+        onClick={e => e.stopPropagation()}
+      >
         {/* Encabezado */}
-        <div className="modal-header-ribbon">
-          <div className="modal-header-left">
-            <span className="modal-category-chip font-mono">ORDEN TÁCTICA DE IMPACTO DUAL</span>
-            <h3 className="modal-main-title">{config.title}</h3>
+        <div className="modal-head">
+          <div className="modal-icon modal-icon--gold">
+            <CardIcon size={22} />
           </div>
-          <button className="btn-modal-close" onClick={onClose} title="Cerrar ventana">
-            <X size={18} />
+          <div className="modal-head-text">
+            <span className="modal-eyebrow modal-eyebrow--gold">Carta de doble efecto</span>
+            <h3 className="modal-title">{config.title}</h3>
+            <p className="modal-subtitle">{config.desc}</p>
+          </div>
+          <button className="btn-modal-close" onClick={onClose} title="Cerrar ventana" aria-label="Cerrar ventana">
+            <X size={20} />
           </button>
         </div>
 
         {/* Resumen del Objetivo Principal */}
         <div className="target-principal-card">
-          <div className="principal-badge-tag font-mono">EMPRESA OBJETIVO PRINCIPAL (FIJA)</div>
+          <div className="principal-badge-tag">Empresa objetivo (fija)</div>
           <div className="principal-company-row">
             <div className="principal-company-left">
               <span className="target-color-indicator" style={{ backgroundColor: targetCompany.color || 'var(--ifi-secondary)' }} />
-              <span className="ticker-badge font-mono">{targetCompany.ticker || `E${targetCompany.id}`}</span>
+              <span className="target-ticker">{targetCompany.ticker || `E${targetCompany.id}`}</span>
               <strong className="principal-company-name">{targetCompany.name}</strong>
             </div>
-            <div className="principal-impact-pill font-mono">
-              <span className="pill-effect-label">Efecto:</span>
+            <div className="principal-impact-pill">
               <span className="pill-effect-val">{config.targetBonus}</span>
-              <span className="pill-price-preview">
-                (Bs {targetCompany.price} → Bs {config.calcTarget(targetCompany.price)})
+              <span className="pill-price-preview font-mono">
+                Bs {targetCompany.price} <ArrowRight size={12} /> Bs {config.calcTarget(targetCompany.price)}
               </span>
             </div>
           </div>
@@ -92,14 +102,15 @@ export function CardTargetModal({ card, companies, onClose, onConfirm }) {
 
         {/* Sección de Selección de Contraparte */}
         <div className="target-selector-section">
-          <label className="target-selector-label">
-            <span>SELECCIONA LA EMPRESA CONTRAPARTE AFECTADA ({config.otherPenalty}):</span>
-          </label>
+          <div className="target-selector-label">
+            Elige la empresa contraparte
+            <span className="target-selector-effect">{config.otherPenalty}</span>
+          </div>
           <p className="target-selector-hint">
-            Haz clic directamente en la empresa que recibirá la contraparte de la orden:
+            Toca la empresa que recibirá el efecto contrario de la carta.
           </p>
 
-          <div className="target-options-list">
+          <div className="target-options-list" role="radiogroup">
             {otherCompanies.map(c => {
               const isSelected = selectedOtherId === c.id;
               const nextPrice = config.calcOther(c.price);
@@ -109,6 +120,8 @@ export function CardTargetModal({ card, companies, onClose, onConfirm }) {
                 <button
                   key={c.id}
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   className={`target-option-item ${isSelected ? 'is-selected' : ''}`}
                   onClick={() => setSelectedOtherId(c.id)}
                 >
@@ -117,26 +130,20 @@ export function CardTargetModal({ card, companies, onClose, onConfirm }) {
                       className="target-color-indicator"
                       style={{ backgroundColor: c.color || 'var(--ink)' }}
                     />
-                    <span className="ticker-badge font-mono">{c.ticker || `E${c.id}`}</span>
+                    <span className="target-ticker">{c.ticker || `E${c.id}`}</span>
                     <div className="target-option-names">
                       <strong className="target-option-full-name">{c.name}</strong>
-                      <span className="target-option-sub font-mono">Renta Variable · BBV</span>
                     </div>
                   </div>
 
-                  <div className="target-option-pricing font-mono">
-                    <div className="pricing-values-wrap">
-                      <div className="pricing-current">
-                        <span className="pricing-label">Actual:</span>
-                        <span className="pricing-val font-bold">Bs {c.price}</span>
-                      </div>
+                  <div className="target-option-pricing">
+                    <div className="pricing-values-wrap font-mono">
+                      <span className="pricing-current">Bs {c.price}</span>
                       <ArrowRight size={13} className="pricing-arrow" />
-                      <div className={`pricing-projected ${delta < 0 ? 'text-down' : delta > 0 ? 'text-up' : ''}`}>
-                        <span className="pricing-label">Proyectado:</span>
-                        <span className="pricing-val font-bold">
-                          Bs {nextPrice} ({delta > 0 ? `+${delta}` : delta})
-                        </span>
-                      </div>
+                      <span className={`pricing-projected ${delta < 0 ? 'is-down' : delta > 0 ? 'is-up' : ''}`}>
+                        Bs {nextPrice}
+                        <span className="pricing-delta">({delta > 0 ? `+${delta}` : delta})</span>
+                      </span>
                     </div>
                     <div className={`custom-radio-circle ${isSelected ? 'is-checked' : ''}`}>
                       {isSelected ? <CheckCircle2 size={16} /> : null}
@@ -149,7 +156,7 @@ export function CardTargetModal({ card, companies, onClose, onConfirm }) {
         </div>
 
         {/* Botones de Acción */}
-        <div className="modal-actions-bar">
+        <div className="modal-actions-row">
           <button className="btn-secondary-action" onClick={onClose}>
             Cancelar
           </button>
@@ -159,8 +166,8 @@ export function CardTargetModal({ card, companies, onClose, onConfirm }) {
             onClick={() => onConfirm(card.instanceId, selectedOtherId)}
           >
             {selectedComp
-              ? `Confirmar Orden (Afectar a ${selectedComp.name})`
-              : 'Selecciona una Contraparte'}
+              ? `Jugar carta · afecta a ${selectedComp.name}`
+              : 'Elige una contraparte'}
           </button>
         </div>
       </div>

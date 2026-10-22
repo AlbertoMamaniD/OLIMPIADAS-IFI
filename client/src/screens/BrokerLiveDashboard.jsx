@@ -28,51 +28,37 @@ export function BrokerLiveDashboard() {
     };
   }).sort((a, b) => b.totalValue - a.totalValue);
 
+
+  // Solo presentación: nombre legible de la fase del turno
+  const phaseLabels = { before: 'Antes de la tarjeta', after: 'Después de la tarjeta' };
+  const phaseText = currentTurn?.phase ? phaseLabels[currentTurn.phase] || currentTurn.phase : 'En espera';
+
   return (
     <div className="broker-dashboard-wrapper">
       {/* Barra de Control de la Mesa Central */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '14px',
-          background: 'var(--surface)',
-          padding: '12px 20px',
-          borderRadius: 'var(--border-radius)',
-          border: '1px solid var(--line)',
-          marginBottom: '18px',
-          boxShadow: 'var(--shadow-sm)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div
-            style={{
-              background: 'var(--ifi-subtle)',
-              border: '1px solid var(--ifi-secondary)',
-              padding: '8px',
-              borderRadius: 'var(--border-radius-sm)',
-              color: 'var(--ifi-secondary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+      <div className="broker-control-bar">
+        <div className="broker-control-info">
+          <div className="broker-control-icon">
             <Sliders size={20} />
           </div>
-          <div>
-            <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', color: 'var(--ink-secondary)', letterSpacing: '0.08em' }}>
-              MESA DE CONTROL · SALA {room?.code}
+          <div className="broker-control-text">
+            <span className="ui-eyebrow">
+              Mesa de control · Sala <span className="font-mono">{room?.code}</span>
             </span>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, marginTop: '2px' }}>
-              Ronda de Negociación · Turno {game.turnNumber} · En turno:{' '}
-              <span style={{ color: 'var(--ifi-secondary)' }}>{currentTeam.name}</span>
+            <div className="broker-control-title">
+              <span>
+                Turno <span className="font-mono">{game.turnNumber}</span>
+              </span>
+              <span className="broker-control-sep" aria-hidden="true" />
+              <span className="broker-control-current">
+                <span className="broker-turn-dot" />
+                En turno: <strong>{currentTeam.name}</strong>
+              </span>
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className="broker-control-actions">
           <TimerBadge
             seconds={clock.timeRemaining}
             paused={game.paused || game.manualPause}
@@ -80,93 +66,56 @@ export function BrokerLiveDashboard() {
           />
 
           <button
-            className="btn-control"
-            style={{
-              borderColor: game.manualPause ? 'var(--up-border)' : 'var(--line-strong)',
-              color: game.manualPause ? 'var(--up)' : 'var(--ink)',
-            }}
+            className={`broker-ctrl-btn ${game.manualPause ? 'is-resume' : ''}`}
             onClick={togglePause}
           >
-            {game.manualPause ? <Play size={13} /> : <Pause size={13} />}
+            {game.manualPause ? <Play size={16} /> : <Pause size={16} />}
             <span>{game.manualPause ? 'Reanudar' : 'Pausar'}</span>
           </button>
 
           <button
-            className="btn-control"
-            style={{ color: 'var(--down)', borderColor: 'var(--down-border)' }}
+            className="broker-ctrl-btn is-danger"
             onClick={() => setShowSkipModal(true)}
             title="Forzar el fin del turno actual si el equipo se demora"
           >
-            <SkipForward size={13} />
-            <span>Saltar Turno</span>
+            <SkipForward size={16} />
+            <span>Saltar turno</span>
           </button>
         </div>
       </div>
 
       {showSkipModal && (
         <div className="terminal-modal-overlay" onClick={() => setShowSkipModal(false)}>
-          <div
-            className="terminal-modal-window"
-            style={{ maxWidth: '440px', padding: '24px 28px', textAlign: 'left' }}
-            onClick={e => e.stopPropagation()}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '8px',
-                  background: 'var(--down-subtle)',
-                  color: 'var(--down)',
-                  border: '1px solid var(--down-border)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <SkipForward size={18} />
+          <div className="terminal-modal-window broker-skip-modal" onClick={e => e.stopPropagation()}>
+            <div className="broker-skip-head">
+              <div className="broker-skip-icon">
+                <SkipForward size={20} />
               </div>
               <div>
-                <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ink-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  MESA DE CONTROL (BROKER)
-                </span>
-                <h3 style={{ margin: '2px 0 0 0', fontSize: '17px', fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'var(--ink)' }}>
-                  ¿Forzar Término de Turno?
-                </h3>
+                <span className="ui-eyebrow">Mesa de control</span>
+                <h3>¿Saltar el turno actual?</h3>
               </div>
             </div>
 
-            <p style={{ fontSize: '12.5px', lineHeight: 1.5, color: 'var(--ink)', marginBottom: '20px' }}>
-              Se forzará la conclusión inmediata del turno de <strong>{currentTeam.name}</strong>, descartando una tarjeta al azar si no jugaron ninguna y transfiriendo la custodia al siguiente equipo.
+            <p className="broker-skip-text">
+              Se terminará de inmediato el turno de <strong>{currentTeam.name}</strong>. Si no jugaron
+              ninguna tarjeta, se descartará una al azar y el turno pasará al siguiente equipo.
             </p>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button
-                type="button"
-                className="btn-control"
-                onClick={() => setShowSkipModal(false)}
-              >
+            <div className="broker-skip-actions">
+              <button type="button" className="btn-secondary-action" onClick={() => setShowSkipModal(false)}>
                 Cancelar
               </button>
               <button
                 type="button"
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--down)',
-                  background: 'var(--down)',
-                  color: '#ffffff',
-                  cursor: 'pointer',
-                }}
+                className="btn-primary-action btn-danger-solid"
                 onClick={() => {
                   setShowSkipModal(false);
                   skipTurn();
                 }}
               >
-                Forzar Término
+                <SkipForward size={16} />
+                Forzar término
               </button>
             </div>
           </div>
@@ -180,15 +129,15 @@ export function BrokerLiveDashboard() {
           <div className="terminal-card">
             <div className="terminal-card-header">
               <div className="header-icon-label">
-                <LineChart size={15} color="var(--ifi-secondary)" />
-                <span>Cotizaciones del Panel de Control</span>
+                <LineChart size={18} />
+                <span className="card-title-strong">Cotizaciones</span>
               </div>
-              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)' }}>
-                {game.auction ? 'SUBASTA ACTIVA' : 'FASE: ' + (currentTurn?.phase || 'ESPERA').toUpperCase()}
+              <span className={`ui-badge ${game.auction ? 'ui-badge--gold' : 'ui-badge--brand'}`}>
+                {game.auction ? 'Subasta activa' : `Fase: ${phaseText}`}
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px' }}>
+            <div className="broker-quote-grid">
               {game.companies.map(c => {
                 const history = c.priceHistory || [];
                 const prev = history.length > 1 ? history[history.length - 2] : c.price;
@@ -197,55 +146,28 @@ export function BrokerLiveDashboard() {
                 return (
                   <div
                     key={c.id}
-                    style={{
-                      background: 'var(--surface-subtle)',
-                      border: '1px solid var(--line)',
-                      borderRadius: 'var(--border-radius-sm)',
-                      padding: '10px 12px',
-                    }}
+                    className="broker-quote-tile"
+                    style={{ '--company-color': c.color || 'var(--ink-muted)' }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span
-                        style={{
-                          backgroundColor: c.color || 'var(--ink)',
-                          color: '#ffffff',
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          padding: '2px 6px',
-                          borderRadius: '2px',
-                        }}
-                      >
-                        {c.ticker}
-                      </span>
-                      <span style={{ fontSize: '10.5px', color: 'var(--ink-secondary)', fontFamily: 'var(--font-mono)' }}>
-                        Broker: {c.brokerShares}
-                      </span>
+                    <div className="broker-quote-top">
+                      <span className="broker-quote-ticker font-mono">{c.ticker}</span>
+                      {delta !== 0 && (
+                        <span className={`broker-quote-delta font-mono ${delta > 0 ? 'is-up' : 'is-down'}`}>
+                          {delta > 0 ? `▲ +${delta}` : `▼ ${delta}`}
+                        </span>
+                      )}
                     </div>
 
-                    <div
-                      style={{
-                        fontWeight: 600,
-                        fontSize: '13px',
-                        marginBottom: '2px',
-                        whiteSpace: 'normal',
-                        wordBreak: 'break-word',
-                        lineHeight: 1.25,
-                      }}
-                      title={c.name}
-                    >
+                    <div className="broker-quote-name" title={c.name}>
                       {c.name}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                      <span className="val-num" style={{ fontSize: '18px', fontWeight: 700 }}>
-                        Bs {c.price}
-                      </span>
-                      {delta !== 0 && (
-                        <span className={`delta-pill ${delta > 0 ? 'positive' : 'negative'}`}>
-                          {delta > 0 ? `+${delta}` : `${delta}`}
-                        </span>
-                      )}
+                    <div className="broker-quote-price val-num">
+                      <span className="broker-quote-currency">Bs</span> {c.price}
+                    </div>
+
+                    <div className="broker-quote-foot">
+                      Broker: <span className="font-mono">{c.brokerShares}</span> acc.
                     </div>
                   </div>
                 );
@@ -261,60 +183,40 @@ export function BrokerLiveDashboard() {
           {/* Clasificación en Vivo */}
           <div className="terminal-card">
             <div className="terminal-card-header">
-              <div className="header-icon-label">
-                <Trophy size={15} color="var(--accent)" />
-                <span>Posiciones de Rendimiento en Vivo</span>
+              <div className="header-icon-label broker-rank-title">
+                <Trophy size={18} />
+                <span className="card-title-strong">Clasificación en vivo</span>
               </div>
-              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)' }}>
-                {ranking.length} MESAS
+              <span className="ui-badge">
+                <span className="font-mono">{ranking.length}</span> equipos
               </span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '280px', overflowY: 'auto' }}>
+            <ol className="broker-rank-list">
               {ranking.map((t, idx) => (
-                <div
+                <li
                   key={t.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '8px 12px',
-                    background: t.id === currentTurn?.teamId ? 'var(--ifi-subtle)' : 'var(--surface-subtle)',
-                    border: '1px solid var(--line)',
-                    borderRadius: 'var(--border-radius-sm)',
-                    fontSize: '12.5px',
-                  }}
+                  className={`broker-rank-row ${t.id === currentTurn?.teamId ? 'is-current' : ''} ${
+                    idx < 3 ? `rank-top rank-${idx + 1}` : ''
+                  }`}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700, width: '22px', color: idx === 0 ? 'var(--accent)' : 'var(--ink-secondary)' }}>
-                      {idx + 1}.º
-                    </span>
-                    <div>
-                      <strong style={{ color: 'var(--ink)' }}>{t.name}</strong>
-                      {t.eliminated && (
-                        <span style={{ color: 'var(--down)', fontSize: '10px', marginLeft: '6px', fontFamily: 'var(--font-mono)' }}>
-                          [LIQUIDADO]
-                        </span>
-                      )}
-                      {t.id === currentTurn?.teamId && (
-                        <span style={{ color: 'var(--ifi-secondary)', fontSize: '10px', marginLeft: '6px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
-                          [TURNO]
-                        </span>
-                      )}
+                  <span className="broker-rank-pos font-mono">{idx + 1}</span>
+                  <div className="broker-rank-team">
+                    <strong>{t.name}</strong>
+                    <div className="broker-rank-tags">
+                      {t.id === currentTurn?.teamId && <span className="ui-badge ui-badge--brand">En turno</span>}
+                      {t.eliminated && <span className="ui-badge ui-badge--down">Liquidado</span>}
                     </div>
                   </div>
-
-                  <div style={{ textAlign: 'right' }}>
-                    <span className="val-num" style={{ fontWeight: 700 }}>
-                      Bs {t.totalValue.toLocaleString()}
-                    </span>
-                    <div style={{ fontSize: '10.5px', color: 'var(--ink-secondary)', fontFamily: 'var(--font-mono)' }}>
-                      Disp: Bs {t.cash}
-                    </div>
+                  <div className="broker-rank-value">
+                    <span className="val-num">Bs {t.totalValue.toLocaleString()}</span>
+                    <small>
+                      Efectivo <span className="font-mono">Bs {t.cash}</span>
+                    </small>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
 
           <EventLog log={game.log} />

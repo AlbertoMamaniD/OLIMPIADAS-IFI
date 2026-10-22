@@ -1,4 +1,5 @@
 import React from 'react';
+import { AlertTriangle, ShieldCheck, Undo2, AlertCircle } from 'lucide-react';
 
 export function CrisisModal({ decision, companies, myTeam, onResolve }) {
   if (!decision) return null;
@@ -10,49 +11,56 @@ export function CrisisModal({ decision, companies, myTeam, onResolve }) {
 
   return (
     <div className="terminal-modal-overlay">
-      <div className="terminal-modal-window" style={{ borderTop: '3px solid var(--down)' }}>
-        <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--down)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-          PROTOCOLO DE RESCATE BURSÁTIL
-        </span>
-        <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 600, margin: '2px 0 10px 0' }}>
-          Activación de Crisis de Piso: {company.name}
-        </h3>
-
-        <p style={{ fontSize: '12.5px', color: 'var(--ink-secondary)', marginBottom: '16px', lineHeight: 1.5 }}>
-          El activo ha tocado el piso reglamentario de <strong>Bs 10</strong>. Su equipo mantiene una posición de <strong>{held}</strong> acciones. La normativa exige adoptar una de las siguientes dos resoluciones:
-        </p>
-
-        <div style={{ background: 'var(--surface-subtle)', border: '1px solid var(--line)', padding: '14px', borderRadius: 'var(--border-radius-sm)', marginBottom: '18px', fontSize: '12.5px' }}>
-          <div style={{ marginBottom: '12px', borderBottom: '1px solid var(--line)', paddingBottom: '10px' }}>
-            <strong style={{ color: 'var(--ink)' }}>Resolución 1: Conservar tenencia accionaria</strong>
-            <div style={{ color: 'var(--ink-secondary)', marginTop: '2px' }}>
-              Abona una tasa de rescate reglamentaria de <strong>Bs 20 por acción</strong> (Total: Bs {costToKeep}).
-            </div>
-            {!canAfford && (
-              <div style={{ color: 'var(--down)', fontSize: '11px', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>
-                Fondos insuficientes en tesorería (Disponibilidad: Bs {myTeam?.cash || 0}).
-              </div>
-            )}
+      <div className="terminal-modal-window crisis-modal-window" role="alertdialog" aria-modal="true">
+        <div className="modal-head">
+          <div className="modal-icon modal-icon--down">
+            <AlertTriangle size={22} />
           </div>
-          <div>
-            <strong style={{ color: 'var(--ink)' }}>Resolución 2: Devolución forzosa al broker</strong>
-            <div style={{ color: 'var(--ink-secondary)', marginTop: '2px' }}>
-              Transfiere las {held} acciones al inventario del broker sin penalización ni costo.
-            </div>
+          <div className="modal-head-text">
+            <span className="modal-eyebrow modal-eyebrow--down">Crisis de piso · Decisión obligatoria</span>
+            <h3 className="modal-title">{company.name} tocó el piso de Bs 10</h3>
+            <p className="modal-subtitle">
+              Tu equipo tiene <strong className="font-mono">{held}</strong> acciones de esta empresa. Elige qué hacer con ellas:
+            </p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="crisis-options">
+          <div className="crisis-option crisis-option--keep">
+            <span className="crisis-option-title">
+              <ShieldCheck size={16} /> Conservar
+            </span>
+            <span className="crisis-option-cost">Bs {costToKeep}</span>
+            <span className="crisis-option-desc">
+              Pagas <strong>Bs 20 por acción</strong> y te quedas con tus acciones.
+            </span>
+            {!canAfford && (
+              <span className="crisis-option-warning">
+                <AlertCircle size={13} />
+                <span>No te alcanza el efectivo (tienes Bs {myTeam?.cash || 0}).</span>
+              </span>
+            )}
+          </div>
+          <div className="crisis-option crisis-option--return">
+            <span className="crisis-option-title">
+              <Undo2 size={16} /> Devolver
+            </span>
+            <span className="crisis-option-cost">Bs 0</span>
+            <span className="crisis-option-desc">
+              Entregas las {held} acciones al broker, sin costo ni penalización.
+            </span>
+          </div>
+        </div>
+
+        <div className="modal-actions-row">
           <button
             className="btn-secondary-action"
-            style={{ flex: 1 }}
             onClick={() => onResolve(decision.companyId, 'return')}
           >
-            Devolver al Broker
+            Devolver al broker
           </button>
           <button
-            className="btn-primary-action"
-            style={{ flex: 1, backgroundColor: 'var(--down)', borderColor: 'var(--down)' }}
+            className="btn-primary-action btn-modal-danger"
             disabled={!canAfford}
             onClick={() => onResolve(decision.companyId, 'keep')}
           >

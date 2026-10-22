@@ -1,0 +1,267 @@
+/* ================= MODAL DE CARTA DE DOBLE EFECTO (ELEGIR CONTRAPARTE) ================= */
+.modal-target-selector-window {
+  max-width: 580px;
+}
+
+/* Código bursátil compacto */
+.target-ticker {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-secondary);
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+}
+
+.target-color-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px var(--surface-subtle);
+}
+
+/* Empresa objetivo fija */
+.target-principal-card {
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  background: var(--ifi-subtle);
+  border: 1px solid var(--ifi-border);
+  border-radius: var(--radius);
+}
+
+.principal-badge-tag {
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifi-secondary);
+  margin-bottom: 8px;
+}
+
+.principal-company-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.principal-company-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.principal-company-name {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.principal-impact-pill {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+}
+
+.pill-effect-val {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pill-price-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+/* Lista de contrapartes */
+.target-selector-section {
+  margin-bottom: 22px;
+}
+
+.target-selector-label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.target-selector-effect {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent-border);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.target-selector-hint {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+
+.target-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px;
+}
+
+.target-option-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.target-option-item:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-subtle);
+}
+.target-option-item.is-selected {
+  border-color: var(--ifi-secondary);
+  background: var(--ifi-subtle);
+  box-shadow: 0 0 0 1px var(--ifi-secondary);
+}
+
+.target-option-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.target-option-names {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.target-option-full-name {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.target-option-pricing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pricing-values-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.pricing-current {
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.pricing-arrow {
+  color: var(--ink-muted);
+  flex-shrink: 0;
+}
+
+.pricing-projected {
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.pricing-projected.is-up { color: var(--up); }
+.pricing-projected.is-down { color: var(--down); }
+
+.pricing-delta {
+  margin-left: 4px;
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.custom-radio-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  color: var(--on-primary);
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.custom-radio-circle.is-checked {
+  border-color: var(--primary-solid);
+  background: var(--primary-solid);
+}
+
+.btn-execute-dual-card {
+  font-weight: 700;
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 768px) {
+  .target-principal-card { padding: 12px 14px; margin-bottom: 16px; }
+  .principal-company-row { flex-direction: column; align-items: flex-start; }
+  .target-options-list { max-height: none; overflow: visible; }
+  .target-option-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+  }
+  .target-option-pricing {
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+  }
+}
