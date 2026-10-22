@@ -255,7 +255,100 @@
 }
 
 /* ================= MÓVIL ================= */
+
+/* ---------- Resumen tipo cotización ---------- */
+.chart-quote-summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 14px 20px 4px;
+}
+.chart-quote-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.chart-quote-ticker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--ink-secondary);
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+}
+.chart-quote-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chart-quote-values {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.chart-quote-price {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.chart-quote-price small {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+.chart-quote-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+}
+.chart-quote-change.is-up { color: var(--up); background: var(--up-subtle); }
+.chart-quote-change.is-down { color: var(--down); background: var(--down-subtle); }
+.chart-quote-change.is-flat { color: var(--ink-muted); background: var(--surface-subtle); }
+.chart-quote-since {
+  font-size: var(--text-xs);
+  color: var(--ink-muted);
+}
+
+/* Variación dentro del tooltip */
+.tooltip-diff {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.tooltip-diff.is-up, .tooltip-price.is-up { color: var(--up); }
+.tooltip-diff.is-down, .tooltip-price.is-down { color: var(--down); }
+
+/* Pulso del último punto */
+.last-dot-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: chart-last-pulse 1.8s ease-out infinite;
+}
+@keyframes chart-last-pulse {
+  0% { transform: scale(0.6); opacity: 0.45; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.last-price-tag text { font-variant-numeric: tabular-nums; }
+
 @media (max-width: 768px) {
+  .chart-quote-summary { padding: 12px 14px 2px; }
+  .chart-quote-price { font-size: 24px; }
+  .chart-quote-since { display: none; }
+
   .chart-header-row {
     padding: 12px 14px;
     gap: 10px;
