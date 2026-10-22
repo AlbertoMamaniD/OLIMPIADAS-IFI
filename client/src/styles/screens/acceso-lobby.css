@@ -1,168 +1,637 @@
-/* ================= PANTALLAS DE ACCESO Y LOBBY ================= */
-.terminal-centered {
+/* ================= PANTALLAS DE ACCESO Y SALAS DE ESPERA ================= */
+
+/* Fondo suave con un toque de marca para las pantallas de acceso */
+.access-screen {
+  background:
+    radial-gradient(900px 420px at 50% -10%, var(--ifi-subtle), transparent 70%),
+    var(--bg);
+}
+
+/* ---------- Ingreso del equipo ---------- */
+.access-panel {
+  max-width: 460px;
+}
+
+.access-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.access-head .ui-eyebrow {
+  margin-bottom: 6px;
+  color: var(--ifi-secondary);
+}
+
+.access-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-solid);
+  color: var(--on-primary);
+  box-shadow: var(--shadow-brand);
+}
+
+.pin-input {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em; /* compensa el espacio del último carácter */
+  text-transform: uppercase;
+  min-height: 64px;
+  color: var(--ifi-secondary);
+}
+.pin-input::placeholder {
+  color: var(--line-strong);
+  font-weight: 600;
+  opacity: 1;
+}
+
+.access-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.access-actions > button {
+  width: 100%;
+}
+
+.access-hint {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--text-xs);
+  color: var(--ink-muted);
+  text-align: left;
+  line-height: 1.5;
+}
+.access-hint svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Botón fantasma de peligro (salir) */
+.btn-ghost-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--down);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.btn-ghost-danger:hover {
+  background: var(--down-subtle);
+  border-color: var(--down-border);
+}
+
+/* ---------- Sala de espera del equipo ---------- */
+.lobby-panel {
+  max-width: 580px;
+}
+
+.lobby-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--up-subtle);
+  border: 1px solid var(--up-border);
+  color: var(--up);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+.lobby-status-chip strong {
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+.lobby-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--up);
+  box-shadow: 0 0 0 3px var(--up-subtle);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+.lobby-team-head {
+  margin-bottom: 20px;
+}
+
+.lobby-team-name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 4px;
+}
+
+.lobby-team-name {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--ink);
+  word-break: break-word;
+  min-width: 0;
+}
+
+.lobby-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  background: var(--ifi-subtle);
+  border: 1px solid var(--ifi-border);
+  color: var(--ifi-secondary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.lobby-edit-btn:hover {
+  border-color: var(--ifi-secondary);
+}
+
+.lobby-waiting-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+}
+
+.lobby-waiting-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.lobby-waiting-text strong {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--ink);
+}
+.lobby-waiting-text span {
+  font-size: var(--text-sm);
+  color: var(--ink-secondary);
+}
+
+/* Tres puntos animados de "esperando" */
+.lobby-waiting-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.lobby-waiting-loader span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ifi-secondary);
+  animation: lobby-bounce 1.2s infinite ease-in-out;
+}
+.lobby-waiting-loader span:nth-child(2) { animation-delay: 0.15s; }
+.lobby-waiting-loader span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes lobby-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.lobby-teams-block {
+  margin-bottom: 24px;
+}
+
+.lobby-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.lobby-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink);
+}
+.lobby-section-label svg {
+  color: var(--ifi-secondary);
+}
+
+/* ---------- Chips de equipos (compartidos por ambas salas) ---------- */
+.team-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.team-indicator-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  min-width: 0;
+  animation: chip-in 280ms var(--ease) both;
+}
+.team-indicator-chip.self {
+  border-color: var(--ifi-secondary);
+  background: var(--ifi-subtle);
+  box-shadow: 0 0 0 1px var(--ifi-border);
+}
+
+@keyframes chip-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.team-chip-check { color: var(--up); flex-shrink: 0; }
+.team-chip-bot { color: var(--ink-muted); flex-shrink: 0; }
+
+.team-chip-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-chip-you,
+.team-chip-cpu {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.team-chip-you {
+  background: var(--primary-solid);
+  color: var(--on-primary);
+}
+.team-chip-cpu {
+  background: var(--surface-subtle);
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+
+.team-chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  margin-right: -4px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.team-chip-remove:hover {
+  background: var(--down-subtle);
+  color: var(--down);
+}
+
+/* ---------- Sala de espera del broker (para proyectar) ---------- */
+.broker-lobby {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 40px);
+  background:
+    radial-gradient(900px 420px at 20% -10%, var(--ifi-subtle), transparent 70%),
+    var(--bg);
+}
+
+.broker-lobby-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 36px);
+  align-items: stretch;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.pin-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 32px);
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: var(--radius-xl);
+  background: var(--hero-gradient);
+  color: #ffffff;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  isolation: isolate;
+}
+.pin-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 75%);
+}
+
+.pin-stage-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ifi-mint);
+}
+
+.pin-stage-title {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.pin-terminal-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(18px, 3vw, 32px) 16px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.pin-value-code {
+  font-family: var(--font-mono);
+  font-size: clamp(56px, 10vw, 132px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  color: #ffffff;
+  text-shadow: 0 6px 30px rgba(74, 222, 128, 0.35);
+  white-space: nowrap;
+}
+
+.pin-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pin-steps li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: rgba(255, 255, 255, 0.85);
+}
+.pin-steps li > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+.pin-steps strong {
+  color: #ffffff;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.pin-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--ifi-mint);
+  color: var(--ifi-900);
+  font-weight: 800;
+  font-size: var(--text-sm);
+}
+
+.pin-stage-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.pin-stage-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+}
+.pin-stage-meta strong {
+  color: #ffffff;
+}
+
+.broker-lobby-teams {
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-xl);
+}
+
+.lobby-team-count {
+  margin-left: 4px;
+  color: var(--ifi-secondary);
+}
+
+.broker-lobby-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+.broker-lobby-body .team-chips-grid {
+  grid-template-columns: 1fr;
+  align-content: start;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.lobby-empty-state {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 44px 20px;
-}
-
-.terminal-panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
+  gap: 8px;
+  min-height: 200px;
+  padding: 28px 16px;
+  border: 2px dashed var(--line);
   border-radius: var(--radius-lg);
-  padding: 36px 42px;
-  width: 100%;
-  max-width: 540px;
-  box-shadow: var(--shadow-md);
+  text-align: center;
 }
-
-.terminal-heading {
-  font-family: var(--font-serif);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--ink);
+.lobby-empty-state .lobby-waiting-loader {
   margin-bottom: 6px;
 }
-
-.terminal-subheading {
-  font-size: 13.5px;
-  color: var(--ink-secondary);
-  line-height: 1.5;
-  margin-bottom: 24px;
-}
-
-.role-card-select {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
-  text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  padding: 18px 20px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  margin-bottom: 14px;
-  transition: all 0.15s ease;
-}
-.role-card-select:hover {
-  border-color: var(--ifi-secondary);
-  background: var(--surface-subtle);
-  box-shadow: var(--shadow-sm);
-}
-
-.role-icon-box {
-  background: var(--surface-subtle);
-  border: 1px solid var(--line);
-  padding: 11px;
-  border-radius: var(--radius-sm);
-  color: var(--ifi-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.role-card-title {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  font-weight: 700;
+.lobby-empty-state strong {
+  font-size: var(--text-md);
   color: var(--ink);
-  margin-bottom: 3px;
 }
-
-.role-card-desc {
-  font-size: 12.5px;
-  color: var(--ink-secondary);
-  line-height: 1.5;
-}
-
-.form-field {
-  margin-bottom: 18px;
-}
-
-.form-label-institutional {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-secondary);
-  margin-bottom: 7px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.form-input-institutional {
-  width: 100%;
-  background: var(--surface-subtle);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 11px 15px;
-  font-family: var(--font-mono);
-  font-size: 14.5px;
-  transition: border-color 0.15s ease;
-}
-.form-input-institutional:focus {
-  outline: none;
-  border-color: var(--line-focus);
-  background: var(--surface);
-}
-
-.pin-terminal-display {
-  background: var(--surface-subtle);
-  border: 1px solid var(--line);
-  border-top: 4px solid var(--ifi-secondary);
-  padding: 24px;
-  text-align: center;
-  border-radius: var(--radius);
-  margin-bottom: 22px;
-}
-
-.pin-label-caption {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
+.lobby-empty-state span {
+  font-size: var(--text-sm);
   color: var(--ink-muted);
-  letter-spacing: 0.08em;
-  margin-bottom: 5px;
 }
 
-.pin-value-code {
-  font-family: var(--font-mono);
-  font-size: 46px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--ifi-primary);
-}
-
-.team-chips-grid {
+.broker-lobby-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: auto 1fr;
   gap: 10px;
-  margin: 16px 0;
+  margin-top: auto;
+  padding-top: 4px;
 }
 
-.team-indicator-chip {
-  background: var(--surface-subtle);
-  border: 1px solid var(--line);
-  padding: 9px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12.5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* ---------- Pantalla "Reanudando sesión" ---------- */
+.restore-panel {
+  max-width: 440px;
+  text-align: center;
 }
-.team-indicator-chip.self {
-  border-color: var(--ifi-secondary);
-  background: var(--ifi-subtle);
+.restore-spinner {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  border: 4px solid var(--ifi-subtle);
+  border-top-color: var(--ifi-secondary);
+  animation: restore-spin 0.9s linear infinite;
+}
+@keyframes restore-spin {
+  to { transform: rotate(360deg); }
+}
+.restore-panel .terminal-heading {
+  font-size: var(--text-xl);
+}
+.restore-panel .terminal-subheading {
+  margin-bottom: 0;
 }
 
+/* ---------- Responsivo ---------- */
+@media (max-width: 960px) {
+  .broker-lobby-grid {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+  }
+  .broker-lobby {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .access-panel input.pin-input {
+    font-size: 24px !important;
+    min-height: 58px;
+  }
+  .lobby-waiting-card {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .lobby-team-name {
+    font-size: var(--text-2xl);
+  }
+  .team-chips-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .broker-lobby {
+    padding: 16px 14px 32px;
+  }
+  .pin-stage {
+    padding: 22px 18px;
+    border-radius: var(--radius-lg);
+  }
+  .pin-value-code {
+    font-size: clamp(40px, 15vw, 72px);
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
+  }
+  .pin-steps li {
+    font-size: var(--text-sm);
+  }
+  .broker-lobby-teams {
+    border-radius: var(--radius-lg);
+  }
+  .broker-lobby-body {
+    padding: 16px;
+  }
+  .broker-lobby-actions {
+    grid-template-columns: 1fr;
+  }
+  .broker-lobby-body .team-chips-grid {
+    grid-template-columns: 1fr;
+  }
+  .broker-lobby-actions .btn-primary-action {
+    order: -1;
+  }
+}
+
+@media (max-width: 380px) {
+  .team-chips-grid {
+    grid-template-columns: 1fr;
+  }
+}

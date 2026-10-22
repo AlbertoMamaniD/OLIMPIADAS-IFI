@@ -16,10 +16,10 @@ function CustomFinancialTooltip({ active, payload, label, companies }) {
   if (!active || !payload || !payload.length) return null;
 
   return (
-    <div className="financial-chart-tooltip font-mono">
+    <div className="financial-chart-tooltip">
       <div className="tooltip-header">
         <span className="tooltip-turn-title">Ronda {label}</span>
-        <span className="tooltip-feed-tag">BBV OFICIAL</span>
+        <span className="tooltip-feed-tag">Precio BBV</span>
       </div>
       <div className="tooltip-body">
         {payload.map(entry => {
@@ -37,12 +37,12 @@ function CustomFinancialTooltip({ active, payload, label, companies }) {
                   className="tooltip-color-swatch"
                   style={{ backgroundColor: entry.color }}
                 />
-                <span className="tooltip-ticker font-bold">
-                  [{comp.ticker || `E${comp.id}`}]
+                <span className="tooltip-ticker font-mono">
+                  {comp.ticker || `E${comp.id}`}
                 </span>
                 <span className="tooltip-name">{comp.name}</span>
               </div>
-              <span className="tooltip-price font-bold">
+              <span className="tooltip-price font-mono">
                 Bs {price}
               </span>
             </div>
@@ -94,16 +94,20 @@ export function PriceChart({ companies }) {
       {/* Encabezado Pro con Filtros y Modos */}
       <div className="terminal-card-header chart-header-row">
         <div className="header-icon-label">
-          <Activity size={17} className="text-ifi" />
-          <span className="card-title-strong">
-            <span className="chart-title-full">Evolución de Cotizaciones en Rueda</span>
-            <span className="chart-title-mob">Evolución de Cotizaciones</span>
+          <span className="card-icon-chip">
+            <Activity size={18} />
           </span>
-          <span className="chart-range-indicator font-mono">Banda [10 - 250]</span>
+          <span className="card-title-strong">
+            <span className="chart-title-full">Evolución de precios</span>
+            <span className="chart-title-mob">Precios</span>
+          </span>
+          <span className="chart-range-indicator">
+            Rango <span className="font-mono">Bs 10 – 250</span>
+          </span>
         </div>
 
         <div className="chart-controls-group">
-          <div className="chart-type-toggle font-mono">
+          <div className="chart-type-toggle" role="group" aria-label="Tipo de trazo">
             <button
               className={`chart-type-btn ${curveMode === 'curves' ? 'active' : ''}`}
               onClick={() => setCurveMode('curves')}
@@ -124,7 +128,7 @@ export function PriceChart({ companies }) {
 
       {/* Barra Interactiva de Emisores (Click para aislar/enfocar) */}
       <div className="chart-interactive-legend-bar">
-        <span className="legend-hint font-mono">ENFOQUE:</span>
+        <span className="legend-hint">Ver:</span>
         <button
           className={`legend-pill-btn ${activeCompanyId === null ? 'is-all-active' : ''}`}
           onClick={() => setActiveCompanyId(null)}
@@ -142,18 +146,12 @@ export function PriceChart({ companies }) {
               key={c.id}
               className={`legend-pill-btn ${isSelected ? 'is-selected' : ''}`}
               onClick={() => toggleCompanyFocus(c.id)}
-              style={{
-                borderColor: isSelected ? c.color : 'var(--line)',
-                background: isSelected ? `${c.color}25` : 'var(--surface-subtle)',
-              }}
+              style={{ '--co': c.color || 'var(--ink)' }}
               title={`Click para enfocar ${c.name}`}
             >
-              <span
-                className="legend-color-dot"
-                style={{ backgroundColor: c.color || 'var(--ink)' }}
-              />
-              <span className="legend-ticker font-mono">[{c.ticker || `E${c.id}`}]</span>
-              <span className="legend-price font-mono font-bold">Bs {lastPrice}</span>
+              <span className="legend-color-dot" />
+              <span className="legend-ticker font-mono">{c.ticker || `E${c.id}`}</span>
+              <span className="legend-price font-mono">Bs {lastPrice}</span>
             </button>
           );
         })}
@@ -164,31 +162,31 @@ export function PriceChart({ companies }) {
         <ResponsiveContainer width="100%" height={isMobile ? 225 : 320}>
           <LineChart
             data={chartData}
-            margin={isMobile ? { top: 12, right: 12, left: -10, bottom: 4 } : { top: 20, right: 30, left: 15, bottom: 12 }}
+            margin={isMobile ? { top: 12, right: 14, left: 2, bottom: 4 } : { top: 20, right: 30, left: 15, bottom: 12 }}
           >
             <CartesianGrid
-              strokeDasharray="2 3"
+              strokeDasharray="3 4"
               stroke="var(--line)"
-              opacity={0.5}
-              vertical={true}
+              opacity={0.8}
+              vertical={false}
             />
 
             <XAxis
               dataKey="turnLabel"
-              tick={{ fill: 'var(--ink-secondary)', fontSize: isMobile ? 10 : 11.5, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
-              axisLine={{ stroke: 'var(--line-strong)' }}
-              tickLine={{ stroke: 'var(--line)' }}
-              dy={4}
+              tick={{ fill: 'var(--ink-muted)', fontSize: isMobile ? 10.5 : 12, fontFamily: 'var(--font-mono)', fontWeight: 500 }}
+              axisLine={{ stroke: 'var(--line)' }}
+              tickLine={false}
+              dy={6}
             />
 
             <YAxis
               domain={[10, 250]}
               ticks={[10, 50, 100, 150, 200, 250]}
-              tick={{ fill: 'var(--ink-secondary)', fontSize: isMobile ? 9.5 : 11, fontFamily: 'var(--font-mono)', fontWeight: 600 }}
+              tick={{ fill: 'var(--ink-muted)', fontSize: isMobile ? 10.5 : 12, fontFamily: 'var(--font-mono)', fontWeight: 500 }}
               tickFormatter={val => `Bs ${val}`}
-              axisLine={{ stroke: 'var(--line-strong)' }}
-              tickLine={{ stroke: 'var(--line)' }}
-              width={isMobile ? 46 : 64}
+              axisLine={false}
+              tickLine={false}
+              width={isMobile ? 50 : 62}
             />
 
             {/* Líneas de Guía Reglamentarias BBV (Líneas limpias SIN etiquetas de texto que choquen con los puntos) */}
@@ -231,8 +229,8 @@ export function PriceChart({ companies }) {
                   name={c.name}
                   stroke={c.color || 'var(--ink)'}
                   strokeWidth={isFocused && activeCompanyId === c.id ? 3.5 : 2.5}
-                  dot={{ r: isMobile ? 3 : 4, strokeWidth: 1.5, fill: 'var(--surface)', stroke: c.color }}
-                  activeDot={{ r: isMobile ? 5 : 6.5, stroke: '#ffffff', strokeWidth: 2, fill: c.color }}
+                  dot={{ r: isMobile ? 2.5 : 3.5, strokeWidth: 2, fill: 'var(--surface)', stroke: c.color }}
+                  activeDot={{ r: isMobile ? 5 : 6.5, stroke: 'var(--surface)', strokeWidth: 2, fill: c.color }}
                   strokeOpacity={opacity}
                   isAnimationActive={false}
                 />
@@ -245,10 +243,12 @@ export function PriceChart({ companies }) {
       {/* Nota oficial del pie */}
       <div className="chart-footer-note">
         <span className="chart-note-legend-desc">
-          * Línea dorada: Techo (Bs 250). Punteada: Base (Bs 100). Roja: Piso (Bs 10).
+          <span className="note-key"><i className="note-swatch is-ceiling" />Techo Bs 250</span>
+          <span className="note-key"><i className="note-swatch is-base" />Inicial Bs 100</span>
+          <span className="note-key"><i className="note-swatch is-floor" />Piso Bs 10</span>
         </span>
-        <span className="font-mono text-ifi font-bold chart-note-focus-desc">
-          {activeCompanyId ? `Enfoque: ${companies.find(c => c.id === activeCompanyId)?.name}` : 'Visualización Consolidada'}
+        <span className="chart-note-focus-desc">
+          {activeCompanyId ? `Viendo: ${companies.find(c => c.id === activeCompanyId)?.name}` : 'Viendo todas las empresas'}
         </span>
       </div>
     </div>

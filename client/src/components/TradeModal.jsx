@@ -59,47 +59,57 @@ export function TradeModal({ company, side, myTeam, onClose, onConfirm }) {
 
   return (
     <div className="terminal-modal-overlay" onClick={onClose}>
-      <div className="terminal-modal-window order-ticket-window" onClick={e => e.stopPropagation()}>
+      <div
+        className={`terminal-modal-window order-ticket-window ${isBuy ? 'is-buy' : 'is-sell'}`}
+        role="dialog"
+        aria-modal="true"
+        onClick={e => e.stopPropagation()}
+      >
         {/* Encabezado de la Boleta */}
-        <div className="modal-header-ribbon">
-          <div className="modal-header-left">
-            <div className={`order-type-chip ${isBuy ? 'chip-buy' : 'chip-sell'}`}>
-              {isBuy ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-              <span className="font-mono">ORDEN OFICIAL DE {isBuy ? 'COMPRA' : 'VENTA'}</span>
-            </div>
+        <div className="modal-head">
+          <div className={`modal-icon ${isBuy ? 'modal-icon--up' : 'modal-icon--down'}`}>
+            {isBuy ? <ArrowUpRight size={22} /> : <ArrowDownRight size={22} />}
+          </div>
+          <div className="modal-head-text">
+            <span className={`modal-eyebrow ${isBuy ? 'modal-eyebrow--up' : 'modal-eyebrow--down'}`}>
+              Orden de {isBuy ? 'compra' : 'venta'}
+            </span>
             <div className="order-target-title">
-              <span className="order-target-ticker font-mono">[{company.ticker || `E${company.id}`}]</span>
-              <span className="order-target-name">{company.name}</span>
+              <h3 className="modal-title">{company.name}</h3>
+              <span className="order-target-ticker">{company.ticker || `E${company.id}`}</span>
             </div>
           </div>
-          <button className="btn-modal-close" onClick={onClose} title="Cerrar boleta">
-            <X size={18} />
+          <button className="btn-modal-close" onClick={onClose} title="Cerrar boleta" aria-label="Cerrar boleta">
+            <X size={20} />
           </button>
         </div>
 
         {/* Resumen de Cotización */}
-        <div className="order-quote-bar font-mono">
-          <div className="quote-bar-item">
-            <span className="quote-bar-label">Precio Unitario: </span>
-            <span className="quote-bar-val font-bold">Bs {price}</span>
+        <div className="order-quote-grid">
+          <div className="order-quote-tile">
+            <span className="order-quote-label">Precio por acción</span>
+            <span className="order-quote-val">Bs {price}</span>
           </div>
-          <div className="quote-bar-divider">·</div>
-          <div className="quote-bar-item">
-            <span className="quote-bar-label">{isBuy ? 'Disponible en Broker: ' : 'En Cartera Actual: '}</span>
-            <span className="quote-bar-val font-bold">{isBuy ? `${company.brokerShares} acc.` : `${held} acc.`}</span>
+          <div className="order-quote-tile">
+            <span className="order-quote-label">{isBuy ? 'Disponibles en el broker' : 'Tus acciones'}</span>
+            <span className="order-quote-val">
+              {isBuy ? company.brokerShares : held}
+              <small>acc.</small>
+            </span>
           </div>
         </div>
 
         {/* Formulario de Cantidad Sin Flechas y con Edición Libre */}
         <div className="order-input-section">
-          <div className="order-input-label">
-            <span>Volumen de títulos a operar:</span>
-            <span className="order-input-max font-mono">
-              Límite autorizado: <strong>{maxPossible} acc.</strong>
+          <label className="order-input-label" htmlFor="order-qty-input">
+            <span>Cantidad de acciones</span>
+            <span className="order-input-max">
+              Máximo: <strong>{maxPossible}</strong>
             </span>
-          </div>
+          </label>
           <div className="order-input-row">
             <input
+              id="order-qty-input"
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
@@ -156,41 +166,41 @@ export function TradeModal({ company, side, myTeam, onClose, onConfirm }) {
 
           {/* Avisos de Validación en Tiempo Real */}
           {isTooHigh && (
-            <div className="order-validation-msg error font-mono">
-              <AlertCircle size={12} />
-              <span>La cantidad solicitada ({qtyStr}) excede el límite autorizado ({maxPossible} acc.).</span>
+            <div className="order-validation-msg error">
+              <AlertCircle size={14} />
+              <span>La cantidad ({qtyStr}) supera el máximo permitido ({maxPossible} acc.).</span>
             </div>
           )}
           {maxPossible === 0 && (
-            <div className="order-validation-msg error font-mono">
-              <AlertCircle size={12} />
-              <span>{isBuy ? 'No dispone de saldo suficiente para adquirir este activo.' : 'No posee acciones disponibles de esta empresa.'}</span>
+            <div className="order-validation-msg error">
+              <AlertCircle size={14} />
+              <span>{isBuy ? 'No tienes efectivo suficiente para comprar esta acción.' : 'No tienes acciones de esta empresa.'}</span>
             </div>
           )}
           {qtyStr === '' && maxPossible > 0 && (
-            <div className="order-validation-msg info font-mono">
-              <span>Ingrese una cantidad mínima de 1 acción.</span>
+            <div className="order-validation-msg info">
+              <span>Ingresa al menos 1 acción.</span>
             </div>
           )}
         </div>
 
         {/* Liquidación Estimada */}
-        <div className="order-settlement-card font-mono">
+        <div className="order-settlement-card">
           <div className="settlement-row primary-settlement">
             <span className="settlement-label">
-              {isBuy ? 'Importe Total a Liquidar:' : 'Importe Total a Acreditar:'}
+              {isBuy ? 'Total a pagar' : 'Total a recibir'}
             </span>
             <span className="settlement-val">
               Bs {totalCost.toLocaleString()}
             </span>
           </div>
-          <div className="settlement-row text-muted">
-            <span className="settlement-label">Saldo en Efectivo Actual:</span>
+          <div className="settlement-row">
+            <span className="settlement-label">Efectivo actual</span>
             <span className="settlement-val">Bs {cash.toLocaleString()}</span>
           </div>
-          <div className="settlement-row text-muted settlement-result">
-            <span className="settlement-label">Saldo Proyectado en Tesorería:</span>
-            <span className="settlement-val text-ifi font-bold">
+          <div className="settlement-row settlement-result">
+            <span className="settlement-label">Efectivo después de la orden</span>
+            <span className="settlement-val">
               Bs {(isBuy ? cash - totalCost : cash + totalCost).toLocaleString()}
             </span>
           </div>
@@ -199,22 +209,22 @@ export function TradeModal({ company, side, myTeam, onClose, onConfirm }) {
         {/* Acciones */}
         <div className="modal-actions-row">
           <button className="btn-secondary-action" onClick={onClose}>
-            Descartar
+            Cancelar
           </button>
           <button
             className={`btn-primary-action ${isBuy ? 'btn-order-confirm-buy' : 'btn-order-confirm-sell'}`}
             disabled={!isValid}
             onClick={handleConfirm}
           >
-            {isBuy ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+            {isBuy ? <ArrowUpRight size={18} /> : <ArrowDownRight size={18} />}
             <span>
               {maxPossible === 0
-                ? 'Sin volumen disponible'
+                ? 'Sin acciones disponibles'
                 : isValid
-                ? `Confirmar ${isBuy ? 'Compra' : 'Venta'} (${numericQty} acc.)`
+                ? `Confirmar ${isBuy ? 'compra' : 'venta'} · ${numericQty} acc.`
                 : isTooHigh
-                ? `Excede límite (máx. ${maxPossible})`
-                : 'Ingrese cantidad (mín. 1)'}
+                ? `Supera el máximo (${maxPossible})`
+                : 'Ingresa una cantidad'}
             </span>
           </button>
         </div>

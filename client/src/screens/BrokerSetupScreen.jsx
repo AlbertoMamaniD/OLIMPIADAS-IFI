@@ -174,42 +174,40 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
   };
 
   return (
-    <div className="terminal-centered" style={{ padding: '24px 16px' }}>
+    <div className="terminal-centered access-screen setup-screen">
       <div className="terminal-panel broker-setup-panel">
-        {/* Encabezado Institucional */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', borderBottom: '1px solid var(--line)', paddingBottom: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--ifi-secondary)' }}>
-            <Sliders size={20} />
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              MESA DE CONTROL (BROKER) · BBV
-            </span>
+        {/* Encabezado */}
+        <div className="setup-header">
+          <div className="setup-header-icon">
+            <Sliders size={22} />
           </div>
-          <span className="order-type-chip chip-buy font-mono" style={{ fontSize: '10px' }}>
-            REGLAMENTO IFI 2026
-          </span>
+          <div className="setup-header-text">
+            <span className="ui-eyebrow">Mesa de control · Broker</span>
+            <h2 className="terminal-heading">Configura la rueda bursátil</h2>
+            <p className="terminal-subheading">
+              Define la duración de los turnos, las empresas que cotizan y las tarjetas que se usarán en la partida.
+            </p>
+          </div>
         </div>
 
-        <h2 className="terminal-heading" style={{ fontSize: '24px', margin: '4px 0 2px 0' }}>
-          Parámetros de la Rueda Bursátil
-        </h2>
-        <p className="terminal-subheading" style={{ marginBottom: '18px' }}>
-          Configure el marco operativo, los activos cotizados y la duración de turnos para las mesas universitarias:
-        </p>
-
-        {error && <div className="terminal-alert-error font-mono">{error}</div>}
+        {error && <div className="terminal-alert-error">{error}</div>}
 
         <form onSubmit={handleCreate}>
           {/* 1. Duración de Turno Operativo */}
-          <div className="form-field" style={{ marginBottom: '18px' }}>
-            <label className="form-label-institutional" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Clock size={13} />
-                <span>Tiempo por Turno de Negociación:</span>
+          <section className="setup-section">
+            <div className="setup-section-head">
+              <span className="setup-step">1</span>
+              <div className="setup-section-title">
+                <h3>
+                  <Clock size={16} />
+                  Tiempo por turno
+                </h3>
+                <p>Cuánto tiene cada equipo para operar en su turno.</p>
+              </div>
+              <span className="ui-badge ui-badge--brand">
+                <span className="font-mono">{turnSeconds}</span> s por equipo
               </span>
-              <span className="font-mono text-ifi" style={{ fontSize: '11px', fontWeight: 600 }}>
-                {turnSeconds} segundos por mesa
-              </span>
-            </label>
+            </div>
 
             <div className="time-pill-grid">
               {[
@@ -220,68 +218,83 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
               ].map(opt => (
                 <div
                   key={opt.val}
+                  role="button"
+                  aria-pressed={turnSeconds === opt.val}
                   className={`time-pill-card ${turnSeconds === opt.val ? 'active' : ''}`}
                   onClick={() => setTurnSeconds(opt.val)}
                 >
-                  <span className="time-pill-value">{opt.lbl}</span>
-                  <span className="time-pill-label font-mono">{opt.desc}</span>
+                  <span className="time-pill-value font-mono">{opt.lbl}</span>
+                  <span className="time-pill-label">{opt.desc}</span>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* 2. Rondas (Tarjetas) y Capacidad */}
-          <div className="broker-setup-params-grid">
-            <div className="form-field">
-              <label className="form-label-institutional">
-                <Layers size={13} />
-                <span>Tarjetas por mesa (Rondas):</span>
-              </label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type="number"
-                  min="2"
-                  max="15"
-                  value={handSize}
-                  onChange={e => setHandSize(parseInt(e.target.value || '6', 10))}
-                  className="terminal-input font-mono"
-                  style={{ width: '100%', padding: '10px 12px', fontSize: '14px', fontWeight: 700 }}
-                />
-                <span style={{ position: 'absolute', right: '12px', top: '11px', fontSize: '11px', color: 'var(--ink-muted)', fontFamily: 'var(--font-mono)' }}>
-                  {handSize} rondas
-                </span>
+          <section className="setup-section">
+            <div className="setup-section-head">
+              <span className="setup-step">2</span>
+              <div className="setup-section-title">
+                <h3>
+                  <Users size={16} />
+                  Rondas y equipos
+                </h3>
+                <p>Cada tarjeta equivale a una ronda de juego por equipo.</p>
               </div>
             </div>
 
-            <div className="form-field">
-              <label className="form-label-institutional">
-                <Users size={13} />
-                <span>Capacidad máxima de mesas:</span>
-              </label>
-              <input
-                type="number"
-                min="2"
-                max="50"
-                placeholder="Ilimitado (Salas 30+)"
-                value={maxTeams}
-                onChange={e => setMaxTeams(e.target.value)}
-                className="terminal-input font-mono"
-                style={{ width: '100%', padding: '10px 12px', fontSize: '14px' }}
-              />
+            <div className="broker-setup-params-grid">
+              <div className="form-field">
+                <label className="form-label-institutional" htmlFor="setup-hand-size">
+                  Tarjetas por equipo
+                </label>
+                <div className="setup-input-suffix">
+                  <input
+                    id="setup-hand-size"
+                    type="number"
+                    min="2"
+                    max="15"
+                    value={handSize}
+                    onChange={e => setHandSize(parseInt(e.target.value || '6', 10))}
+                    className="form-input-institutional font-mono"
+                  />
+                  <span className="setup-suffix-label">{handSize} rondas</span>
+                </div>
+              </div>
+
+              <div className="form-field">
+                <label className="form-label-institutional" htmlFor="setup-max-teams">
+                  Máximo de equipos
+                </label>
+                <input
+                  id="setup-max-teams"
+                  type="number"
+                  min="2"
+                  max="50"
+                  placeholder="Sin límite"
+                  value={maxTeams}
+                  onChange={e => setMaxTeams(e.target.value)}
+                  className="form-input-institutional font-mono"
+                />
+              </div>
             </div>
-          </div>
+          </section>
 
           {/* 3. Selección de Emisores Bursátiles con Plantillas de Bolivia */}
-          <div className="form-field" style={{ marginBottom: '20px' }}>
-            <label className="form-label-institutional" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Building2 size={13} />
-                <span>Emisores y Tickers Bursátiles (5 Activos Cotizados):</span>
+          <section className="setup-section">
+            <div className="setup-section-head">
+              <span className="setup-step">3</span>
+              <div className="setup-section-title">
+                <h3>
+                  <Building2 size={16} />
+                  Empresas que cotizan
+                </h3>
+                <p>Elige una plantilla o edita el nombre y el ticker de cada empresa.</p>
+              </div>
+              <span className="ui-badge">
+                Base <span className="font-mono">Bs 100 · 260</span> acc.
               </span>
-              <span className="font-mono" style={{ fontSize: '10.5px', color: 'var(--ink-muted)' }}>
-                Base: Bs 100 · 260 Acciones
-              </span>
-            </label>
+            </div>
 
             {/* Selector de Plantillas Rápidas */}
             <div className="preset-selector-bar">
@@ -290,7 +303,7 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
                 className={`preset-tab-btn ${activePreset === 'bbv' ? 'active' : ''}`}
                 onClick={() => applyPreset('bbv')}
               >
-                <Sparkles size={12} />
+                <Sparkles size={14} />
                 <span>Oficial BBV</span>
               </button>
               <button
@@ -298,14 +311,14 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
                 className={`preset-tab-btn ${activePreset === 'banking' ? 'active' : ''}`}
                 onClick={() => applyPreset('banking')}
               >
-                <span>Banca & Finanzas</span>
+                <span>Banca y finanzas</span>
               </button>
               <button
                 type="button"
                 className={`preset-tab-btn ${activePreset === 'industry' ? 'active' : ''}`}
                 onClick={() => applyPreset('industry')}
               >
-                <span>Industria & Energía</span>
+                <span>Industria y energía</span>
               </button>
               <button
                 type="button"
@@ -325,8 +338,9 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
                     type="text"
                     value={c.name}
                     onChange={e => updateCompanyName(idx, e.target.value)}
-                    placeholder="Razón Social del Emisor"
+                    placeholder="Nombre de la empresa"
                     className="company-name-input"
+                    aria-label={`Nombre de la empresa ${idx + 1}`}
                   />
                   <input
                     type="text"
@@ -336,6 +350,7 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
                     maxLength={4}
                     className="company-ticker-pill"
                     title="Ticker nemotécnico (hasta 4 letras)"
+                    aria-label={`Ticker de la empresa ${idx + 1}`}
                   />
                   <span className="company-price-tag font-mono">
                     Bs {c.price || 100}
@@ -343,19 +358,26 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* 4. Tarjetas Tácticas Autorizadas con Impacto Visual */}
-          <div className="form-field" style={{ marginBottom: '22px' }}>
-            <label className="form-label-institutional" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Layers size={13} />
-                <span>Tarjetas Reglamentarias Habilitadas:</span>
+          <section className="setup-section">
+            <div className="setup-section-head">
+              <span className="setup-step">4</span>
+              <div className="setup-section-title">
+                <h3>
+                  <Layers size={16} />
+                  Tarjetas habilitadas
+                </h3>
+                <p>Toca una tarjeta para activarla o desactivarla.</p>
+              </div>
+              <span className="ui-badge ui-badge--brand">
+                <span className="font-mono">
+                  {selectedCards.length}/{CARD_TYPES.length}
+                </span>{' '}
+                activas
               </span>
-              <span className="font-mono text-ifi" style={{ fontSize: '11px', fontWeight: 600 }}>
-                {selectedCards.length} de {CARD_TYPES.length} activas
-              </span>
-            </label>
+            </div>
 
             <div className="card-tiles-grid">
               {CARD_TYPES.map(card => {
@@ -365,54 +387,56 @@ export function BrokerSetupScreen({ onBack, onRoomCreated }) {
                 return (
                   <div
                     key={card.id}
-                    className={`card-tile-item ${isSelected ? 'is-selected' : ''}`}
+                    role="button"
+                    aria-pressed={isSelected}
+                    className={`card-tile-item ${card.badgeClass} ${isSelected ? 'is-selected' : ''}`}
                     onClick={() => toggleCard(card.id)}
                   >
+                    <span className="card-tile-icon">
+                      <Icon size={18} />
+                    </span>
+                    <div className="card-tile-content">
+                      <div className="card-tile-header">
+                        <span className="card-tile-code font-mono">{card.label}</span>
+                        <span className="card-tile-title">{card.title}</span>
+                      </div>
+                      <p className="card-tile-desc">{card.desc}</p>
+                    </div>
+                    <span className="card-tile-check" aria-hidden="true">
+                      {isSelected && <Check size={14} strokeWidth={3} />}
+                    </span>
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => {}} // controlado por el contenedor
                       className="card-tile-checkbox"
+                      tabIndex={-1}
+                      aria-hidden="true"
                     />
-                    <div className="card-tile-content">
-                      <div className="card-tile-header">
-                        <span className="card-tile-code">{card.label}</span>
-                        <span className="card-tile-title">{card.title}</span>
-                      </div>
-                      <p className="card-tile-desc">{card.desc}</p>
-                    </div>
                   </div>
                 );
               })}
             </div>
-          </div>
+          </section>
 
           {/* Botones de Envío */}
-          <button
-            type="submit"
-            className="btn-primary-action"
-            style={{ width: '100%', padding: '12px', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            disabled={isSubmitting}
-          >
-            <Play size={16} />
-            <span>{isSubmitting ? 'Aperturando sesión...' : 'Aperturar Sala Bursátil (Generar PIN)'}</span>
-          </button>
+          <div className="setup-actions">
+            <button type="button" className="btn-secondary-action" onClick={onBack}>
+              <ArrowLeft size={16} />
+              <span>Volver</span>
+            </button>
 
-          <button
-            type="button"
-            className="btn-control"
-            style={{ width: '100%', marginTop: '8px', padding: '10px', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-            onClick={onBack}
-          >
-            <ArrowLeft size={14} />
-            <span>Volver a Selección de Rol</span>
-          </button>
+            <button type="submit" className="btn-primary-action" disabled={isSubmitting}>
+              <Play size={17} />
+              <span>{isSubmitting ? 'Abriendo sala…' : 'Abrir sala y generar PIN'}</span>
+            </button>
+          </div>
         </form>
 
-        {/* Sello de Auditoría */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--line)', color: 'var(--ink-muted)', fontSize: '10.5px', fontFamily: 'var(--font-mono)' }}>
-          <ShieldCheck size={13} className="text-ifi" />
-          <span>PARÁMETROS REGULADOS POR EL COMITÉ TÉCNICO · OLIMPIADAS IFI 2026</span>
+        {/* Sello */}
+        <div className="setup-seal">
+          <ShieldCheck size={15} />
+          <span>Parámetros del reglamento oficial · Olimpiadas IFI 2026</span>
         </div>
       </div>
     </div>

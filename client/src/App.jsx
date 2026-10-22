@@ -30,14 +30,12 @@ export function App() {
 
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {restoringSession ? (
-          <div className="terminal-centered" style={{ minHeight: '65vh' }}>
-            <div className="terminal-panel" style={{ maxWidth: '440px', textAlign: 'center', padding: '36px 28px' }}>
-              <div className="status-pulse-dot" style={{ width: '14px', height: '14px', margin: '0 auto 16px auto', background: 'var(--ifi-primary)' }} />
-              <h3 className="terminal-heading" style={{ fontSize: '18px', marginBottom: '8px' }}>
-                Reanudando Rueda Bursátil...
-              </h3>
-              <p className="terminal-subheading" style={{ fontSize: '12.5px', margin: 0 }}>
-                Restableciendo terminal, cartera de títulos y conexión con el recinto olímpico.
+          <div className="terminal-centered access-screen">
+            <div className="terminal-panel restore-panel">
+              <div className="restore-spinner" aria-hidden="true" />
+              <h3 className="terminal-heading">Reanudando la partida…</h3>
+              <p className="terminal-subheading">
+                Recuperando tu mesa, tu cartera y la conexión con la sala.
               </p>
             </div>
           </div>

@@ -1,6 +1,7 @@
 /* Punto de entrada de estilos. El ORDEN de los imports importa (cascada). */
 @import './base/variables.css';
 @import './base/reset.css';
+@import './base/primitives.css';
 @import './layout/topbar.css';
 @import './layout/barra-ronda.css';
 @import './layout/workspace.css';
@@ -14,12 +15,10 @@
 @import './components/modales-boleta.css';
 @import './components/modal-contraparte.css';
 @import './screens/broker-panel.css';
+@import './screens/inicio.css';
 @import './screens/acceso-lobby.css';
 @import './screens/historial-podio.css';
 @import './screens/broker-config.css';
+@import './screens/fin-partida.css';
 @import './screens/historial-actas.css';
 @import './responsive/responsive-base.css';
-@import './responsive/movil-general.css';
-@import './responsive/movil-pestanas-mercado.css';
-@import './responsive/movil-paneles.css';
-@import './responsive/movil-modales-acceso.css';

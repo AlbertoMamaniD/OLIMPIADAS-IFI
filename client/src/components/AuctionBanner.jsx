@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gavel, Clock, ArrowUpRight, Coins, AlertCircle, ShieldAlert } from 'lucide-react';
+import { Gavel, Clock, ArrowUpRight, Coins, AlertCircle } from 'lucide-react';
 
 export function AuctionBanner({
   auction,
@@ -22,46 +22,49 @@ export function AuctionBanner({
   const auctionSeconds = clock?.phase === 'auction' ? clock.auctionRemaining : 30;
 
   return (
-    <div className="auction-execution-panel">
+    <div className="auction-execution-panel" role="region" aria-label="Subasta en curso">
       <div className="auction-top-row">
         <div className="auction-title-group">
           <div className="auction-icon-box">
-            <Gavel size={18} />
+            <Gavel size={22} />
           </div>
-          <div>
-            <div className="auction-header-tag font-mono">
-              SUBASTA PÚBLICA EXTRAORDINARIA EN CURSO
+          <div className="auction-title-text">
+            <div className="auction-header-tag">
+              <span className="auction-live-dot" />
+              Subasta pública en curso
             </div>
             <h3 className="auction-main-heading">
-              Lote de {auction.lotSize} acciones de {company.name}
+              Lote de <span className="font-mono">{auction.lotSize}</span> acciones de {company.name}
             </h3>
           </div>
         </div>
 
-        <div className="auction-countdown-pill font-mono">
-          <Clock size={14} />
-          <span className="countdown-label">CIERRE:</span>
-          <span className="countdown-seconds">{auctionSeconds}s</span>
+        <div className="auction-countdown-pill" aria-live="polite">
+          <Clock size={16} />
+          <span className="countdown-label">Cierra en</span>
+          <span className="countdown-seconds font-mono">{auctionSeconds}s</span>
         </div>
       </div>
 
       <p className="auction-legal-desc">
-        Aportes obligatorios liquidados al precio base de mercado (Bs {auction.priceAtStart}). El paquete adjudicado se transferirá a la mayor postura solvente registrada al cierre de rueda.
+        Los aportes obligatorios se pagan al precio base (<strong className="font-mono">Bs {auction.priceAtStart}</strong>).
+        El lote completo se adjudica a la oferta más alta que pueda pagarse al cierre.
       </p>
 
       <div className="auction-bid-control-strip">
         <div className="current-bid-box">
-          <span className="current-bid-caption font-mono">POSTURA MÁXIMA VIGENTE:</span>
-          <div className="current-bid-amount font-mono">
+          <span className="current-bid-caption">Mejor oferta actual</span>
+          <div className="current-bid-amount">
             {highestBid ? (
-              <span>
-                <strong>Bs {highestBid.amountPerShare}</strong> / acción
-                <span className="bid-owner-tag">
-                  {highestBid.teamId === myTeam?.id ? ' (Propiedad de tu mesa)' : ' (Oferta contraria)'}
+              <span className="current-bid-line">
+                <strong className="font-mono">Bs {highestBid.amountPerShare}</strong>
+                <span className="current-bid-unit">por acción</span>
+                <span className={`bid-owner-tag ${highestBid.teamId === myTeam?.id ? 'is-mine' : ''}`}>
+                  {highestBid.teamId === myTeam?.id ? 'Tu mesa' : 'Otra mesa'}
                 </span>
               </span>
             ) : (
-              <span className="no-bids-yet">Sin posturas iniciales (Base: Bs 10 / acc)</span>
+              <span className="no-bids-yet">Sin ofertas aún · mínimo Bs 10 por acción</span>
             )}
           </div>
         </div>
@@ -72,9 +75,11 @@ export function AuctionBanner({
             disabled={!canAfford}
             onClick={onPlaceBid}
           >
-            <ArrowUpRight size={15} />
-            <span className="btn-bid-main">Pujar Bs {nextBidAmount} / acc</span>
-            <span className="btn-bid-sub font-mono">· Total: Bs {totalCost.toLocaleString()}</span>
+            <ArrowUpRight size={17} />
+            <span className="btn-bid-text">
+              <span className="btn-bid-main">Pujar Bs {nextBidAmount} por acción</span>
+              <span className="btn-bid-sub font-mono">Total Bs {totalCost.toLocaleString()}</span>
+            </span>
           </button>
 
           <button
@@ -82,16 +87,19 @@ export function AuctionBanner({
             onClick={onOpenQuickSell}
             title="Venta inmediata de acciones en cartera para generar liquidez"
           >
-            <Coins size={14} />
-            <span>Venta de Liquidez</span>
+            <Coins size={16} />
+            <span>Vender acciones</span>
           </button>
         </div>
       </div>
 
       {!canAfford && (
-        <div className="auction-insolvency-alert font-mono">
-          <AlertCircle size={13} />
-          <span>Liquidez disponible insuficiente (Bs {myTeam?.cash || 0}). Realice una venta de cartera para fondear la postura.</span>
+        <div className="auction-insolvency-alert">
+          <AlertCircle size={15} />
+          <span>
+            Tu efectivo (<span className="font-mono">Bs {myTeam?.cash || 0}</span>) no alcanza para esta oferta.
+            Vende acciones para conseguir liquidez.
+          </span>
         </div>
       )}
     </div>

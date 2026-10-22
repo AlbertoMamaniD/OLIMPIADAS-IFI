@@ -70,3 +70,30 @@
 }
 
 /* --- TABLETS Y SMARTPHONES (<= 768px) --- */
+
+/* Alternancia de etiquetas compactas en móvil */
+@media (max-width: 768px) {
+  /* Alternancia de títulos compactos */
+  .step-mob-label {
+    display: inline !important;
+  }
+
+  .step-full-label {
+    display: none !important;
+  }
+
+  .chart-title-mob,
+  .deck-title-mob,
+  .tape-title-mob,
+  .market-title-mob {
+    display: inline !important;
+  }
+
+  .chart-title-full,
+  .deck-title-full,
+  .tape-title-full,
+  .market-title-full {
+    display: none !important;
+  }
+
+}

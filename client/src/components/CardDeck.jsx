@@ -80,21 +80,24 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
     <div className="terminal-card card-deck-card">
       <div className="terminal-card-header deck-header-row">
         <div className="header-icon-label">
-          <Layers size={17} className="text-ifi" />
-          <span className="card-title-strong">
-            <span className="deck-title-full">Cartera de Tarjetas Tácticas ({hand?.length || 0})</span>
-            <span className="deck-title-mob">Tarjetas Tácticas ({hand?.length || 0})</span>
+          <span className="panel-icon-chip">
+            <Layers size={17} />
           </span>
+          <span className="card-title-strong">
+            <span className="deck-title-full">Tus cartas tácticas</span>
+            <span className="deck-title-mob">Cartas tácticas</span>
+          </span>
+          <span className="deck-count-pill font-mono">{hand?.length || 0}</span>
         </div>
         <div className="card-deck-status">
           {cardPlayed ? (
-            <span className="turn-step-executed font-mono">
-              <CheckCircle2 size={12} />
-              <span>Ejecutada</span>
+            <span className="turn-step-executed">
+              <CheckCircle2 size={14} />
+              <span>Carta jugada</span>
             </span>
           ) : (
-            <span className="turn-step-pending font-mono">
-              1 obligatoria / turno
+            <span className="turn-step-pending">
+              Juega 1 por turno
             </span>
           )}
         </div>
@@ -102,8 +105,9 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
 
       <div className="cards-list-container">
         {(!hand || hand.length === 0) ? (
-          <div className="empty-deck-notice font-mono">
-            <span>Sin tarjetas disponibles en cartera</span>
+          <div className="empty-deck-notice">
+            <Layers size={26} className="empty-deck-icon" />
+            <span>No te quedan cartas en la mano</span>
           </div>
         ) : (
           hand.map(card => {
@@ -122,68 +126,71 @@ export function CardDeck({ hand, companies, isMyTurn, cardPlayed, onPlayCard, ac
             return (
               <div
                 key={card.instanceId}
-                className={`tactical-card-item ${isExpanded ? 'is-expanded' : ''} ${config.badgeClass}`}
+                className={`tactical-card-item ${isExpanded ? 'is-expanded' : ''} ${config.badgeClass} ${canPlay ? 'is-playable' : ''}`}
                 onClick={() => toggleExpand(card.instanceId)}
               >
                 <div className="tactical-card-header">
-                  <div className="tactical-card-left">
-                    <div className="tactical-card-badge">
-                      <Icon size={14} />
-                      <span className="font-mono">{config.label}</span>
-                    </div>
-                    <div className="tactical-card-meta">
-                      <div className="tactical-target-line">
-                        <span className="meta-label">Objetivo:</span>
-                        <span className="meta-ticker-chip font-mono">
-                          [{targetComp.ticker || `E${targetComp.id}`}]
-                        </span>
-                        <strong className="meta-name-full">{targetComp.name}</strong>
-                      </div>
-                      <span className="tactical-type-tag">{config.type}</span>
-                    </div>
+                  <div className="tactical-card-face">
+                    <span className="tactical-card-icon">
+                      <Icon size={16} />
+                    </span>
+                    <span className="tactical-type-tag">{config.type}</span>
                   </div>
 
-                  <div className="tactical-card-actions" onClick={e => e.stopPropagation()}>
-                    <button
-                      className="btn-execute-card"
-                      disabled={!canPlay}
-                      onClick={() => onPlayCard(card, config.needsOther)}
-                      title={
-                        !isMyTurn
-                          ? 'Esperando turno de tu mesa'
-                          : cardPlayed
-                          ? 'Ya se ejecutó una tarjeta en este turno'
-                          : 'Ejecutar orden táctica en el mercado'
-                      }
-                    >
-                      <Play size={12} fill="currentColor" />
-                      <span>EJECUTAR</span>
-                    </button>
-                    <button
-                      className="btn-expand-card"
-                      onClick={() => toggleExpand(card.instanceId)}
-                      title={isExpanded ? 'Colapsar detalles' : 'Ver impacto completo'}
-                    >
-                      {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                    </button>
+                  <div className="tactical-card-badge font-mono">{config.label}</div>
+
+                  <div className="tactical-target-line">
+                    <span className="meta-label">Empresa objetivo</span>
+                    <span className="meta-target-row">
+                      <span className="meta-ticker-chip font-mono">
+                        {targetComp.ticker || `E${targetComp.id}`}
+                      </span>
+                      <strong className="meta-name-full">{targetComp.name}</strong>
+                    </span>
                   </div>
                 </div>
 
                 {isExpanded && (
                   <div className="tactical-card-detail">
                     <div className="impact-description">
-                      <strong>Efecto en Rueda:</strong>{' '}
+                      <strong>Qué hace:</strong>{' '}
                       {config.impact
                         .replace('La empresa objetivo', `[${targetComp.ticker || `E${targetComp.id}`}] ${targetComp.name}`)
                         .replace('del objetivo', `de [${targetComp.ticker || `E${targetComp.id}`}] ${targetComp.name}`)}
                     </div>
                     {config.needsOther && (
-                      <div className="dual-target-alert font-mono">
-                        * Requiere seleccionar una segunda empresa en pantalla al ejecutar.
+                      <div className="dual-target-alert">
+                        Al jugarla elegirás una segunda empresa.
                       </div>
                     )}
                   </div>
                 )}
+
+                <div className="tactical-card-actions" onClick={e => e.stopPropagation()}>
+                  <button
+                    className="btn-execute-card"
+                    disabled={!canPlay}
+                    onClick={() => onPlayCard(card, config.needsOther)}
+                    title={
+                      !isMyTurn
+                        ? 'Esperando turno de tu mesa'
+                        : cardPlayed
+                        ? 'Ya se ejecutó una tarjeta en este turno'
+                        : 'Ejecutar orden táctica en el mercado'
+                    }
+                  >
+                    <Play size={13} fill="currentColor" />
+                    <span>Jugar</span>
+                  </button>
+                  <button
+                    className="btn-expand-card"
+                    onClick={() => toggleExpand(card.instanceId)}
+                    title={isExpanded ? 'Colapsar detalles' : 'Ver impacto completo'}
+                    aria-label={isExpanded ? 'Ocultar efecto' : 'Ver efecto'}
+                  >
+                    {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </button>
+                </div>
               </div>
             );
           })

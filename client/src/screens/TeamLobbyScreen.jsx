@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, BookOpen, CheckCircle2, Edit3, LogOut } from 'lucide-react';
+import { BookOpen, CheckCircle2, Edit3, LogOut, Users } from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 import { RenameTeamModal } from '../components/RenameTeamModal';
 import { ExitConfirmModal } from '../components/ExitConfirmModal';
@@ -13,63 +13,53 @@ export function TeamLobbyScreen({ onOpenRules }) {
 
   return (
     <>
-      <div className="terminal-centered">
-        <div className="terminal-panel" style={{ maxWidth: '520px', textAlign: 'center' }}>
-          {/* Título de mesa con botón para editar */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '6px' }}>
-            <h2 className="terminal-heading" style={{ margin: 0, fontSize: '22px' }}>
-              Mesa Registrada: <span style={{ color: 'var(--ifi-secondary)' }}>{myTeam?.name}</span>
-            </h2>
-            <button
-              type="button"
-              className="btn-control"
-              onClick={() => setShowRenameModal(true)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '4px 8px',
-                fontSize: '11px',
-                fontWeight: 600,
-                color: 'var(--ifi-secondary)',
-                borderColor: 'var(--ifi-border)',
-                background: 'var(--ifi-subtle)',
-              }}
-              title="Modificar nombre de su equipo"
-            >
-              <Edit3 size={12} />
-              <span>Editar</span>
-            </button>
+      <div className="terminal-centered access-screen">
+        <div className="terminal-panel lobby-panel">
+          <div className="lobby-status-chip">
+            <span className="lobby-status-dot" />
+            <span>
+              Conectado a la sala <strong className="font-mono">{room?.code}</strong>
+            </span>
           </div>
 
-          <p className="terminal-subheading">
-            Conexión establecida con la sala <strong>{room?.code}</strong>. Permanezca en esta pantalla hasta la apertura de la rueda por parte del broker.
-          </p>
+          {/* Título de mesa con botón para editar */}
+          <div className="lobby-team-head">
+            <span className="ui-eyebrow">Tu mesa</span>
+            <div className="lobby-team-name-row">
+              <h2 className="lobby-team-name">{myTeam?.name}</h2>
+              <button
+                type="button"
+                className="lobby-edit-btn"
+                onClick={() => setShowRenameModal(true)}
+                title="Modificar nombre de su equipo"
+              >
+                <Edit3 size={14} />
+                <span>Editar</span>
+              </button>
+            </div>
+          </div>
 
-          <div
-            style={{
-              background: 'var(--surface-subtle)',
-              border: '1px solid var(--line)',
-              borderLeft: '3px solid var(--ifi-secondary)',
-              padding: '14px 18px',
-              borderRadius: 'var(--border-radius-sm)',
-              marginBottom: '20px',
-              textAlign: 'left',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ifi-secondary)', fontWeight: 700 }}>
-                <Clock size={14} />
-                <span>ESTADO: EN ESPERA DE APERTURA</span>
-              </span>
-              <span style={{ color: 'var(--ink-secondary)' }}>{teams.length} equipos en sala</span>
+          {/* Estado de espera */}
+          <div className="lobby-waiting-card">
+            <div className="lobby-waiting-loader" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className="lobby-waiting-text">
+              <strong>Esperando que el broker abra la rueda</strong>
+              <span>Mantén esta pantalla abierta. El juego empezará automáticamente.</span>
             </div>
           </div>
 
           {/* Equipos registrados */}
-          <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-            <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)', fontWeight: 700, marginBottom: '8px', textTransform: 'uppercase' }}>
-              OPERADORES INSCRITOS EN SALA:
+          <div className="lobby-teams-block">
+            <div className="lobby-section-title">
+              <span className="lobby-section-label">
+                <Users size={15} />
+                Equipos en la sala
+              </span>
+              <span className="ui-badge ui-badge--brand font-mono">{teams.length}</span>
             </div>
             <div className="team-chips-grid">
               {teams.map(t => (
@@ -77,42 +67,29 @@ export function TeamLobbyScreen({ onOpenRules }) {
                   key={t.id}
                   className={`team-indicator-chip ${t.id === myTeam?.id ? 'self' : ''}`}
                 >
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {t.name}
-                  </span>
-                  <CheckCircle2 size={12} color="var(--up)" />
+                  <CheckCircle2 size={15} className="team-chip-check" />
+                  <span className="team-chip-name">{t.name}</span>
+                  {t.id === myTeam?.id && <span className="team-chip-you">Tú</span>}
                 </div>
               ))}
             </div>
           </div>
 
           {/* Acciones del Lobby */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <button className="btn-secondary-action" style={{ width: '100%' }} onClick={onOpenRules}>
-              <BookOpen size={14} />
-              <span>Consultar Reglamento de Operación</span>
+          <div className="access-actions">
+            <button className="btn-secondary-action" onClick={onOpenRules}>
+              <BookOpen size={16} />
+              <span>Leer el reglamento</span>
             </button>
 
             <button
               type="button"
-              className="btn-control"
-              style={{
-                width: '100%',
-                padding: '9px',
-                fontSize: '12px',
-                color: 'var(--down)',
-                borderColor: 'var(--down-border)',
-                background: 'transparent',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-              }}
+              className="btn-ghost-danger"
               onClick={() => setShowExitModal(true)}
               title="Liberar cupo y salir de la sala"
             >
-              <LogOut size={13} />
-              <span>Abandonar Sala de Espera</span>
+              <LogOut size={15} />
+              <span>Salir de la sala</span>
             </button>
           </div>
         </div>

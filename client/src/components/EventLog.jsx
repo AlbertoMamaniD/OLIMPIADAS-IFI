@@ -15,38 +15,38 @@ function parseEvent(text) {
   const lower = text.toLowerCase();
 
   let type = 'general';
-  let badgeLabel = 'RUEDA';
+  let badgeLabel = 'Rueda';
   let Icon = Activity;
   let badgeClass = 'badge-general';
 
   if (lower.includes('subasta')) {
     type = 'auction';
-    badgeLabel = 'SUBASTA';
+    badgeLabel = 'Subasta';
     Icon = Gavel;
     badgeClass = 'badge-auction';
   } else if (lower.includes('dividendo')) {
     type = 'dividend';
-    badgeLabel = 'DIVIDENDO';
+    badgeLabel = 'Dividendo';
     Icon = DollarSign;
     badgeClass = 'badge-dividend';
   } else if (lower.includes('compra')) {
     type = 'buy';
-    badgeLabel = 'COMPRA';
+    badgeLabel = 'Compra';
     Icon = ArrowUpRight;
     badgeClass = 'badge-buy';
   } else if (lower.includes('venta') || lower.includes('vende') || lower.includes('liquidada')) {
     type = 'sell';
-    badgeLabel = 'VENTA';
+    badgeLabel = 'Venta';
     Icon = ArrowDownRight;
     badgeClass = 'badge-sell';
   } else if (lower.includes('juega') || lower.includes('tarjeta')) {
     type = 'card';
-    badgeLabel = 'TÁCTICA';
+    badgeLabel = 'Carta';
     Icon = Zap;
     badgeClass = 'badge-card';
   } else if (lower.includes('crisis')) {
     type = 'crisis';
-    badgeLabel = 'CRISIS';
+    badgeLabel = 'Crisis';
     Icon = ShieldAlert;
     badgeClass = 'badge-crisis';
   }
@@ -75,30 +75,31 @@ export function EventLog({ log }) {
 
   return (
     <div className="terminal-card event-tape-card">
-      {/* Encabezado Fijo: Título en su propia fila completa */}
-      {/* Encabezado Fijo: Título en su propia fila completa */}
+      {/* Encabezado */}
       <div className="terminal-card-header tape-header-row">
         <div className="header-icon-label">
-          <Activity size={17} className="text-ifi" />
+          <span className="panel-icon-chip">
+            <Activity size={17} />
+          </span>
           <span className="card-title-strong">
-            <span className="tape-title-full">Cinta de Operaciones en Rueda</span>
-            <span className="tape-title-mob">Cinta de Operaciones</span>
+            <span className="tape-title-full">Registro de la rueda</span>
+            <span className="tape-title-mob">Registro</span>
           </span>
           <span className="tape-pulse-dot" title="Transmisión en tiempo real de la BBV" />
         </div>
-        <span className="tape-counter-badge font-mono">
-          {log?.length || 0} ev.
+        <span className="tape-counter-badge">
+          <span className="font-mono">{log?.length || 0}</span> eventos
         </span>
       </div>
 
-      {/* Sub-barra de Filtros Dedicada (Nunca comprime el título) */}
-      <div className="tape-filter-toolbar">
-        <span className="filter-toolbar-label font-mono">FILTRO:</span>
+      {/* Filtros */}
+      <div className="tape-filter-toolbar" role="tablist" aria-label="Filtrar registro">
+        <span className="filter-toolbar-label">Ver</span>
         <button
           className={`tape-filter-btn ${filterType === 'all' ? 'active' : ''}`}
           onClick={() => setFilterType('all')}
         >
-          Todas ({log?.length || 0})
+          Todo
         </button>
         <button
           className={`tape-filter-btn ${filterType === 'trades' ? 'active' : ''}`}
@@ -120,13 +121,13 @@ export function EventLog({ log }) {
         </button>
       </div>
 
-      {/* Contenedor Amplio y Espacioso de Entradas */}
+      {/* Entradas */}
       <div ref={containerRef} className="tape-feed-scroll">
         {filteredLog.length === 0 ? (
           <div className="tape-empty-feed">
-            <Activity size={22} className="tape-empty-icon" />
-            <span className="tape-empty-title">Sin registros en este filtro</span>
-            <span className="tape-empty-sub">Las órdenes transmitidas en la rueda bursátil se reflejarán aquí en tiempo real.</span>
+            <Activity size={24} className="tape-empty-icon" />
+            <span className="tape-empty-title">Nada por aquí todavía</span>
+            <span className="tape-empty-sub">Las compras, ventas y cartas jugadas aparecerán aquí en tiempo real.</span>
           </div>
         ) : (
           filteredLog.map((item, idx) => {
@@ -135,17 +136,17 @@ export function EventLog({ log }) {
 
             return (
               <div key={idx} className={`tape-card-entry entry-${type}`}>
-                <div className="tape-card-left">
-                  <span className="turn-stamp-pill font-mono">
-                    T{turnStr}
-                  </span>
-                  <span className={`operation-badge ${badgeClass}`}>
-                    <Icon size={11} />
-                    <span>{badgeLabel}</span>
-                  </span>
-                </div>
+                <span className={`tape-entry-icon ${badgeClass}`} aria-hidden="true">
+                  <Icon size={15} />
+                </span>
 
                 <div className="tape-card-body">
+                  <div className="tape-entry-meta">
+                    <span className={`operation-badge ${badgeClass}`}>{badgeLabel}</span>
+                    <span className="turn-stamp-pill">
+                      Turno <span className="font-mono">{turnStr}</span>
+                    </span>
+                  </div>
                   <span className="tape-narrative-text">
                     {item.text}
                   </span>
@@ -156,14 +157,15 @@ export function EventLog({ log }) {
         )}
       </div>
 
-      {/* Pie de Sincronización */}
+      {/* Pie */}
       <div className="tape-footer-bar">
         <span className="tape-footer-status">
-          <CheckCircle2 size={13} className="text-ifi" />
-          <span>Libro de transacciones auditado</span>
+          <CheckCircle2 size={14} />
+          <span>Registro en tiempo real</span>
         </span>
-        <span className="tape-footer-counter font-mono">
-          Mostrando {filteredLog.length} de {log?.length || 0}
+        <span className="tape-footer-counter">
+          Mostrando <span className="font-mono">{filteredLog.length}</span> de{' '}
+          <span className="font-mono">{log?.length || 0}</span>
         </span>
       </div>
     </div>

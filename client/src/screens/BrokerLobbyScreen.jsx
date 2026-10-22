@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KeyRound, Users, Play, CheckCircle2, Clock, X } from 'lucide-react';
+import { KeyRound, Users, Play, CheckCircle2, Clock, X, Bot, Layers, Globe } from 'lucide-react';
 import { useGameSocket } from '../context/SocketContext';
 
 export function BrokerLobbyScreen() {
@@ -23,122 +23,135 @@ export function BrokerLobbyScreen() {
   };
 
   return (
-    <div className="terminal-centered">
-      <div className="terminal-panel" style={{ maxWidth: '600px', textAlign: 'center' }}>
-        <h1 className="terminal-heading">Apertura de Rueda Bursátil</h1>
-        <p className="terminal-subheading">
-          Proyecte el código PIN en la pantalla del auditorio para el ingreso de las mesas operadoras:
-        </p>
-
-        {/* PIN Institucional */}
-        <div className="pin-terminal-display">
-          <div className="pin-label-caption">
-            <KeyRound size={13} color="var(--ifi-secondary)" />
-            <span>CÓDIGO DE ACCESO (PIN)</span>
+    <div className="broker-lobby">
+      <div className="broker-lobby-grid">
+        {/* PIN para proyectar */}
+        <section className="pin-stage">
+          <div className="pin-stage-top">
+            <span className="pin-stage-eyebrow">
+              <KeyRound size={16} />
+              Código de la sala
+            </span>
+            <h1 className="pin-stage-title">Únete a la rueda bursátil</h1>
           </div>
-          <div className="pin-value-code">{room?.code}</div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '11.5px', color: 'var(--ink-secondary)', fontFamily: 'var(--font-mono)', marginTop: '6px' }}>
-            <Clock size={12} />
-            <span>{room?.settings?.turnSeconds} seg/turno · {room?.settings?.handSize} tarjetas/equipo</span>
-          </div>
-        </div>
 
-        {error && <div className="terminal-alert-error">{error}</div>}
+          <div className="pin-terminal-display">
+            <div className="pin-value-code font-mono">{room?.code}</div>
+          </div>
+
+          <ol className="pin-steps">
+            <li>
+              <span className="pin-step-num">1</span>
+              <span>
+                <Globe size={15} /> Abre <strong className="font-mono">{window.location.host}</strong>
+              </span>
+            </li>
+            <li>
+              <span className="pin-step-num">2</span>
+              <span>Elige <strong>Mesa Inversionista</strong></span>
+            </li>
+            <li>
+              <span className="pin-step-num">3</span>
+              <span>Escribe el código y el nombre de tu equipo</span>
+            </li>
+          </ol>
+
+          <div className="pin-stage-meta">
+            <span>
+              <Clock size={15} />
+              <strong className="font-mono">{room?.settings?.turnSeconds}</strong> seg por turno
+            </span>
+            <span>
+              <Layers size={15} />
+              <strong className="font-mono">{room?.settings?.handSize}</strong> tarjetas por equipo
+            </span>
+          </div>
+        </section>
 
         {/* Equipos registrados */}
-        <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line)', paddingBottom: '8px' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
-              <Users size={14} color="var(--ifi-secondary)" />
-              <span>
-                Equipos Registrados ({teams.length}
-                {room?.settings?.maxTeams ? ` / ${room.settings.maxTeams}` : ''})
-              </span>
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <button
-                type="button"
-                className="btn-control"
-                style={{ fontSize: '11px', padding: '4px 8px' }}
-                onClick={() => addBot()}
-                title="Añadir una mesa operada por inteligencia artificial"
-              >
-                + Añadir Bot (CPU)
-              </button>
-              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: canStart ? 'var(--up)' : 'var(--accent)' }}>
-                {canStart ? 'LISTO' : `FALTAN ${minTeamsNeeded - teams.length}`}
+        <section className="broker-lobby-teams terminal-card">
+          <div className="terminal-card-header">
+            <div className="header-icon-label">
+              <Users size={18} />
+              <span className="card-title-strong">
+                Equipos conectados{' '}
+                <span className="font-mono lobby-team-count">
+                  {teams.length}
+                  {room?.settings?.maxTeams ? ` / ${room.settings.maxTeams}` : ''}
+                </span>
               </span>
             </div>
+            <span className={`ui-badge ${canStart ? 'ui-badge--up' : 'ui-badge--gold'}`}>
+              {canStart ? 'Listo para iniciar' : `Faltan ${minTeamsNeeded - teams.length}`}
+            </span>
           </div>
 
-          {teams.length === 0 ? (
-            <div
-              style={{
-                padding: '24px',
-                textAlign: 'center',
-                color: 'var(--ink-muted)',
-                fontStyle: 'italic',
-                fontSize: '13px',
-              }}
-            >
-              Aguardando conexión de las primeras terminales estudiantiles...
-            </div>
-          ) : (
+          <div className="broker-lobby-body">
+            {error && <div className="terminal-alert-error">{error}</div>}
+
+            {teams.length === 0 ? (
+              <div className="lobby-empty-state">
+                <div className="lobby-waiting-loader" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <strong>Esperando a los primeros equipos…</strong>
+                <span>Aparecerán aquí en cuanto ingresen el código.</span>
+              </div>
+            ) : (
               <div className="team-chips-grid">
                 {teams.map(t => (
-                  <div key={t.id} className="team-indicator-chip" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
-                      <CheckCircle2 size={13} color="var(--up)" flexShrink={0} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {t.name}
-                      </span>
-                      {t.isBot && (
-                        <span style={{ fontSize: '9.5px', fontFamily: 'var(--font-mono)', opacity: 0.7, flexShrink: 0 }}>
-                          (CPU)
-                        </span>
-                      )}
-                    </div>
+                  <div key={t.id} className="team-indicator-chip">
+                    {t.isBot ? (
+                      <Bot size={15} className="team-chip-bot" />
+                    ) : (
+                      <CheckCircle2 size={15} className="team-chip-check" />
+                    )}
+                    <span className="team-chip-name">{t.name}</span>
+                    {t.isBot && <span className="team-chip-cpu">CPU</span>}
                     <button
                       type="button"
+                      className="team-chip-remove"
                       onClick={() => removeTeam(t.id)}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--down)',
-                        cursor: 'pointer',
-                        padding: '2px 4px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        opacity: 0.75,
-                        transition: 'opacity 0.15s ease',
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                      onMouseLeave={e => (e.currentTarget.style.opacity = '0.75')}
                       title={`Retirar a ${t.name} de la sala`}
+                      aria-label={`Retirar a ${t.name} de la sala`}
                     >
-                      <X size={13} />
+                      <X size={14} />
                     </button>
                   </div>
                 ))}
               </div>
-          )}
-        </div>
+            )}
 
-        <button
-          className="btn-primary-action"
-          style={{ width: '100%', fontSize: '14px', padding: '12px' }}
-          disabled={!canStart || starting}
-          onClick={handleStart}
-        >
-          <Play size={16} />
-          <span>
-            {starting
-              ? 'Iniciando Rueda...'
-              : canStart
-              ? `Iniciar Rueda con ${teams.length} Equipos`
-              : `Requiere mínimo ${minTeamsNeeded} equipos`}
-          </span>
-        </button>
+            <div className="broker-lobby-actions">
+              <button
+                type="button"
+                className="btn-secondary-action"
+                onClick={() => addBot()}
+                title="Añadir una mesa operada por inteligencia artificial"
+              >
+                <Bot size={16} />
+                <span>Añadir bot</span>
+              </button>
+
+              <button
+                className="btn-primary-action"
+                disabled={!canStart || starting}
+                onClick={handleStart}
+              >
+                <Play size={17} />
+                <span>
+                  {starting
+                    ? 'Iniciando rueda…'
+                    : canStart
+                    ? `Iniciar rueda con ${teams.length} equipos`
+                    : `Se necesitan mínimo ${minTeamsNeeded} equipos`}
+                </span>
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

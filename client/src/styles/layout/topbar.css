@@ -1,51 +1,62 @@
-/* ================= TOPBAR INSTITUCIONAL ================= */
+/* ================= BARRA SUPERIOR (TOPBAR) ================= */
 .topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px clamp(12px, 2vw, 24px);
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: var(--shadow-sm);
-  min-height: 58px;
+  display: flex;
+  align-items: center;
   width: 100%;
-  box-sizing: border-box;
+  min-height: var(--topbar-h);
+  padding: 10px clamp(14px, 2.4vw, 32px);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Franja de marca con los colores de las velas del logo */
+.topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ifi-red) 0%, var(--ifi-red) 18%, #1a4a37 18%, #1a4a37 82%, var(--ifi-mint) 82%, var(--ifi-mint) 100%);
 }
 
 .topbar-inner-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   width: 100%;
-  max-width: 1600px;
+  max-width: var(--content-max);
   margin: 0 auto;
-  gap: 14px;
   min-width: 0;
 }
 
+/* ---------- Marca ---------- */
 .topbar-brand {
   display: flex;
   align-items: center;
   gap: 14px;
   min-width: 0;
-  flex-shrink: 0;
 }
 
 .brand-logo-frame {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  width: auto;
   flex-shrink: 0;
+  height: 42px;
+  padding: 4px 10px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xs);
 }
 
 .brand-logo-img {
-  height: 34px;
-  max-height: 36px;
+  height: 30px;
   width: auto;
   object-fit: contain;
 }
@@ -53,35 +64,43 @@
 .brand-title-wrap {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   min-width: 0;
 }
 
 .brand-title-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .brand-main-title {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
   line-height: 1.15;
+  color: var(--ink);
   white-space: nowrap;
 }
 
+.brand-league-word {
+  color: var(--ifi-secondary);
+}
+
 .room-code-badge {
+  display: inline-flex;
+  align-items: center;
   font-size: 11px;
   font-weight: 700;
-  color: var(--ifi-primary);
+  letter-spacing: 0.08em;
+  color: var(--ifi-secondary);
   background: var(--ifi-subtle);
   border: 1px solid var(--ifi-border);
-  padding: 2px 7px;
-  border-radius: var(--radius-xs);
-  letter-spacing: 0.05em;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -99,26 +118,22 @@
   height: 7px;
   border-radius: 50%;
   background-color: var(--up);
-  box-shadow: 0 0 6px var(--up);
+  box-shadow: 0 0 0 3px var(--up-subtle);
   animation: pulse-dot 2s infinite ease-in-out;
   flex-shrink: 0;
 }
 
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-
 .brand-sub-badge {
-  font-size: 10px;
-  font-family: var(--font-mono);
-  color: var(--ink-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  color: var(--ink-muted);
   white-space: nowrap;
 }
 
+/* ---------- Acciones ---------- */
 .topbar-actions {
   display: flex;
   align-items: center;
@@ -127,128 +142,169 @@
   flex-shrink: 0;
 }
 
-.user-seat-pill {
+.user-seat-pill,
+.broker-auth-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: var(--surface-subtle);
-  border: 1px solid var(--line);
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 11.5px;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
   white-space: nowrap;
-  max-width: 240px;
   min-width: 0;
 }
 
+.user-seat-pill {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  max-width: 260px;
+}
+
 .seat-label {
-  font-size: 9.5px;
-  font-family: var(--font-mono);
-  color: var(--ink-muted);
+  font-size: var(--text-2xs);
   font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--ink-muted);
   flex-shrink: 0;
 }
 
 .seat-team-name {
+  font-family: var(--font-sans);
   font-weight: 700;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 140px;
-  display: inline-block;
-  vertical-align: middle;
+  max-width: 150px;
 }
 
 .broker-auth-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
   font-weight: 700;
-  color: var(--ifi-primary);
-  background: var(--ifi-subtle);
-  border: 1px solid var(--ifi-secondary);
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.05em;
-  white-space: nowrap;
+  letter-spacing: 0.06em;
+  color: var(--on-primary);
+  background: var(--primary-solid);
+  border: 1px solid transparent;
   flex-shrink: 0;
 }
 
-/* Botones de Control Topbar */
+/* Botones de la barra */
 .btn-control {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: var(--surface);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  padding: 6px 12px;
-  font-size: 12.5px;
-  font-weight: 500;
-  border-radius: var(--radius-sm);
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px;
+  background: transparent;
+  color: var(--ink-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
   white-space: nowrap;
   flex-shrink: 0;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
-.btn-control .btn-control-label {
-  display: inline;
-}
-.btn-control .btn-control-compact-label {
-  display: none;
-}
+.btn-control .btn-control-label { display: inline; }
+.btn-control .btn-control-compact-label { display: none; }
+
 .btn-control:hover:not(:disabled) {
-  border-color: var(--line-strong);
-  background: var(--surface-subtle);
+  background: var(--surface-hover);
+  color: var(--ink);
 }
+
+.btn-control.btn-history {
+  color: var(--accent);
+}
+.btn-control.btn-history:hover:not(:disabled) {
+  background: var(--accent-subtle);
+  color: var(--accent-strong);
+}
+
 .btn-control.btn-exit-danger {
   color: var(--down);
   border-color: var(--down-border);
 }
-.btn-control.btn-exit-danger:hover {
+.btn-control.btn-exit-danger:hover:not(:disabled) {
   background: var(--down-subtle);
   border-color: var(--down);
+  color: var(--down-strong);
 }
 
-/* Responsive Topbar en Escritorio Intermedio (1024px - 1279px) */
+/* ---------- Escritorio intermedio ---------- */
 @media (min-width: 769px) and (max-width: 1279px) {
+  .topbar-actions { gap: 4px; }
+  .btn-control { padding: 0 11px; }
+  .btn-control .btn-control-label { display: none; }
+  .btn-control .btn-control-compact-label { display: inline; }
+  .seat-team-name { max-width: 110px; }
+}
+
+@media (min-width: 769px) and (max-width: 1040px) {
+  .brand-meta-row { display: none; }
+  .seat-label { display: none; }
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 768px) {
   .topbar {
-    padding: 8px 14px;
-    min-height: 52px;
+    min-height: 56px;
+    padding: 8px 12px;
   }
-  .topbar-actions {
-    gap: 6px;
+  .topbar-inner-container { gap: 8px; }
+  .topbar-brand {
+    gap: 10px;
+    flex-shrink: 1;
   }
+  .brand-logo-frame {
+    height: 34px;
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+  }
+  .brand-logo-img { height: 24px; }
+  .brand-title-row { gap: 6px; }
+  .brand-main-title {
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .brand-league-word,
+  .brand-meta-row,
+  .user-seat-pill {
+    display: none !important;
+  }
+  .room-code-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+  .topbar-actions { gap: 2px; }
+  .broker-auth-pill {
+    height: 36px;
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .broker-auth-pill span { display: none !important; }
   .btn-control {
-    padding: 5px 9px;
-    font-size: 11.5px;
-    gap: 4px;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: var(--radius-sm);
   }
-  .btn-control .btn-control-label {
-    display: none;
-  }
-  .btn-control .btn-control-compact-label {
-    display: inline;
-  }
-  .brand-sub-badge {
-    font-size: 9px;
-  }
-  .seat-team-name {
-    max-width: 100px;
-  }
+  .btn-control span { display: none !important; }
+  .btn-control.btn-exit-danger { border-color: transparent; }
 }
 
-@media (min-width: 769px) and (max-width: 980px) {
-  .brand-meta-row {
-    display: none;
-  }
-  .seat-label {
-    display: none;
-  }
+/* Con sala activa en pantallas angostas, el código de sala es más útil que el logo */
+@media (max-width: 480px) {
+  .topbar-brand:has(.room-code-badge) .brand-logo-frame { display: none; }
+  .brand-main-title { font-size: 14px; }
 }
 
+@media (max-width: 380px) {
+  .brand-logo-frame { display: none; }
+}
